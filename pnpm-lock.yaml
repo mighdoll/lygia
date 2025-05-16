@@ -39,11 +39,11 @@ importers:
         specifier: github:patriciogonzalezvivo/webpack-glsl-loader
         version: https://codeload.github.com/patriciogonzalezvivo/webpack-glsl-loader/tar.gz/3023b6ce6e56fb779ca305d61de7bc356b7cca35
       wesl-packager:
-        specifier: 0.6.2
+        specifier: ^0.6.2
         version: 0.6.2
       wesl-tooling:
-        specifier: 0.6.3
-        version: 0.6.3(wesl@0.6.2)
+        specifier: ^0.6.5
+        version: 0.6.5(wesl@0.6.2)
 
 packages:
 
@@ -1318,8 +1318,8 @@ packages:
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
 
-  thimbleberry@0.2.9:
-    resolution: {integrity: sha512-m1vB5d3VunjmaoDFk5e7YDm+EI1GIHdWyJgh9ELbfGuArb49mr3mXqARoEbUKwKEMnIs+Kc+aikIfgQ2VQKeYg==}
+  thimbleberry@0.2.10:
+    resolution: {integrity: sha512-sWQIKq9FdqYZbsUfw7l7/HqxNmvze0e6/FUlgjBkwYtfd5A30cjfY2M+mHUGlO0+bGZro5J0c7lfeHJ1Zu7/JQ==}
 
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
@@ -1495,8 +1495,8 @@ packages:
   wesl-tooling@0.6.2:
     resolution: {integrity: sha512-bWLtXymW+NdmVqFE4fg91qttDPjsgdN9JP74NbgDBuFoi7GgGEYvk6urprwZLzAIXDpfRO+luzK9UiWDUFzxeg==}
 
-  wesl-tooling@0.6.3:
-    resolution: {integrity: sha512-jt1/twuvUxA0XFFwo1w+BOY2lZk82fGh2RZ+IAkS+gpr4CkFGbNjRHiNevAFEYi5/Qm5fQ1kUtsb18vSUfki4g==}
+  wesl-tooling@0.6.5:
+    resolution: {integrity: sha512-JgtK1501pX3XFTTBSF0NHKmdipvSRYhkYZFBkWqmgSsI0a5SVQTZMs9keOBggqcxHO/XTwGQGGPdYtYnbE7CRQ==}
     peerDependencies:
       wesl: ^0.6.2
 
@@ -2676,7 +2676,7 @@ snapshots:
 
   text-table@0.2.0: {}
 
-  thimbleberry@0.2.9:
+  thimbleberry@0.2.10:
     dependencies:
       '@petamoriken/float16': 3.9.2
       '@reactively/core': 0.0.8
@@ -2873,12 +2873,12 @@ snapshots:
   wesl-tooling@0.6.2:
     dependencies:
       import-meta-resolve: 4.1.0
-      thimbleberry: 0.2.9
+      thimbleberry: 0.2.10
 
-  wesl-tooling@0.6.3(wesl@0.6.2):
+  wesl-tooling@0.6.5(wesl@0.6.2):
     dependencies:
       import-meta-resolve: 4.1.0
-      thimbleberry: 0.2.9
+      thimbleberry: 0.2.10
       wesl: 0.6.2
 
   wesl@0.6.2:

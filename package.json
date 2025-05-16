@@ -50,8 +50,8 @@
     "webpack": "^5.36.2",
     "webpack-cli": "^4.6.0",
     "webpack-glsl-loader": "github:patriciogonzalezvivo/webpack-glsl-loader",
-    "wesl-packager": "0.6.2",
-    "wesl-tooling": "0.6.3" 
+    "wesl-packager": "^0.6.2",
+    "wesl-tooling": "^0.6.5"
   },
   "eslintConfig": {
     "env": {
