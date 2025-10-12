@@ -1,0 +1,22 @@
+- [x] sphereSDF with vec3f - ✅ GOOD: Tests distance calculation with non-trivial point (3,0,4) expecting length = 5.0
+- [x] sphereSDF1 with radius - ✅ GOOD: Tests sphere with radius, validates subtraction behavior (5.0 - 2.0 = 3.0)
+- [x] boxSDF with vec3f - ⚠️ RANGE-ONLY: Only checks output >= 0, doesn't verify specific distance computation
+- [x] boxSDF1 with bounds - ⚠️ RANGE-ONLY: Only checks point is inside (distance <= 0), doesn't verify actual distance value
+- [x] cylinderSDF vertical - ⚠️ RANGE-ONLY: Only checks point is inside (distance <= 0), doesn't verify actual distance value
+- [x] cylinderSDF1 with single param - ⚠️ RANGE-ONLY: Only checks output >= 0, doesn't verify specific distance computation
+- [x] cylinderSDF2 with height and radius - ⚠️ RANGE-ONLY: Only checks point is inside (distance <= 0), doesn't verify actual distance value
+- [x] cylinderSDF4 arbitrary orientation - ⚠️ RANGE-ONLY: Only checks distance <= 0.5, doesn't verify specific distance computation
+- [x] torusSDF - ✅ GOOD: Tests torus distance with specific point (1,0,0), expects -0.25 based on geometric calculation
+- [x] torusSDF4 with sin/cos - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test mathematical correctness
+- [x] rectSDF with vec2f size - ⚠️ RANGE-ONLY: Only checks distance <= 1.0, doesn't verify specific distance computation
+- [x] rectSDF1 with scalar size - ⚠️ RANGE-ONLY: Only checks distance <= 1.0, doesn't verify specific distance computation
+- [x] rectSDFDefault - ⚠️ RANGE-ONLY: Only checks distance <= 1.0, doesn't verify specific distance computation
+- [x] rectSDF3 with rounded corners - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test mathematical correctness
+- [x] rectSDF2Round - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test mathematical correctness
+- [x] opUnion - ✅ GOOD: Tests union operation returns minimum of two distances (min(2.0, 3.0) = 2.0)
+- [x] opUnionSmooth - ⚠️ RANGE-ONLY: Only checks result <= 1.0, doesn't verify smooth blending calculation
+- [x] opUnionSmooth4 with vec4f - ⚠️ RANGE-ONLY: Only checks output is valid and result.a <= 3.0, doesn't verify blending behavior
+- [x] opSubtraction - ✅ GOOD: Tests subtraction operation max(-d1, d2) = max(-2, 3) = 3.0
+- [x] opSubtraction4 with vec4f - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test mathematical correctness
+- [x] opSubtractionSmooth - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test smooth blending calculation
+- [x] opSubtractionSmooth4 with vec4f - ⚠️ NO-CRASH: Only verifies output is a valid number, doesn't test mathematical correctness

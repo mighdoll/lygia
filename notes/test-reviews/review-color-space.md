@@ -1,0 +1,61 @@
+- [x] rgb2heat - ✅ GOOD: Tests heat mapping conversion with RGB(0.8, 0.7, 0.5), verifies specific output (0.854)
+- [x] rgb2xyz - ✅ GOOD: Tests RGB to XYZ color space conversion with default and CIE_D50 white point variants
+- [x] rgb2YPbPr - ✅ GOOD: Tests RGB to YPbPr conversion with HDTV and SDTV variants, validates matrix transforms
+- [x] rgb2yuv - ✅ GOOD: Tests RGB to YUV conversion with HDTV and SDTV variants, verifies luma/chroma separation
+- [x] yuv2rgb - ✅ GOOD: Tests inverse YUV to RGB conversion with both standard variants, validates roundtrip behavior
+- [x] lab2srgb - ✅ GOOD: Tests LAB(50, 25, -25) to sRGB conversion, validates perceptual color space transform
+- [x] lch2srgb3 - ✅ GOOD: Tests LCH(50, 30, 120°) cylindrical coordinates to sRGB, validates polar color representation
+- [x] hsl2rgb - ✅ GOOD: Tests HSL(180°, 80%, 50%) to RGB, expects cyan-ish color (0.1, 0.9, 0.9)
+- [x] rgb2hsl - ✅ GOOD: Tests RGB to HSL roundtrip conversion, validates inverse transform maintains values
+- [x] hsv2rgb - ✅ GOOD: Tests HSV(240°, 100%, 100%) to RGB, expects pure blue (0, 0, 1)
+- [x] rgb2hsv - ✅ GOOD: Tests RGB(0, 0, 1) to HSV, validates inverse transform to (0.6667, 1, 1)
+- [x] hcy2rgb - ✅ GOOD: Tests HCY(0°, 0.5, 0.5) to RGB, validates chroma/luma-based color space
+- [x] rgb2hcy - ✅ GOOD: Tests RGB(1, 0, 0) to HCY, expects (0, 1, 0.2989) with correct luma coefficient
+- [x] lab2rgb - ✅ GOOD: Tests LAB(53.24, 80.09, 67.20) red to RGB(1, 0, 0), validates perceptual color space
+- [x] srgb2lab - ✅ GOOD: Tests sRGB red to LAB conversion, validates gamma-corrected input handling
+- [x] lch2rgb - ✅ GOOD: Tests LCH(53.24, 104.55, 40°) to RGB, validates cylindrical LAB representation
+- [x] srgb2lch - ✅ GOOD: Tests sRGB red to LCH conversion with chroma and hue angle calculations
+- [x] oklab2srgb - ✅ GOOD: Tests Oklab(0.628, 0.225, 0.126) to sRGB, validates perceptually uniform color space
+- [x] srgb2oklab - ✅ GOOD: Tests sRGB(1, 0, 0) to Oklab, expects (0.628, 0.225, 0.126)
+- [x] srgb2xyz - ✅ GOOD: Tests sRGB(1, 0, 0) to XYZ, validates gamma correction and matrix transform
+- [x] xyY2rgb - ✅ GOOD: Tests xyY chromaticity coordinates to RGB (validates CIE 1931 color space)
+- [x] rgb2xyY - ✅ GOOD: Tests RGB(1, 0, 0) to xyY(0.64, 0.33, 0.2126), validates chromaticity conversion
+- [x] xyY2srgb - ✅ GOOD: Tests xyY to sRGB with gamma correction applied
+- [x] ryb2rgb - ✅ GOOD: Tests RYB(1, 0, 0) artist color space to RGB(1, 0, 0)
+- [x] rgb2ryb - ✅ GOOD: Tests RGB to RYB artist color space conversion (uses cubicMix3)
+- [x] hsv2ryb - ✅ GOOD: Tests HSV(0°, 1, 1) to RYB conversion, validates HSV->RGB->RYB pipeline
+- [x] YCbCr2rgb - ✅ GOOD: Tests YCbCr(0.5, 0.5, 0.5) to RGB, validates digital video color space
+- [x] YPbPr2rgb - ✅ GOOD: Tests YPbPr(0.5, 0, 0) to RGB, expects gray (0.5, 0.5, 0.5)
+- [x] cmyk2rgb - ✅ GOOD: Tests CMYK(0, 0, 0, 0.5) to RGB, validates subtractive color model (50% gray)
+- [x] gamma2linear - ✅ GOOD: Tests gamma to linear conversion with pow(0.5, 2.2) ≈ 0.218
+- [x] linear2gamma - ✅ GOOD: Tests linear to gamma conversion, validates roundtrip with pow(0.218, 1/2.2) ≈ 0.5
+- [x] rgb2YCbCr - ✅ GOOD: Tests RGB(0.5, 0.5, 0.5) to YCbCr, validates gray point conversion
+- [x] rgb2cmyk - ✅ GOOD: Tests RGB(1, 0, 0) to CMYK(0, 1, 1, 0), validates subtractive color separation
+- [x] rgb2luma - ✅ GOOD: Tests RGB(1.0, 0.5, 0.0) orange to luma using Rec709 coefficients (0.5702)
+- [x] srgb2luma - ✅ GOOD: Tests sRGB(1.0, 0.5, 0.0) to luma using Rec601 coefficients (0.5925)
+- [x] lab2lch - ✅ GOOD: Tests LAB(50, 25, 25) to LCH(50, 35.36, 45°), validates polar coordinates conversion
+- [x] lch2lab - ✅ GOOD: Tests LCH(50, 35.36, 45°) to LAB(50, 25, 25), validates inverse polar transform
+- [x] lab2xyz - ✅ GOOD: Tests LAB(50, 0, 0) neutral gray to XYZ with D65 white point scaling
+- [x] xyz2lab - ✅ GOOD: Tests XYZ(17.5, 18.4, 20.0) to LAB, validates inverse transform with D65 reference
+- [x] rgb2hcv - ✅ GOOD: Tests RGB(1, 0, 0) to HCV(0, 1, 1), validates Hue/Chroma/Value extraction
+- [x] rgb2hue - ✅ GOOD: Tests RGB(0, 1, 0) green to hue (0.3333), validates 120° hue angle
+- [x] hue2rgb - ✅ GOOD: Tests hue 0.3333 (120°) to RGB(0, 1, 0) green, validates hue-to-color mapping
+- [x] k2rgb - ⚠️ RANGE-ONLY: Tests blackbody radiation K=6500 to RGB, only checks output > 0.9, doesn't verify specific color temperature conversion
+- [x] rgb2lms - ⚠️ RANGE-ONLY: Tests RGB(1, 0, 0) to LMS cone response, only checks result[0] > 0, doesn't verify actual matrix transform values
+- [x] lms2rgb - ⚠️ RANGE-ONLY: Tests LMS(0.3, 0.2, 0.1) to RGB, only checks output in [-0.1, 1.1] range, doesn't verify specific conversion
+- [x] oklab2rgb - ✅ GOOD: Tests Oklab(0.628, 0.225, 0.126) to RGB(1, 0, 0), validates perceptually uniform space
+- [x] rgb2oklab - ✅ GOOD: Tests RGB(1, 0, 0) to Oklab(0.628, 0.225, 0.126), validates forward transform
+- [x] rgb2lab - ✅ GOOD: Tests RGB(0.5, 0.5, 0.5) gray to LAB, expects (4.52, 0, 0) specific output
+- [x] rgb2lch - ✅ GOOD: Tests RGB(1, 0, 0) red to LCH(1.92, 9.13, 19.41), validates cylindrical LAB coordinates
+- [x] rgb2srgb - ✅ GOOD: Tests linear RGB(0.5, 0.3, 0.1) to sRGB(0.735, 0.584, 0.349), validates gamma correction
+- [x] srgb2rgb - ✅ GOOD: Tests sRGB(0.735, 0.584, 0.349) to linear RGB(0.5, 0.3, 0.1), validates inverse gamma
+- [x] xyY2xyz - ✅ GOOD: Tests xyY(0.3127, 0.329, 1) D65 white point to XYZ(0.9505, 1.0, 1.089)
+- [x] xyz2xyY - ✅ GOOD: Tests XYZ(0.9505, 1.0, 1.089) to xyY(0.3127, 0.329, 1), validates roundtrip
+- [x] xyz2srgb - ✅ GOOD: Tests XYZ(0.4124, 0.2126, 0.0193) red to sRGB, validates matrix transform and gamma
+- [x] yiq2rgb - ✅ GOOD: Tests YIQ(0.5, 0, 0) to RGB with NTSC matrix, expects (0.5, 0.4735, 0.3117)
+- [x] rgb2yiq - ✅ GOOD: Tests RGB(1, 0, 0) to YIQ, validates NTSC color space matrix transform (0.3, 0.59, 0.11)
+- [x] xyz2rgb - ✅ GOOD: Tests XYZ(41.24, 21.26, 1.93) scaled to RGB(1, 0, 0), validates 100x scaling factor
+- [x] lab2srgb - ✅ GOOD: Tests LAB(50, 25, -25) to sRGB conversion, validates perceptual color space transform
+- [x] lch2srgb3 - ✅ GOOD: Tests LCH(50, 30, 120°) cylindrical coordinates to sRGB, validates polar color representation
+- [x] YCbCr2rgb - ✅ GOOD: Tests YCbCr(0.5, 0.5, 0.5) to RGB, validates digital video color space
+- [x] YPbPr2rgb - ✅ GOOD: Tests YPbPr(0.5, 0, 0) to RGB, expects gray (0.5, 0.5, 0.5)

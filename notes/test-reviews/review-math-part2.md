@@ -1,0 +1,46 @@
+# Math Test Review - Part 2 (Last 42 Tests)
+
+## Tests from "map" through "grad4"
+
+- [x] map - remap value between ranges - ✅ GOOD: Tests linear remapping with two cases (0.5→50, 5→150), validates interpolation formula
+- [x] mirror - triangle wave - ✅ GOOD: Tests triangle wave property with multiple periods (0.5, 1.5, 2.5, 3.5 all expect 0.5), verifies symmetry
+- [x] decimate - quantize value - ✅ GOOD: Tests quantization to 10 levels, validates floor(0.567*10)/10 = 0.5
+- [x] lengthSq2 - ✅ GOOD: Tests squared length calculation (3² + 4² = 25), avoids sqrt computation
+- [x] lengthSq3 - ✅ GOOD: Tests squared length for vec3 (1² + 2² + 2² = 9), validates 3D distance
+- [x] distEuclidean2 - ✅ GOOD: Tests Euclidean distance calculation (3-4-5 triangle, expects 5.0)
+- [x] distManhattan2 - ✅ GOOD: Tests Manhattan distance (|3| + |4| = 7), validates L1 norm
+- [x] pack/unpack roundtrip - ✅ GOOD: Tests precision-limited float encoding/decoding roundtrip, validates within 0.001
+- [x] taylorInvSqrt - ✅ GOOD: Tests fast inverse square root approximation (1/sqrt(1) ≈ 1.0), validates within 0.1 tolerance
+- [x] aamirror - anti-aliased triangle wave - ⚠️ RANGE-ONLY: Uses fragment shader with derivatives but only checks output is in [0,1], doesn't verify anti-aliasing behavior
+- [x] aastep - anti-aliased step - ⚠️ RANGE-ONLY: Uses fragment shader with derivatives but only checks output is in [0,1], doesn't verify smoothstep-like behavior
+- [x] fcos - filtered cosine - ⚠️ RANGE-ONLY: Uses fragment shader with band-limiting but only checks output is in [-1,1], doesn't verify filtering
+- [x] adaptiveThreshold - ✅ GOOD: Tests threshold comparison with two cases (0.8 vs 0.5+0.1 = 1.0, 0.4 vs 0.5+0.1 = 0.0), validates binary output
+- [x] atan2Custom - ⚠️ RANGE-ONLY: Tests three angle cases but only checks results are >= 0.0, doesn't verify actual angle values or normalization
+- [x] bump - ✅ GOOD: Tests bump function at three points (0→1.0, 1→0.0, 0.5→0.75), validates smooth falloff curve
+- [x] bump2 - ✅ GOOD: Tests vec2 bump function with two components (0.0→1.0, 0.5→0.75), validates per-component behavior
+- [x] highPass - ✅ GOOD: Tests high-pass filter with two cases (0.8-0.5=0.3→0.6, 0.3-0.5→0.0), validates clamping and subtraction
+- [x] inside - scalar - ✅ GOOD: Tests range check with three cases (5 in [0,10]→true, -1→false, 11→false), validates boundary conditions
+- [x] inside2 - ✅ GOOD: Tests vec2 range check with two cases (both in range→true, one out→false), validates component-wise logic
+- [x] inverse - mat3 - ✅ GOOD: Tests 3x3 matrix inversion on diagonal matrix (1→1.0, 2→0.5, 3→0.333), validates inverse calculation
+- [x] mmax2 - ✅ GOOD: Tests component-wise maximum for vec2 (max(3.0, 7.0) = 7.0), validates horizontal max
+- [x] mmax3 - ✅ GOOD: Tests component-wise maximum for vec3 (max(3.0, 7.0, 5.0) = 7.0), validates 3-component max
+- [x] mmin2 - ✅ GOOD: Tests component-wise minimum for vec2 (min(3.0, 7.0) = 3.0), validates horizontal min
+- [x] mmin3 - ✅ GOOD: Tests component-wise minimum for vec3 (min(3.0, 7.0, 5.0) = 3.0), validates 3-component min
+- [x] mod2 - mutates pointer - ✅ GOOD: Tests pointer mutation and cell index calculation (vec2(7,10) % 3 → p≈(1,1), c=cell), validates in-place modification
+- [x] mod289 - ✅ GOOD: Tests modulo 289 with three cases (300→11, 289→0, 100→100), validates noise helper function
+- [x] powFast - ⚠️ RANGE-ONLY: Tests fast power approximation but only checks result is in (0,1), doesn't verify actual pow(0.5, 0.5) ≈ 0.707 value
+- [x] rotate3dX - ✅ GOOD: Tests 90° rotation around X-axis ((0,1,0) → (0,0,1)), validates rotation matrix behavior
+- [x] rotate3dY - ✅ GOOD: Tests 90° rotation around Y-axis ((1,0,0) → (0,0,-1)), validates right-hand rule
+- [x] rotate3dZ - ✅ GOOD: Tests 90° rotation around Z-axis ((1,0,0) → (0,-1,0)), validates matrix convention
+- [x] rotate4d - axis-angle rotation - ✅ GOOD: Tests 4x4 rotation around Z-axis ((1,0,0,1) → (0,-1,0,1)), validates homogeneous coordinates
+- [x] rotate4dX - ✅ GOOD: Tests 4x4 X-axis rotation ((0,1,0,1) → (0,0,-1,1)), validates 4D matrix rotation
+- [x] rotate4dY - ✅ GOOD: Tests 4x4 Y-axis rotation ((1,0,0,1) → (0,0,-1,1)), validates homogeneous transformation
+- [x] rotate4dZ - ✅ GOOD: Tests 4x4 Z-axis rotation ((1,0,0,1) → (0,-1,0,1)), validates matrix convention
+- [x] round - ✅ GOOD: Tests rounding with four cases (2.3→2, 2.7→3, -2.3→-2, -2.7→-3), validates nearest integer behavior
+- [x] saturateMediump - ⚠️ RANGE-ONLY: Tests large values but only checks results > 0, doesn't verify MEDIUMP_FLT_MAX clamping on mobile
+- [x] scale4d - ✅ GOOD: Tests 4x4 scale matrix (vec3(2,3,4) scales vec4(1,2,3,1) → (2,6,12,1)), validates homogeneous scaling
+- [x] sum2 - ✅ GOOD: Tests component sum for vec2 (3.0 + 7.0 = 10.0), validates horizontal addition
+- [x] sum3 - ✅ GOOD: Tests component sum for vec3 (3.0 + 7.0 + 5.0 = 15.0), validates 3-component sum
+- [x] within - scalar - ✅ GOOD: Tests range check returning float (5 in [0,10]→1.0, -1→0.0, 11→0.0), validates float result vs inside's bool
+- [x] within2 - ✅ GOOD: Tests vec2 range check returning float (both in→1.0, one out→0.0), validates component-wise float result
+- [x] grad4 - noise gradient helper - ⚠️ RANGE-ONLY: Tests gradient vector but only checks result is in [-10,10], doesn't verify gradient calculation or permutation behavior

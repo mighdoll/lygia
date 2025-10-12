@@ -1,0 +1,47 @@
+# Math Test Review - First 42 Tests (saturate through taylorInvSqrt)
+
+## Test Review Checklist
+
+- [x] saturate - ✅ GOOD: Tests clamping behavior with negative input (-0.5 → 0.0), validates lower bound
+- [x] saturate clamped upper - ✅ GOOD: Tests clamping behavior with value > 1 (1.5 → 1.0), validates upper bound
+- [x] saturate3 - ✅ GOOD: Tests vec3 clamping with multiple edge cases (-0.5→0.0, 0.5→0.5, 1.5→1.0)
+- [x] pow2 - ✅ GOOD: Tests squaring operation (3.0^2 = 9.0), validates specific mathematical behavior
+- [x] pow22 - ✅ GOOD: Tests vec2 squaring (2.0^2=4.0, 3.0^2=9.0), validates componentwise operation
+- [x] pow3 - ✅ GOOD: Tests cubing operation (2.0^3 = 8.0), validates specific power
+- [x] pow5 - ✅ GOOD: Tests fifth power (2.0^5 = 32.0), validates higher power calculation
+- [x] pow7 - ✅ GOOD: Tests seventh power (2.0^7 = 128.0), validates even higher power
+- [x] absi positive - ✅ GOOD: Tests absolute value with positive input (5 → 5), validates passthrough for positive
+- [x] absi negative - ✅ GOOD: Tests absolute value with negative input (-5 → 5), validates negation for negative
+- [x] toMat3 - ✅ GOOD: Tests mat4→mat3 conversion by extracting upper-left 3x3, validates diagonal elements (1.0, 6.0, 11.0)
+- [x] hammersley - ⚠️ TRIVIAL: Zero case test (0u, 10) → [0.0, 0.0], doesn't validate quasi-random sequence generation
+- [x] nyquist - ⚠️ TRIVIAL: Pass-through test (0.8, 0.0) → [0.8], no frequency filtering demonstrated
+- [x] aafloor with derivatives - ✅ GOOD: Tests anti-aliased floor using fragment shader with derivatives, validates smoothing at ~2.5 input
+- [x] aafloor2 with vec2 - ✅ GOOD: Tests vec2 anti-aliased floor with fragment shader, validates both components (2.5→2.0, 3.7→3.0)
+- [x] cubicMix - ✅ GOOD: Tests cubic interpolation at midpoint (0.5 between 0.0 and 1.0), validates hermite curve
+- [x] permute - ⚠️ RANGE-ONLY: Only checks result > 0.0, doesn't validate permutation function behavior or reproducibility
+- [x] smootherstep - ✅ GOOD: Tests Ken Perlin's smootherstep at midpoint (0.5), validates 6t^5-15t^4+10t^3 formula
+- [x] fmod2 - ✅ GOOD: Tests floored modulo with both positive (5%3=2, 7%4=3) and negative (-5%3=1, -7%4=1) cases
+- [x] fmod3 - ✅ GOOD: Tests vec3 floored modulo with negative values, validates floor-based vs truncate-based behavior
+- [x] fmod4 - ✅ GOOD: Tests vec4 floored modulo with mixed positive/negative inputs, validates all components
+- [x] quat - create from axis and angle - ✅ GOOD: Tests quaternion from axis-angle (Y-axis, π/2) → (0, 0.707, 0, 0.707)
+- [x] quatDiv - divide quaternion by scalar - ✅ GOOD: Tests componentwise division by 2, validates (2,4,6,8)/2 = (1,2,3,4)
+- [x] quatNeg - negate quaternion - ✅ GOOD: Tests quaternion negation, validates componentwise negation
+- [x] quatInverse - ✅ GOOD: Tests quaternion inverse by verifying q * q^-1 = identity (0,0,0,1)
+- [x] rotate2d - 90 degree rotation - ✅ GOOD: Tests 2D rotation matrix (π/2), validates (1,0) → (0,1)
+- [x] rotate3d - rotation around axis - ✅ GOOD: Tests 3D rotation around Z-axis (π/2), validates (1,0,0) → (0,-1,0)
+- [x] scale2d - uniform scale - ✅ GOOD: Tests uniform 2D scaling by 2.0, validates (3,4) → (6,8)
+- [x] scale2dVec - non-uniform scale - ✅ GOOD: Tests non-uniform 2D scaling by (2,3), validates (4,5) → (8,15)
+- [x] scale3d - ✅ GOOD: Tests 3D non-uniform scaling, validates (1,2,3) * (2,3,4) = (2,6,12)
+- [x] translate4d - ✅ GOOD: Tests 4D translation matrix, validates (1,2,3,1) + (10,20,30) = (11,22,33,1)
+- [x] toMat4 - ✅ GOOD: Tests mat3→mat4 conversion, validates diagonal elements (1,5,9,1) with identity w component
+- [x] cubic - ✅ GOOD: Tests cubic function at boundary and midpoint (0→0, 0.5→0.5, 1→1), validates smoothstep-like behavior
+- [x] quartic - ✅ GOOD: Tests quartic polynomial at key points, validates formula v*v*(2-v*v) at (0, 0.5, 1)
+- [x] quintic - ✅ GOOD: Tests quintic function at boundary and midpoint (0→0, 0.5→0.5, 1→1), validates smootherstep-like behavior
+- [x] invCubic - ✅ GOOD: Tests inverse cubic via roundtrip (cubic(0.3) then invCubic), validates invertibility
+- [x] invQuartic - ✅ GOOD: Tests inverse quartic via roundtrip (quartic(0.7) then invQuartic), validates invertibility
+- [x] gain - ✅ GOOD: Tests gain function property (gain(0.5, k) = 0.5 for any k), validates mathematical invariant
+- [x] parabola - ✅ GOOD: Tests parabola at key points (0→0, 0.5→1, 1→0), validates peak at midpoint
+- [x] gaussian - ✅ GOOD: Tests Gaussian at peak (0→1) and at 1 sigma (1→0.606), validates exp(-0.5) calculation
+- [x] map - remap value between ranges - ✅ GOOD: Tests linear remapping (0.5 in [0,1] → 50 in [0,100], 5 in [0,10] → 150 in [100,200])
+- [x] mirror - triangle wave - ✅ GOOD: Tests triangle wave periodicity at multiple periods (0.5, 1.5, 2.5, 3.5 all → 0.5)
+- [x] decimate - quantize value - ✅ GOOD: Tests quantization to 10 levels (0.567 → 0.5), validates floor-based decimation
