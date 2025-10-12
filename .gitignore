@@ -4,3 +4,13 @@
 assets/*
 node_modules
 dist
+
+# don't clutter the repo with ai
+.claude
+.agent
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+copilot-instructions.md
+agent-*.md
+agent-notes
