@@ -1,4 +1,4 @@
-import package::color::space::rgb2hcv::rgb2hcv;
+import lygia::color::space::rgb2hcv::rgb2hcv;
 
 /*
 contributors: Patricio Gonzalez Vivo
@@ -13,4 +13,8 @@ fn rgb2hsl(rgb: vec3f) -> vec3f {
     let L = HCV.z - HCV.y * 0.5;
     let S = HCV.y / (1.0 - abs(L * 2.0 - 1.0) + 1e-10);
     return vec3f(HCV.x, S, L);
+}
+
+fn rgb2hsl4(color: vec4f) -> vec4f {
+    return vec4f(rgb2hsl(color.rgb), color.a);
 }

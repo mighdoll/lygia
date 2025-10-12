@@ -1,9 +1,13 @@
-import package::color::space::{hsv2rgb::hsv2rgb, ryb2rgb::ryb2rgb};
+import lygia::color::space::{hsv2rgb::hsv2rgb, ryb2rgb::ryb2rgb};
+import lygia::math::saturate::saturate3;
 
 /*
 contributors: Patricio Gonzalez Vivo
 description: Convert from HSV to RYB color space
 use: <vec3> hsv2ryb(<vec3> hsv)
+options:
+    - HSV2RYB_FAST: if defined, use CMY bias version
+    - RYB_FAST: if defined, use fast RYB conversion
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/color_ryb.frag
 license:
@@ -11,7 +15,22 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
+@if(!HSV2RYB_FAST && RYB_FAST)
 fn hsv2ryb(v: vec3f) -> vec3f {
     let rgb = hsv2rgb(v);
-    return ryb2rgb(rgb) - saturate(1.-v.z);
+    return ryb2rgb(rgb);
+}
+
+@if(!HSV2RYB_FAST && !RYB_FAST)
+fn hsv2ryb(v: vec3f) -> vec3f {
+    let rgb = hsv2rgb(v);
+    return ryb2rgb(rgb) - saturate3(vec3f(1.0 - v.z));
+}
+
+@if(HSV2RYB_FAST)
+fn hsv2ryb(v: vec3f) -> vec3f {
+    let f = fract(v.x) * 6.0;
+    var c = smoothstep(vec3f(3.0, 0.0, 3.0), vec3f(2.0, 2.0, 4.0), vec3f(f));
+    c += smoothstep(vec3f(4.0, 3.0, 4.0), vec3f(6.0, 4.0, 6.0), vec3f(f)) * vec3f(1.0, -1.0, -1.0);
+    return mix(vec3f(1.0), c, v.y) * v.z;
 }

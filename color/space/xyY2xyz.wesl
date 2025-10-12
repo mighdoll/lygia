@@ -13,3 +13,7 @@ fn xyY2xyz(xyY: vec3f) -> vec3f {
     let z = Y * (1.0 - xyY.x - xyY.y) * f;
     return vec3f(x, Y, z);
 }
+
+fn xyY2xyz4(color: vec4f) -> vec4f {
+    return vec4f(xyY2xyz(color.xyz), color.a);
+}

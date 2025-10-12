@@ -23,3 +23,7 @@ fn rgb2hcv(rgb: vec3f) -> vec3f {
     let H = abs((Q.w - Q.y) / (6.0 * C + 1e-10) + Q.z);
     return vec3f(H, C, Q.x);
 }
+
+fn rgb2hcv4(color: vec4f) -> vec4f {
+    return vec4f(rgb2hcv(color.rgb), color.a);
+}

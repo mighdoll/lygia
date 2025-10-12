@@ -101,11 +101,11 @@ const scale_cs = 0.056;  // Compression slope above scale_lim
 const w1 = vec3(0.5, 1.0, 1.41421356237);            // 0.25, 1.0, 2.0
 const w2 = vec3(0.86602540378, 1.0, 0.54772255751);  // 0.75, 1.0, 0.3
 
-fn sharpenAdaptive(myTexture: texture_2d<f32>,
-                   mySampler: sampler,
-                   st: vec2f,
-                   pixel: vec2f,
-                   strength: f32) -> vec4f {
+fn sharpenAdaptive4(myTexture: texture_2d<f32>,
+                    mySampler: sampler,
+                    st: vec2f,
+                    pixel: vec2f,
+                    strength: f32) -> vec4f {
     // [                c22               ]
     // [           c24, c9,  c23          ]
     // [      c21, c1,  c2,  c3, c18      ]
@@ -282,4 +282,11 @@ fn sharpenAdaptive(myTexture: texture_2d<f32>,
     let sharpdiff_lim = saturate(c0_Y + sharpdiff) - c0_Y;
     let satmul = (c0_Y + max(sharpdiff_lim * 0.9, sharpdiff_lim) * 1.03 + 0.03) / (c0_Y + 0.03);
     return c0_Y + (sharpdiff_lim * 3.0 + sharpdiff) / 4.0 + (c[0] - c0_Y) * satmul;
+}
+
+fn sharpenAdaptive(myTexture: texture_2d<f32>,
+                   mySampler: sampler,
+                   st: vec2f,
+                   pixel: vec2f) -> vec4f {
+    return sharpenAdaptive4(myTexture, mySampler, st, pixel, 1.0);
 }

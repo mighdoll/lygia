@@ -1,0 +1,27 @@
+{
+  "header": "import { expect, test } from \"vitest\";\nimport { expectCloseTo, testCompute } from \"./testUtil.ts\";\n\n",
+  "categories": {
+    "color-space.test.ts": {
+      "patterns": ["2rgb", "rgb2", "2xyz", "xyz2", "2lab", "lab2", "2lch", "lch2",
+                   "2hsl", "hsl2", "2hsv", "hsv2", "2hcy", "hcy2", "2oklab", "oklab2",
+                   "2yuv", "yuv2", "2YPbPr", "YPbPr2", "2YCbCr", "YCbCr2",
+                   "2srgb", "srgb2", "2xyY", "xyY2", "2lms", "lms2", "gamma2", "2gamma",
+                   "ryb", "cmyk", "yiq"]
+    },
+    "color-blend.test.ts": {
+      "patterns": ["blend"]
+    },
+    "color-composite.test.ts": {
+      "patterns": ["composite", "layer"]
+    },
+    "color-adjust.test.ts": {
+      "tests": ["desaturate", "desaturate4", "contrast", "contrast3", "contrastMatrix",
+                "brightnessMatrix", "levelsInputRange3", "levelsGamma3", "levels3Float",
+                "tonemapReinhard3", "tonemapUnreal3", "tonemapLinear3", "vibrance",
+                "hueShift", "ditherBayer"]
+    },
+    "color-util.test.ts": {
+      "tests": ["luminance", "luminance4", "luma", "colorDistance", "mixOklab"]
+    }
+  }
+}

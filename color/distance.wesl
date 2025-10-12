@@ -1,4 +1,4 @@
-import package::color::space::{
+import lygia::color::space::{
     rgb2lab::rgb2lab, 
     rgb2YCbCr::rgb2YCbCr, 
     rgb2YPbPr::rgb2YPbPr, 
@@ -53,4 +53,13 @@ fn colorDistanceYUV(rgb1 : vec3<f32>, rgb2 : vec3<f32>) -> f32 {
 }
 fn colorDistanceOKLAB(rgb1 : vec3<f32>, rgb2 : vec3<f32>) -> f32 {
     return distance(rgb2oklab(rgb1), rgb2oklab(rgb2));
+}
+
+// Default function using CIE94
+fn colorDistance(rgb1: vec3f, rgb2: vec3f) -> f32 {
+    return colorDistanceLABCIE94(rgb1, rgb2);
+}
+
+fn colorDistance4(rgb1: vec4f, rgb2: vec4f) -> f32 {
+    return colorDistanceLABCIE94(rgb1.rgb, rgb2.rgb);
 }

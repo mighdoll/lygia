@@ -11,3 +11,6 @@ fn rgb2hsv(c: vec3f) -> vec3f {
     let e = 1.0e-10;
     return vec3f(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x);
 }
+fn rgb2hsv4(color: vec4f) -> vec4f {
+    return vec4f(rgb2hsv(color.rgb), color.a);
+}

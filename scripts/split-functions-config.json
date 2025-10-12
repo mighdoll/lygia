@@ -1,0 +1,47 @@
+{
+  "header": "import { expect, test } from \"vitest\";\nimport { expectCloseTo, testCompute } from \"./testUtil.ts\";\n\n",
+  "categories": {
+    "generative.test.ts": {
+      "tests": [
+        "cnoise2",
+        "cnoise3",
+        "snoise2",
+        "snoise3",
+        "pnoise2",
+        "srandom2",
+        "worley2",
+        "noised2",
+        "noised3",
+        "wavelet2",
+        "wavelet3",
+        "waveletScaled2"
+      ]
+    },
+    "lighting-misc.test.ts": {
+      "tests": [
+        "fresnel",
+        "fresnelReflection",
+        "raymarchCast",
+        "specularCookTorrance"
+      ]
+    },
+    "math-from-functions.test.ts": {
+      "tests": [
+        "aafloor",
+        "aafract",
+        "cubicMix",
+        "permute",
+        "smootherstep",
+        "fmod2",
+        "fmod3",
+        "fmod4"
+      ]
+    },
+    "space-from-functions.test.ts": {
+      "tests": [
+        "fisheye2xyz",
+        "fisheye2xyz - division by zero at center"
+      ]
+    }
+  }
+}

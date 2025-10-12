@@ -26,3 +26,8 @@ fn rgb2hue(rgb: vec3f) -> f32 {
     let d = q.x - min(q.w, q.y);
     return abs(q.z + (q.w - q.y) / (6. * d + 1e-10));
 }
+
+fn rgb2hue4(color: vec4f) -> vec4f {
+    let hue = rgb2hue(color.rgb);
+    return vec4f(hue, hue, hue, color.a);
+}

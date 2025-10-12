@@ -56,7 +56,7 @@ fn random4(p: vec4f) -> f32 {
     var pos = p;
     if (RANDOM_SINLESS) {
         pos = fract(pos * RANDOM_SCALE);
-        pos += dot(pos, pos.wzxy+33.33);
+        pos += dot(pos, pos.wzxy + 33.33);
         return fract((pos.x + pos.y) * (pos.z + pos.w));
     } else {
         let dot_product = dot(pos, vec4(12.9898,78.233,45.164,94.673));

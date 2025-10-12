@@ -1,5 +1,5 @@
-import package::color::blend::lighten::blendLighten;
-import package::color::blend::darken::blendDarken;
+import lygia::color::blend::lighten::blendLighten;
+import lygia::color::blend::darken::blendDarken;
 
 /*
 contributors: Jamie Owen

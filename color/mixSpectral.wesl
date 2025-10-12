@@ -1,4 +1,4 @@
-import package::color::space::xyz2srgb::XYZ2RGB;
+import lygia::color::space::xyz2rgb::XYZ2RGB;
 
 /*
 contributors: Ronald van Wijnen (@OneDayOfCrypto)
@@ -203,4 +203,8 @@ fn mixSpectral(A: vec3f, B: vec3f, pct: f32) -> vec3f {
     R[37] = 1.0 + KS37 - sqrt(pow(KS37, 2.0) + 2.0 * KS37);
 
     return XYZ2RGB * mixSpectral_reflectance_to_xyz(R);
+}
+
+fn mixSpectral4(A: vec4f, B: vec4f, pct: f32) -> vec4f {
+    return vec4f(mixSpectral(A.rgb, B.rgb, pct), mix(A.a, B.a, pct));
 }

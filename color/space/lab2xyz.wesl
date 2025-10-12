@@ -15,3 +15,7 @@ fn lab2xyz(c : vec3f) -> vec3f {
     let c1 = (f - 16.0 / 116.0) / 7.787;
     return vec3f(95.047, 100.000, 108.883) * mix(c0, c1, step(f, vec3f(0.206897)));
 }
+
+fn lab2xyz4(c: vec4f) -> vec4f {
+    return vec4f(lab2xyz(c.xyz), c.a);
+}

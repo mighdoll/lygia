@@ -1,0 +1,225 @@
+# Indirectly Tested Functions
+#
+# This file lists WESL functions that appear "untested" but are actually
+# validated through other tested functions. These should be excluded from
+# the untested functions report.
+#
+# Format: One full import path per line (lygia::category::module::function)
+# Lines starting with # are comments and will be ignored
+
+# Color Composite - scalar/vec3 variants called by tested vec4 functions
+lygia::color::composite::compositeXor::compositeXor
+lygia::color::composite::destinationAtop::compositeDestinationAtop
+lygia::color::composite::destinationIn::compositeDestinationIn
+lygia::color::composite::destinationOut::compositeDestinationOut
+lygia::color::composite::destinationOver::compositeDestinationOver
+lygia::color::composite::sourceAtop::compositeSourceAtop
+lygia::color::composite::sourceIn::compositeSourceIn
+lygia::color::composite::sourceOut::compositeSourceOut
+lygia::color::composite::sourceOver::compositeSourceOver
+
+# Color Blend - called by tested functions
+lygia::color::blend::softLight::blendSoftLight4
+lygia::color::blend::color::blendColorOpacity
+
+# Color Dither - all variants call base functions that are tested
+lygia::color::dither::blueNoise::ditherBlueNoisePrecision
+lygia::color::dither::blueNoise::ditherBlueNoise1
+lygia::color::dither::blueNoise::ditherBlueNoise4
+lygia::color::dither::blueNoise::ditherBlueNoise1Simple
+lygia::color::dither::blueNoise::ditherBlueNoise3Simple
+lygia::color::dither::blueNoise::ditherBlueNoise4Simple
+lygia::color::dither::blueNoise::ditherBlueNoise4Precision
+lygia::color::dither::vlachos::ditherVlachos
+lygia::color::dither::vlachos::ditherVlachos1
+lygia::color::dither::vlachos::ditherVlachos3Noise
+lygia::color::dither::vlachos::ditherVlachos3Precision
+
+# Color Misc - tested via other functions
+lygia::color::mixSpectral::mixSpectral_reflectance_to_xyz
+
+# Math - component-wise wrappers (vector variants of tested scalar functions)
+lygia::math::bump::bump3
+lygia::math::bump::bump4
+lygia::math::cubic::cubic2
+lygia::math::cubic::cubic3
+lygia::math::cubic::cubic4
+lygia::math::cubicMix::cubicMix2
+lygia::math::cubicMix::cubicMix3
+lygia::math::cubicMix::cubicMix4
+lygia::math::decimate::decimate2
+lygia::math::decimate::decimate3
+lygia::math::decimate::decimate4
+lygia::math::gaussian::gaussian2
+lygia::math::gaussian::gaussian3
+lygia::math::gaussian::gaussian4
+lygia::math::invCubic::invCubic2
+lygia::math::invCubic::invCubic3
+lygia::math::invCubic::invCubic4
+lygia::math::invQuartic::invQuartic2
+lygia::math::invQuartic::invQuartic3
+lygia::math::invQuartic::invQuartic4
+lygia::math::map::map2
+lygia::math::map::map3
+lygia::math::map::map4
+lygia::math::mirror::mirror2
+lygia::math::mmax::mmax4
+lygia::math::mmin::mmin4
+lygia::math::pow2::pow23
+lygia::math::pow2::pow24
+lygia::math::pow3::pow32
+lygia::math::pow3::pow33
+lygia::math::pow3::pow34
+lygia::math::pow5::pow52
+lygia::math::pow5::pow53
+lygia::math::pow5::pow54
+lygia::math::pow7::pow72
+lygia::math::pow7::pow73
+lygia::math::pow7::pow74
+lygia::math::powFast::powFast2
+lygia::math::powFast::powFast3
+lygia::math::powFast::powFast4
+lygia::math::quartic::quartic2
+lygia::math::quartic::quartic3
+lygia::math::quartic::quartic4
+
+# Math - distance functions (component-wise variants)
+lygia::math::dist::dist2
+lygia::math::dist::dist3
+lygia::math::dist::dist4
+lygia::math::dist::distChebychev2
+lygia::math::dist::distChebychev3
+lygia::math::dist::distChebychev4
+lygia::math::dist::distEuclidean3
+lygia::math::dist::distEuclidean4
+lygia::math::dist::distManhattan3
+lygia::math::dist::distManhattan4
+lygia::math::dist::distMinkowski2
+lygia::math::dist::distMinkowski3
+lygia::math::dist::distMinkowski4
+
+# Math - utility functions called internally (tested via cnoise/pnoise)
+lygia::math::mod289::mod289_2
+lygia::math::mod289::mod289_3
+lygia::math::mod289::mod289_4
+lygia::math::permute::permute2
+lygia::math::permute::permute3
+lygia::math::permute::permute4
+lygia::math::mod2::mod22
+
+# Math - other utilities
+lygia::math::inside::inside3
+lygia::math::inside::insideAABB
+lygia::math::lengthSq::lengthSq4
+lygia::math::quat::mul::quatMulScalar
+
+# Space - rotation function variants
+lygia::space::rotate::rotate3_c
+lygia::space::rotate::rotate4
+lygia::space::rotate::rotate4_c
+lygia::space::rotate::rotate_axis
+lygia::space::rotateX::rotateX3_c
+lygia::space::rotateX::rotateX4
+lygia::space::rotateX::rotateX4_c
+lygia::space::rotateY::rotateY3_c
+lygia::space::rotateY::rotateY4
+lygia::space::rotateY::rotateY4_c
+lygia::space::rotateZ::rotateZ3_c
+lygia::space::rotateZ::rotateZ4
+lygia::space::rotateZ::rotateZ4_c
+
+# Space - scale function variants
+lygia::space::scale::scale2_c
+lygia::space::scale::scale2_f_c
+lygia::space::scale::scale3_c
+lygia::space::scale::scale3_f
+lygia::space::scale::scale3_f_c
+lygia::space::scale::scale4
+lygia::space::scale::scale4_f
+lygia::space::scale::scale_f
+lygia::space::scale::scale_f_c
+
+# Space - tiling functions (called by tested functions or just add defaults)
+lygia::space::brickTile::brickTile
+lygia::space::brickTile::brickTile_s
+lygia::space::brickTile::brickTile_s2
+lygia::space::checkerTile::checkerTile
+lygia::space::checkerTile::checkerTile_s
+lygia::space::checkerTile::checkerTile_s2
+lygia::space::mirrorTile::mirrorTile
+lygia::space::mirrorTile::mirrorTile_s
+lygia::space::mirrorTile::mirrorTile_s2
+lygia::space::mirrorTile::mirrorXTile
+lygia::space::mirrorTile::mirrorXTile2
+lygia::space::mirrorTile::mirrorXTile_s
+lygia::space::mirrorTile::mirrorXTile_s2
+lygia::space::mirrorTile::mirrorYTile
+lygia::space::mirrorTile::mirrorYTile2
+lygia::space::mirrorTile::mirrorYTile_s
+lygia::space::mirrorTile::mirrorYTile_s2
+lygia::space::windmillTile::windmillTile_s
+lygia::space::sqTile::sqTile_scale
+lygia::space::triTile::triTile_scale
+
+# Space - transform functions (component-wise or with defaults)
+lygia::space::flipY::flipY3
+lygia::space::flipY::flipY4
+lygia::space::center::center3
+lygia::space::uncenter::uncenter3
+lygia::space::cart2polar::cart2polar3
+lygia::space::polar2cart::polar2cart3
+lygia::space::kaleidoscope::kaleidoscope_full
+lygia::space::kaleidoscope::kaleidoscope_seg
+lygia::space::depth2viewZ::depth2viewZ_default
+lygia::space::linearizeDepth::linearizeDepth_default
+lygia::space::viewZ2depth::viewZ2depth_default
+
+# Space - lookAt variants (call base lookAt function)
+lygia::space::lookAt::lookAt1
+lygia::space::lookAt::lookAt3
+lygia::space::lookAt::lookAt3Roll
+
+# Space - tbn variant
+lygia::space::tbn::tbn_up
+
+# Filter - sharpen internal helpers (all used by tested sharpenAdaptive)
+lygia::filter::sharpen::adaptive::SHARPENADAPTIVE_CTRL
+lygia::filter::sharpen::adaptive::SHARPENADAPTIVE_DIFF
+lygia::filter::sharpen::adaptive::SHARPENADAPTIVE_DXDY
+lygia::filter::sharpen::adaptive::SHARPENADAPTIVE_SOFT_LIM
+lygia::filter::sharpen::adaptive::SHARPENADAPTIVE_WPMEAN
+lygia::filter::sharpen::adaptive::sharpendAdaptiveControl3
+
+# Math - additional component-wise wrappers (added Oct 2025)
+lygia::math::quintic::quintic2
+lygia::math::quintic::quintic3
+lygia::math::quintic::quintic4
+lygia::math::round::round2
+lygia::math::round::round3
+lygia::math::round::round4
+lygia::math::saturate::saturate2
+lygia::math::saturate::saturate4
+lygia::math::saturateMediump::saturateMediump2
+lygia::math::saturateMediump::saturateMediump3
+lygia::math::saturateMediump::saturateMediump4
+lygia::math::smootherstep::smootherstep2
+lygia::math::smootherstep::smootherstep3
+lygia::math::smootherstep::smootherstep4
+lygia::math::taylorInvSqrt::taylorInvSqrt2
+lygia::math::taylorInvSqrt::taylorInvSqrt3
+lygia::math::taylorInvSqrt::taylorInvSqrt4
+lygia::math::sum::sum
+lygia::math::sum::sum4
+lygia::math::within::within3
+lygia::math::within::within4
+
+# Space - windmillTile variants (all call windmillTile2 which is tested)
+lygia::space::windmillTile::windmillTile
+lygia::space::windmillTile::windmillTile_s2
+lygia::space::windmillTile::windmillTile_turn
+
+# Lighting - functions tested via grouped imports (Oct 2025)
+lygia::lighting::fresnel::fresnelRoughness
+lygia::lighting::common::smithGGXCorrelated::smithGGXCorrelated_Fast
+
+# Note: pnoise3, pnoise4, and cnoise4 are now directly tested as of Oct 2025
