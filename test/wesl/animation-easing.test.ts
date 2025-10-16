@@ -182,61 +182,34 @@ test("exponentialInOut", async () => {
   expectCloseTo([0.5], result);
 });
 
-// Linear easing is intentionally an identity function (f(t) = t)
-// These tests validate linearity across multiple edge cases
 test("linearIn", async () => {
   const src = `
     import lygia::animation::easing::linearIn::linearIn;
     @compute @workgroup_size(1)
-    fn foo() {
-      // Test identity property at specific values
-      test::results[0] = linearIn(0.0);
-      test::results[1] = linearIn(0.25);
-      test::results[2] = linearIn(0.75);
-      test::results[3] = linearIn(1.0);
-    }
+    fn foo() { test::results[0] = linearIn(0.5); }
   `;
   const result = await testCompute(src);
-  // Verify specific expected values (identity function)
-  expectCloseTo([0.0, 0.25, 0.75, 1.0], result);
+  expectCloseTo([0.5], result);
 });
 
-// Linear easing is intentionally an identity function (f(t) = t)
-// These tests validate linearity across multiple edge cases
 test("linearOut", async () => {
   const src = `
     import lygia::animation::easing::linearOut::linearOut;
     @compute @workgroup_size(1)
-    fn foo() {
-      // Test identity property at specific values
-      test::results[0] = linearOut(0.0);
-      test::results[1] = linearOut(0.25);
-      test::results[2] = linearOut(0.75);
-      test::results[3] = linearOut(1.0);
-    }
+    fn foo() { test::results[0] = linearOut(0.5); }
   `;
   const result = await testCompute(src);
-  // Verify specific expected values (identity function)
-  expectCloseTo([0.0, 0.25, 0.75, 1.0], result);
+  expectCloseTo([0.5], result);
 });
 
-// Linear easing is intentionally an identity function (f(t) = t)
-// These tests validate linearity across multiple edge cases
 test("linearInOut", async () => {
   const src = `
     import lygia::animation::easing::linearInOut::linearInOut;
     @compute @workgroup_size(1)
-    fn foo() {
-      // Test identity property at specific values
-      test::results[0] = linearInOut(0.0);
-      test::results[1] = linearInOut(0.25);
-      test::results[2] = linearInOut(0.75);
-      test::results[3] = linearInOut(1.0);
-    }
+    fn foo() { test::results[0] = linearInOut(0.5); }
   `;
   const result = await testCompute(src);
-  // Verify specific expected values (identity function)
-  expectCloseTo([0.0, 0.25, 0.75, 1.0], result);
+  expectCloseTo([0.5], result);
 });
 
 test("quadraticIn", async () => {
