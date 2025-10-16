@@ -1,13 +1,13 @@
 import { expect } from "vitest";
 import {
+  createCheckerboardTexture,
+  createGradientTexture,
+  createSampler,
+  createSolidTexture,
   getGPUDevice,
   testComputeShader,
   testFragmentShader,
   type WgslElementType,
-  createSolidTexture,
-  createGradientTexture,
-  createCheckerboardTexture,
-  createSampler,
 } from "wesl-debug";
 
 const projectDir = import.meta.url;
