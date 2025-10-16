@@ -11,9 +11,7 @@ use:
     - <vec4f|vec3f|f32> ditherBayer(<vec4f|vec3f|f32> value)
     - <f32> ditherBayer(<vec2f> xy)
 options:
-    - DITHER_BAKER_COORD: coordinate to use (default: vec2f(0.0))
     - DITHER_BAYER_PRECISION: precision for decimation (default: 256)
-    - DITHER_PRECISION: global dither precision (default: 256)
 examples:
     - /shaders/color_dither_bayer.frag
 license:
@@ -21,15 +19,8 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
-@if(!DITHER_BAKER_COORD)
-const DITHER_BAKER_COORD = vec2f(0.0);
-
-@if(!DITHER_BAYER_PRECISION && DITHER_PRECISION)
-const DITHER_BAYER_PRECISION: i32 = DITHER_PRECISION;
-
-@if(!DITHER_BAYER_PRECISION && !DITHER_PRECISION)
+// LATER make this a @param const when WESL supports that
 const DITHER_BAYER_PRECISION: i32 = 256;
-
 
 // Core Bayer matrix function using 8x8 pattern
 fn ditherBayer(xy: vec2f) -> f32 {
@@ -72,26 +63,4 @@ fn ditherBayer3(color: vec3f, xy: vec2f) -> vec3f {
 
 fn ditherBayer4(color: vec4f, xy: vec2f) -> vec4f {
     return vec4f(ditherBayer3Precision(color.rgb, xy, DITHER_BAYER_PRECISION), color.a);
-}
-
-// Overloads with precision but using default coordinate
-fn ditherBayerPrecision3(color: vec3f, pres: i32) -> vec3f {
-    return ditherBayer3Precision(color, DITHER_BAKER_COORD, pres);
-}
-
-fn ditherBayerPrecision4(color: vec4f, pres: i32) -> vec4f {
-    return vec4f(ditherBayer3Precision(color.rgb, DITHER_BAKER_COORD, pres), color.a);
-}
-
-// Overloads using both default coordinate and precision
-fn ditherBayer1(val: f32) -> f32 {
-    return ditherBayer3Precision(vec3f(val), DITHER_BAKER_COORD, DITHER_BAYER_PRECISION).r;
-}
-
-fn ditherBayer3Simple(color: vec3f) -> vec3f {
-    return ditherBayer3Precision(color, DITHER_BAKER_COORD, DITHER_BAYER_PRECISION);
-}
-
-fn ditherBayer4Simple(color: vec4f) -> vec4f {
-    return vec4f(ditherBayer3Precision(color.rgb, DITHER_BAKER_COORD, DITHER_BAYER_PRECISION), color.a);
 }
