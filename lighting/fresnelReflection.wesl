@@ -14,7 +14,8 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
-@if(!FRESNEL_REFLECTION_RGB)
+// LATER make this a @param const when WESL supports
+// Default wavelengths for Fresnel reflection
 const FRESNEL_REFLECTION_RGB: vec3f = vec3f(612.0, 549.0, 464.0);
 
 // Note: fresnelReflection requires envMap function which is not yet available in WESL
