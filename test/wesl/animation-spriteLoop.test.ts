@@ -8,12 +8,11 @@ const projectDir = import.meta.url;
 // spriteLoop requires texture/sampler which cannot be easily tested in compute shaders
 // Using fragment shader approach with sprite sheet texture
 //
-// NOTE: The sprite function has a non-intuitive index mapping for a 4x4 grid:
+// NOTE: The sprite function indices go bottom to top, left to right
 //   index 0 → texture frame 12 (bottom-left)
 //   index 4 → texture frame 8
 //   index 8 → texture frame 4
 //   index 12 → texture frame 0 (top-left)
-// Indices go bottom-to-top, left-to-right
 
 test("spriteLoop - index 0", async () => {
   const device = await getGPUDevice();
