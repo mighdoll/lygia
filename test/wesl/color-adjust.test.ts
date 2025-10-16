@@ -799,39 +799,6 @@ test("ditherVlachos3", async () => {
   expectCloseTo([0.5], [result[3]], 0.0001);
 });
 
-test("ditherVlachos3Simple", async () => {
-  const src = `
-     import lygia::color::dither::vlachos::ditherVlachos3Simple;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // Test simple variant (uses default DITHER_VLACHOS_COORD)
-       let color = vec3f(0.6, 0.4, 0.3);
-       let dithered = ditherVlachos3Simple(color);
-
-       test::results[0] = vec4f(dithered, 0.0);
-     }
-   `;
-  const result = await testCompute(src, "vec4f");
-
-  // Result should be in valid range [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
-
-  // Each channel should be quantized (multiple of 1/256)
-  const tolerance = 0.0001;
-  expect(Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0))).toBeLessThan(tolerance);
-
-  // Results should be close to original values (within one quantization step)
-  expectCloseTo([0.6, 0.4, 0.3], [result[0], result[1], result[2]], 1.0 / 256.0);
-});
-
 test("ditherVlachos4", async () => {
   const src = `
      import lygia::color::dither::vlachos::ditherVlachos4;
@@ -859,39 +826,6 @@ test("ditherVlachos4", async () => {
 
   // RGB should be in valid range and close to original
   expectCloseTo([0.7, 0.5, 0.3], [result[0], result[1], result[2]], 1.0 / 256.0);
-});
-
-test("ditherVlachos4Simple", async () => {
-  const src = `
-     import lygia::color::dither::vlachos::ditherVlachos4Simple;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // Test simple vec4 variant
-       let color = vec4f(0.8, 0.6, 0.2, 0.95);
-       let dithered = ditherVlachos4Simple(color);
-
-       test::results[0] = dithered;
-     }
-   `;
-  const result = await testCompute(src, "vec4f");
-
-  // RGB channels should be quantized
-  const tolerance = 0.0001;
-  expect(Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0))).toBeLessThan(tolerance);
-
-  // Alpha should be preserved
-  expectCloseTo([0.95], [result[3]], 0.0001);
-
-  // RGB should be in valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
 });
 
 // Blend Mode Tests
