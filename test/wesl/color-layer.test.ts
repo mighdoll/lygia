@@ -71,13 +71,15 @@ test("layerColorBurnSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.92);
 
   // Verify color burn darkens the image
-  // Color burn formula: 1 - (1 - base) / blend
-  // This creates a darkening effect similar to overexposure in photography
-  // Result should be darker than both input colors
-  expect(result[0]).toBeLessThan(0.6); // Darkened from src
-  expect(result[0]).toBeGreaterThan(0.0); // Not completely black
-  expect(result[1]).toBeLessThan(0.5);
-  expect(result[2]).toBeLessThan(0.5);
+  // Color burn formula: max((1 - (1 - base) / blend), 0)
+  // For these values, all channels produce 0 or near-0 after blending:
+  // R: max(1 - (1 - 0.4) / 0.6, 0) = max(1 - 1.0, 0) = 0.0
+  // G: max(1 - (1 - 0.3) / 0.5, 0) = max(1 - 1.4, 0) = 0.0
+  // B: max(1 - (1 - 0.5) / 0.4, 0) = max(1 - 1.25, 0) = 0.0
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.048, 3); // 0.0*0.8 + 0.4*0.6*0.2
+  expect(result[1]).toBeCloseTo(0.036, 3); // 0.0*0.8 + 0.3*0.6*0.2
+  expect(result[2]).toBeCloseTo(0.06, 3);  // 0.0*0.8 + 0.5*0.6*0.2
 });
 
 test("layerColorBurnSourceOver4 - with black blend", async () => {
@@ -95,10 +97,11 @@ test("layerColorBurnSourceOver4 - with black blend", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Black color burn should produce very dark or black result
-  expect(result[0]).toBeLessThan(0.1);
-  expect(result[1]).toBeLessThan(0.1);
-  expect(result[2]).toBeLessThan(0.1);
+  // When blend is black (0.0), color burn returns 0.0
+  // Then source-over: 0.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.096, 3); // 0.0*0.8 + 0.8*0.6*0.2
+  expect(result[1]).toBeCloseTo(0.072, 3); // 0.0*0.8 + 0.6*0.6*0.2
+  expect(result[2]).toBeCloseTo(0.048, 3); // 0.0*0.8 + 0.4*0.6*0.2
 });
 
 test("layerColorDodgeSourceOver4", async () => {
@@ -119,12 +122,14 @@ test("layerColorDodgeSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify color dodge brightens the image
-  // Color dodge formula: base / (1 - blend)
-  // This creates a brightening effect similar to underexposure in photography
-  // Result should be brighter than both input colors
-  expect(result[0]).toBeGreaterThan(0.3); // Brightened from dst
-  expect(result[1]).toBeGreaterThan(0.4);
-  expect(result[2]).toBeGreaterThan(0.5);
+  // Color dodge formula: min(base / (1 - blend), 1.0) where base=src, blend=dst
+  // R: min(0.4 / (1 - 0.3), 1.0) = min(0.4 / 0.7, 1.0) ≈ 0.571
+  // G: min(0.5 / (1 - 0.4), 1.0) = min(0.5 / 0.6, 1.0) ≈ 0.833
+  // B: min(0.6 / (1 - 0.5), 1.0) = min(0.6 / 0.5, 1.0) = 1.0
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.445, 3); // 0.571*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.643, 3); // 0.833*0.7 + 0.4*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.775, 3); // 1.0*0.7 + 0.5*0.5*0.3
 });
 
 test("layerColorDodgeSourceOver4 - with white blend", async () => {
@@ -142,11 +147,11 @@ test("layerColorDodgeSourceOver4 - with white blend", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // White color dodge should produce very bright or white result (clamped to 1.0)
-  // With alpha compositing, the result will be somewhat less than 1.0
-  expect(result[0]).toBeGreaterThan(0.8);
-  expect(result[1]).toBeGreaterThan(0.8);
-  expect(result[2]).toBeGreaterThan(0.8);
+  // When blend is white (1.0), color dodge returns 1.0
+  // Then source-over: 1.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.83, 2); // 1.0*0.8 + 0.3*0.5*0.2
+  expect(result[1]).toBeCloseTo(0.84, 2); // 1.0*0.8 + 0.4*0.5*0.2
+  expect(result[2]).toBeCloseTo(0.85, 2); // 1.0*0.8 + 0.5*0.5*0.2
 });
 
 test("layerColorSourceOver4", async () => {
@@ -217,18 +222,14 @@ test("layerGlowSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
 
-  // Verify glow effect (reflect with swapped parameters)
-  // Glow should create a brightening/reflective effect
-  // Result should show interaction between channels
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
-
-  // At least one channel should show brightening
-  const maxResult = Math.max(result[0], result[1], result[2]);
-  const maxSrc = Math.max(0.4, 0.6, 0.2);
-  const maxDst = Math.max(0.5, 0.3, 0.8);
-  expect(maxResult).toBeGreaterThanOrEqual(Math.min(maxSrc, maxDst) * 0.5);
+  // Glow = reflect(dst, src) where reflect(blend, base) = min(blend² / (1-base), 1)
+  // R: reflect(0.5, 0.4) = min(0.25 / 0.6, 1) ≈ 0.417
+  // G: reflect(0.3, 0.6) = min(0.09 / 0.4, 1) = 0.225
+  // B: reflect(0.8, 0.2) = min(0.64 / 0.8, 1) = 0.8
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.393, 2); // 0.417*0.8 + 0.5*0.6*0.2
+  expect(result[1]).toBeCloseTo(0.216, 2); // 0.225*0.8 + 0.3*0.6*0.2
+  expect(result[2]).toBeCloseTo(0.736, 2); // 0.8*0.8 + 0.8*0.6*0.2
 });
 
 test("layerHardLightSourceOver4", async () => {
@@ -248,12 +249,14 @@ test("layerHardLightSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify hard light creates strong contrast
-  // Hard light: if blend < 0.5, multiply; else screen
-  // This should show visible blending, not just pass-through
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Hard light: blendHardLight(src, dst) = blendOverlay(dst, src)
+  // R: dst=0.3 < 0.5 → 2*0.3*0.4 = 0.24
+  // G: dst=0.5 ≥ 0.5 → 1 - 2*(1-0.5)*(1-0.6) = 1 - 2*0.5*0.4 = 0.6
+  // B: dst=0.7 ≥ 0.5 → 1 - 2*(1-0.7)*(1-0.8) = 1 - 2*0.3*0.2 = 0.88
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.213, 2); // 0.24*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.495, 2); // 0.6*0.7 + 0.5*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.721, 2); // 0.88*0.7 + 0.7*0.5*0.3
 });
 
 test("layerHardLightSourceOver4 - dark blend", async () => {
@@ -271,10 +274,13 @@ test("layerHardLightSourceOver4 - dark blend", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Dark blend should darken the result
-  expect(result[0]).toBeLessThan(0.8); // Darker than dst
-  expect(result[1]).toBeLessThan(0.8);
-  expect(result[2]).toBeLessThan(0.8);
+  // Hard light: blendHardLight(src, dst) = blendOverlay(dst, src)
+  // With src=0.2, dst=0.8: overlay checks if base (dst=0.8) < 0.5? No
+  // Since dst >= 0.5: 1 - 2*(1-dst)*(1-src) = 1 - 2*0.2*0.8 = 0.68
+  // With full opacity, source-over just returns the blend result
+  expect(result[0]).toBeCloseTo(0.68, 2);
+  expect(result[1]).toBeCloseTo(0.68, 2);
+  expect(result[2]).toBeCloseTo(0.68, 2);
 });
 
 test("layerHardLightSourceOver4 - light blend", async () => {
@@ -292,10 +298,13 @@ test("layerHardLightSourceOver4 - light blend", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Light blend should brighten the result
-  expect(result[0]).toBeGreaterThan(0.2); // Brighter than dst
-  expect(result[1]).toBeGreaterThan(0.2);
-  expect(result[2]).toBeGreaterThan(0.2);
+  // Hard light: blendHardLight(src, dst) = blendOverlay(dst, src)
+  // With src=0.8, dst=0.2: overlay checks if base (dst=0.2) < 0.5? Yes
+  // Since dst < 0.5: 2*dst*src = 2*0.2*0.8 = 0.32
+  // With full opacity, source-over just returns the blend result
+  expect(result[0]).toBeCloseTo(0.32, 2);
+  expect(result[1]).toBeCloseTo(0.32, 2);
+  expect(result[2]).toBeCloseTo(0.32, 2);
 });
 
 test("layerHardMixSourceOver4", async () => {
@@ -413,13 +422,14 @@ test("layerLinearBurnSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
 
-  // Verify linear burn darkening: max(src + dst - 1, 0)
-  // This should produce darker results than either input
-  // Example: 0.6 + 0.4 - 1 = 0.0 (clamped)
-  // All channels should be darkened (considering alpha compositing)
-  expect(result[0]).toBeLessThan(Math.max(0.6, 0.4));
-  expect(result[1]).toBeLessThan(Math.max(0.5, 0.3));
-  expect(result[2]).toBeLessThan(Math.max(0.7, 0.2));
+  // Verify linear burn darkening: max(base + blend - 1, 0)
+  // R: max(0.4 + 0.6 - 1, 0) = 0.0
+  // G: max(0.3 + 0.5 - 1, 0) = 0.0
+  // B: max(0.2 + 0.7 - 1, 0) = 0.0
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.048, 3); // 0.0*0.8 + 0.4*0.6*0.2
+  expect(result[1]).toBeCloseTo(0.036, 3); // 0.0*0.8 + 0.3*0.6*0.2
+  expect(result[2]).toBeCloseTo(0.024, 3); // 0.0*0.8 + 0.2*0.6*0.2
 });
 
 test("layerLinearBurnSourceOver4 - complete darkening", async () => {
@@ -460,13 +470,14 @@ test("layerLinearDodgeSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify linear dodge brightening: min(src + dst, 1.0)
-  // This should produce brighter results than either input
-  // Example: min(0.4 + 0.3, 1.0) = 0.7
-  // All channels should show additive brightening (considering alpha compositing)
-  expect(result[0]).toBeGreaterThan(Math.max(0.4, 0.3) * 0.5);
-  expect(result[1]).toBeGreaterThan(Math.max(0.5, 0.2) * 0.5);
-  expect(result[2]).toBeGreaterThan(Math.max(0.6, 0.1) * 0.5);
+  // Verify linear dodge brightening: min(base + blend, 1.0)
+  // R: min(0.3 + 0.4, 1.0) = 0.7
+  // G: min(0.2 + 0.5, 1.0) = 0.7
+  // B: min(0.1 + 0.6, 1.0) = 0.7
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.535, 3); // 0.7*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.52, 3);  // 0.7*0.7 + 0.2*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.505, 3); // 0.7*0.7 + 0.1*0.5*0.3
 });
 
 test("layerLinearDodgeSourceOver4 - clamping at white", async () => {
@@ -507,11 +518,14 @@ test("layerLinearLightSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify linear light: if blend < 0.5, linear burn; else linear dodge
-  // This creates strong contrast with both darkening and brightening
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Linear light: if blend < 0.5, linearBurn(base, blend*2); else linearDodge(base, (blend-0.5)*2)
+  // R: dst=0.3 < 0.5 → linearBurn(0.4, 0.6) = max(0.4+0.6-1, 0) = 0.0
+  // G: dst=0.5 ≥ 0.5 → linearDodge(0.5, 0.0) = min(0.5+0.0, 1) = 0.5
+  // B: dst=0.7 ≥ 0.5 → linearDodge(0.6, 0.4) = min(0.6+0.4, 1) = 1.0
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.045, 3); // 0.0*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.425, 3); // 0.5*0.7 + 0.5*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.805, 3); // 1.0*0.7 + 0.7*0.5*0.3
 });
 
 test("layerLinearLightSourceOver4 - extreme contrast", async () => {
@@ -603,12 +617,13 @@ test("layerNegationSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.8);
 
   // Verify negation formula: 1 - abs(1 - base - blend)
-  // Example: R channel: 1 - abs(1 - 0.4 - 0.7) = 1 - abs(-0.1) = 1 - 0.1 = 0.9
-  // This creates a unique blending effect
-  // All channels should be affected by negation formula
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // R: 1 - abs(1 - 0.4 - 0.7) = 1 - abs(-0.1) = 0.9
+  // G: 1 - abs(1 - 0.6 - 0.5) = 1 - abs(-0.1) = 0.9
+  // B: 1 - abs(1 - 0.8 - 0.3) = 1 - abs(-0.1) = 0.9
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.62, 2); // 0.9*0.6 + 0.4*0.5*0.4
+  expect(result[1]).toBeCloseTo(0.66, 2); // 0.9*0.6 + 0.6*0.5*0.4
+  expect(result[2]).toBeCloseTo(0.70, 2); // 0.9*0.6 + 0.8*0.5*0.4
 });
 
 test("layerNegationSourceOver4 - complementary colors", async () => {
@@ -697,13 +712,14 @@ test("layerReflectSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
 
-  // Verify reflect creates brightening effect
-  // Formula: base^2 / (1 - blend), clamped to 1.0
-  // This creates a "glow" or reflection-like effect
-  // Result should show brightening (considering alpha compositing)
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Reflect formula: min(base² / (1-blend), 1.0) where base=src, blend=dst
+  // R: min(0.4² / (1-0.5), 1) = min(0.16 / 0.5, 1) = 0.32
+  // G: min(0.6² / (1-0.3), 1) = min(0.36 / 0.7, 1) ≈ 0.514
+  // B: min(0.2² / (1-0.8), 1) = min(0.04 / 0.2, 1) = 0.2
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.316, 2); // 0.32*0.8 + 0.5*0.6*0.2
+  expect(result[1]).toBeCloseTo(0.447, 2); // 0.514*0.8 + 0.3*0.6*0.2
+  expect(result[2]).toBeCloseTo(0.256, 2); // 0.2*0.8 + 0.8*0.6*0.2
 });
 
 test("layerReflectSourceOver4 - extreme reflection", async () => {
@@ -721,11 +737,12 @@ test("layerReflectSourceOver4 - extreme reflection", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // With low blend (0.2), formula: 0.8^2 / (1 - 0.2) = 0.64 / 0.8 = 0.8
-  // However, the parameter order may be swapped, so just verify reflection occurs
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Reflect formula: min(base*base / (1 - blend), 1.0)
+  // With src=0.2 (blend), dst=0.8 (base): min(0.2*0.2 / (1 - 0.8), 1.0) = min(0.04 / 0.2, 1.0) = 0.2
+  // With full opacity, source-over just returns the blend result
+  expect(result[0]).toBeCloseTo(0.2, 2);
+  expect(result[1]).toBeCloseTo(0.2, 2);
+  expect(result[2]).toBeCloseTo(0.2, 2);
 });
 
 test("layerSaturationSourceOver4", async () => {
@@ -801,11 +818,15 @@ test("layerSoftLightSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify soft light creates subtle contrast enhancement
-  // Similar to overlay but with softer transition
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Soft light: if blend < 0.5: 2*base*blend + base²*(1-2*blend)
+  //             else: sqrt(base)*(2*blend-1) + 2*base*(1-blend)
+  // R: dst=0.3 < 0.5 → 2*0.5*0.3 + 0.25*(1-0.6) = 0.3 + 0.1 = 0.4
+  // G: dst=0.5 ≥ 0.5 → sqrt(0.6)*0 + 2*0.6*0.5 = 0.6
+  // B: dst=0.7 ≥ 0.5 → sqrt(0.4)*0.4 + 2*0.4*0.3 ≈ 0.253 + 0.24 = 0.493
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.325, 2); // 0.4*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.495, 2); // 0.6*0.7 + 0.5*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.450, 2); // 0.493*0.7 + 0.7*0.5*0.3
 });
 
 test("layerSoftLightSourceOver4 - subtle contrast", async () => {
@@ -852,12 +873,15 @@ test("layerVividLightSourceOver4", async () => {
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify vivid light creates strong contrast
-  // If blend < 0.5: color burn (darkening)
-  // If blend >= 0.5: color dodge (brightening)
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Vivid light: if blend < 0.5: colorBurn(base, blend*2)
+  //              else: colorDodge(base, (blend-0.5)*2)
+  // R: dst=0.3 < 0.5 → colorBurn(0.5, 0.6) = max(1-(1-0.5)/0.6, 0) ≈ 0.167
+  // G: dst=0.5 ≥ 0.5 → colorDodge(0.6, 0.0) = min(0.6/(1-0), 1) = 0.6
+  // B: dst=0.7 ≥ 0.5 → colorDodge(0.4, 0.4) = min(0.4/(1-0.4), 1) ≈ 0.667
+  // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expect(result[0]).toBeCloseTo(0.162, 2); // 0.167*0.7 + 0.3*0.5*0.3
+  expect(result[1]).toBeCloseTo(0.495, 2); // 0.6*0.7 + 0.5*0.5*0.3
+  expect(result[2]).toBeCloseTo(0.572, 2); // 0.667*0.7 + 0.7*0.5*0.3
 });
 
 test("layerVividLightSourceOver4 - extreme contrast", async () => {
