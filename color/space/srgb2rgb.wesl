@@ -7,6 +7,9 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
+// LATER make this a @param const when WESL supports that
+const SRGB_EPSILON: f32 = 1e-10;
+
 fn srgb2rgb_mono(channel: f32) -> f32 {
     if (channel < 0.04045) {
         return channel * 0.0773993808;
@@ -18,9 +21,9 @@ fn srgb2rgb_mono(channel: f32) -> f32 {
 
 fn srgb2rgb(srgb:vec3f) -> vec3f {
     return vec3f(
-            srgb2rgb_mono(srgb.r + 0.00000001),
-            srgb2rgb_mono(srgb.g + 0.00000001),
-            srgb2rgb_mono(srgb.b + 0.00000001)
+            srgb2rgb_mono(srgb.r + SRGB_EPSILON),
+            srgb2rgb_mono(srgb.g + SRGB_EPSILON),
+            srgb2rgb_mono(srgb.b + SRGB_EPSILON)
         );
 }
 

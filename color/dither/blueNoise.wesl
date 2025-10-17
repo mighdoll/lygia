@@ -20,7 +20,8 @@ license:
 // LATER make this a @param const when WESL supports that
 const DITHER_BLUENOISE_PRECISION: i32 = 256;
 
-// LATER add support for DITHER_BLUENOISE_TIME
+// LATER make this a @param const when WESL supports that
+const DITHER_BLUENOISE_TIME: f32 = 0.0;
 
 // Core blue noise generation function
 fn ditherBlueNoise(inp: vec2f) -> f32 {
@@ -29,6 +30,9 @@ fn ditherBlueNoise(inp: vec2f) -> f32 {
     var p = floor(inp);
     var p1 = p;
 
+    @if(DITHER_BLUENOISE_TIME_ENABLED)
+    p += DITHER_BLUENOISE_TIME;
+    @else
     p += 10.0;
 
     p = floor(p / size) * size;

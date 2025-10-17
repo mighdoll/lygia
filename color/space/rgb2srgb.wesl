@@ -9,6 +9,9 @@ license:
 
 import lygia::math::saturate::saturate3;
 
+// LATER make this a @param const when WESL supports that
+const SRGB_EPSILON: f32 = 1e-10;
+
 fn rgb2srgb_mono(channel: f32) -> f32 {
     if (channel < 0.0031308) {
         return 12.92 * channel;

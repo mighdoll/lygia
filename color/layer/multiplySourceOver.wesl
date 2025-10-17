@@ -1,6 +1,5 @@
 import lygia::color::blend::multiply::blendMultiply3;
-import lygia::color::composite::sourceOver::compositeSourceOver;
-import lygia::color::composite::sourceOver::compositeSourceOver3;
+import lygia::color::composite::sourceOver::{compositeSourceOver, compositeSourceOver3};
 
 /*
 contributors: Patricio Gonzalez Vivo, Anton Marini

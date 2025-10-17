@@ -8,10 +8,13 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
+// LATER make this a @param const when WESL supports that
+const HSL_EPSILON: f32 = 1e-10;
+
 fn rgb2hsl(rgb: vec3f) -> vec3f {
     let HCV = rgb2hcv(rgb);
     let L = HCV.z - HCV.y * 0.5;
-    let S = HCV.y / (1.0 - abs(L * 2.0 - 1.0) + 1e-10);
+    let S = HCV.y / (1.0 - abs(L * 2.0 - 1.0) + HSL_EPSILON);
     return vec3f(HCV.x, S, L);
 }
 
