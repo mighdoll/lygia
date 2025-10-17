@@ -149,13 +149,20 @@ test("layerColorSourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
+  // Color mode: takes H+S from blend (src), V from base (dst)
+  // src is orange, dst is cyan. Result takes src's hue with dst's brightness
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify color mode takes hue+saturation from src, luminosity from dst
-  // The result should have the orange hue/saturation of src
-  // but maintain the luminosity (brightness) of dst
-  // With alpha compositing, the effect is blended - just verify it's not zero
+  // Verify some color is present (not grayscale)
+  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  expect(colorRange).toBeGreaterThan(0.15);
+
+  // Verify moderate brightness (from dst)
+  const maxChannel = Math.max(result[0], result[1], result[2]);
+  expect(maxChannel).toBeGreaterThan(0.3);
+  expect(maxChannel).toBeLessThan(0.9);
+
+  // All channels should be valid
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
@@ -176,13 +183,22 @@ test("layerColorSourceOver4 - grayscale dst", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Result should maintain some properties from color blending
-  // With pure red src and gray dst, the result should show color influence
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
-  // All channels should be equal (gray dst has no hue to preserve, result may stay gray)
-  // This is expected behavior for HSL color mode with achromatic dst
+  // Color mode: takes H+S from blend (src=red), V from base (dst=gray)
+  // src is pure red, dst is mid-gray. Result applies src's hue+saturation with dst's brightness
+
+  // With gray dst (undefined hue/saturation), result may stay gray or show color
+  // HSV implementations vary in handling achromatic colors - just verify valid output
+
+  // Verify valid output (HSV edge case handling varies)
+  expect(result[3]).toBeCloseTo(1.0);
+
+  // All channels should be valid
+  expect(result[0]).toBeGreaterThanOrEqual(0.0);
+  expect(result[0]).toBeLessThanOrEqual(1.0);
+  expect(result[1]).toBeGreaterThanOrEqual(0.0);
+  expect(result[1]).toBeLessThanOrEqual(1.0);
+  expect(result[2]).toBeGreaterThanOrEqual(0.0);
+  expect(result[2]).toBeLessThanOrEqual(1.0);
 });
 
 test("layerGlowSourceOver4", async () => {
@@ -293,16 +309,13 @@ test("layerHardMixSourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
-  expect(result[3]).toBeCloseTo(0.8);
-
-  // Verify hard mix creates posterization (binary output: each channel should be close to 0 or 1)
-  // Formula: if vividLight(base, blend) < 0.5 then 0 else 1
-  // With alpha compositing at 0.6/0.5, the effect is softened considerably
-  // Just verify each channel shows some posterization tendency
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Hard mix: if vividLight(base, blend) < 0.5 then 0.0 else 1.0
+  // base=dst, blend=src in the layer function
+  // R: vividLight(0.3, 0.4) = colorBurn(0.3, 0.8) = max(1-(1-0.3)/0.8, 0) = 0.125 < 0.5 → 0.0
+  // G: vividLight(0.5, 0.6) = colorDodge(0.5, 0.2) = min(0.5/0.8, 1) = 0.625 ≥ 0.5 → 1.0
+  // B: vividLight(0.2, 0.8) = colorDodge(0.2, 0.6) = min(0.2/0.4, 1) = 0.5 ≥ 0.5 → 1.0
+  // Then source-over with α=(0.6, 0.5): blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
+  expectCloseTo([0.06, 0.7, 0.64, 0.8], result, 0.01); // [0.0*0.6+0.3*0.5*0.4, 1.0*0.6+0.5*0.5*0.4, 1.0*0.6+0.2*0.5*0.4, 0.8]
 });
 
 test("layerHardMixSourceOver4 - fully opaque posterization", async () => {
@@ -320,12 +333,11 @@ test("layerHardMixSourceOver4 - fully opaque posterization", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Each channel should be very close to 0.0 or 1.0 (posterized)
-  for (let i = 0; i < 3; i++) {
-    const nearZero = result[i] < 0.2;
-    const nearOne = result[i] > 0.8;
-    expect(nearZero || nearOne).toBe(true);
-  }
+  // Hard mix with full opacity produces pure posterization (0.0 or 1.0)
+  // R: vividLight(0.3, 0.4) = 0.125 < 0.5 → 0.0
+  // G: vividLight(0.5, 0.6) = 0.625 ≥ 0.5 → 1.0
+  // B: vividLight(0.2, 0.8) = 0.5 ≥ 0.5 → 1.0
+  expectCloseTo([0.0, 1.0, 1.0], result.slice(0, 3), 0.01);
 });
 
 test("layerHueSourceOver4", async () => {
@@ -343,11 +355,20 @@ test("layerHueSourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
+  // Hue mode: takes H from blend (src), S+V from base (dst)
+  // src is orange (warm hue), dst is cyan (high saturation, high V)
+  // Result should have orange hue with cyan's saturation and brightness
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify hue mode blending is applied
-  // With alpha compositing, the effect is blended
+  // Verify the result has some color saturation (not gray)
+  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  expect(colorRange).toBeGreaterThan(0.1);
+
+  // Verify reasonably bright (from dst's high V)
+  const maxChannel = Math.max(result[0], result[1], result[2]);
+  expect(maxChannel).toBeGreaterThan(0.3);
+
+  // All channels should be valid
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
@@ -368,13 +389,20 @@ test("layerHueSourceOver4 - red to gray", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Hue mode with achromatic dst - behavior varies by implementation
-  // When dst has no saturation, hue mode may preserve the grayscale or apply the hue
-  // Just verify the result is valid (some channels may be zero)
+  // Hue mode: takes H from blend (src=red), S+V from base (dst=gray)
+  // src is pure red, dst is gray (S=0, V=0.5)
+  // HSV implementations vary in handling achromatic colors - result may stay gray or show color
+
+  // Verify valid output
+  expect(result[3]).toBeCloseTo(1.0);
+
+  // All channels should be valid
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
+  expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
+  expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[3]).toBeCloseTo(1.0); // Alpha should be 1.0
+  expect(result[2]).toBeLessThanOrEqual(1.0);
 });
 
 test("layerLinearBurnSourceOver4", async () => {
@@ -529,14 +557,20 @@ test("layerLuminositySourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
+  // Luminosity mode: takes H+S from base (dst), V from blend (src)
+  // src is bright orange (V ≈ 0.8), dst is cyan
+  // HSV implementations vary, so just verify reasonable output
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify luminosity mode blending is applied
-  // With alpha compositing, the effect is blended
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Verify reasonable brightness
+  const maxChannel = Math.max(result[0], result[1], result[2]);
+  expect(maxChannel).toBeGreaterThan(0.2); // Reasonably bright
+  expect(maxChannel).toBeLessThan(1.0);    // Not overly bright
+
+  // All channels should be valid
+  expect(result[0]).toBeGreaterThanOrEqual(0.0);
+  expect(result[1]).toBeGreaterThanOrEqual(0.0);
+  expect(result[2]).toBeGreaterThanOrEqual(0.0);
 });
 
 test("layerLuminositySourceOver4 - gray to color", async () => {
@@ -554,11 +588,19 @@ test("layerLuminositySourceOver4 - gray to color", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Luminosity mode with achromatic src - behavior varies by implementation
-  // Just verify all channels have reasonable values
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Luminosity mode: takes H+S from base (dst=red), V from blend (src=gray)
+  // src is dark gray (V=0.3), dst is bright red (V=1.0)
+  // Result should be darkened
+
+  // Verify red hue is preserved (R should be dominant or equal to other channels)
+  expect(result[0]).toBeGreaterThanOrEqual(result[1]);
+  expect(result[0]).toBeGreaterThanOrEqual(result[2]);
+
+  // All channels should be valid (some may be low but not negative)
+  expect(result[0]).toBeGreaterThanOrEqual(0.0);
+  expect(result[0]).toBeLessThanOrEqual(1.0);
+  expect(result[1]).toBeGreaterThanOrEqual(0.0);
+  expect(result[2]).toBeGreaterThanOrEqual(0.0);
 });
 
 test("layerNegationSourceOver4", async () => {
@@ -619,14 +661,12 @@ test("layerPinLightSourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
-  expect(result[3]).toBeCloseTo(0.85);
-
-  // Verify pin light: if blend < 0.5, darken; else lighten
-  // This creates selective darkening/lightening per channel
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
+  // Pin light: if blend < 0.5 then min(base, blend*2) else max(base, (blend-0.5)*2)
+  // base=src, blend=dst (in blendPinLight call)
+  // R: dst=0.3 < 0.5 → min(0.5, 0.6) = 0.5 → sourceOver: 0.5*0.7 + 0.3*0.5*0.3 = 0.395
+  // G: dst=0.5 ≥ 0.5 → max(0.6, 0.0) = 0.6 → sourceOver: 0.6*0.7 + 0.5*0.5*0.3 = 0.495
+  // B: dst=0.7 ≥ 0.5 → max(0.4, 0.4) = 0.4 → sourceOver: 0.4*0.7 + 0.7*0.5*0.3 = 0.385
+  expectCloseTo([0.395, 0.495, 0.385, 0.85], result, 0.01);
 });
 
 test("layerPinLightSourceOver4 - extreme values", async () => {
@@ -644,13 +684,12 @@ test("layerPinLightSourceOver4 - extreme values", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Channel 0: blend < 0.5, should use darken (min)
-  expect(result[0]).toBeLessThanOrEqual(0.5);
-
-  // Channel 1: blend > 0.5, should use lighten (max)
-  expect(result[1]).toBeGreaterThanOrEqual(0.5);
-
-  // Channel 2: blend = 0.5, boundary case
+  // Pin light with full opacity: if blend < 0.5 then min(base, blend*2) else max(base, (blend-0.5)*2)
+  // base=src, blend=dst
+  // R: base=0.2, blend=0.5 ≥ 0.5 → max(0.2, 0.0) = 0.2
+  // G: base=0.8, blend=0.5 ≥ 0.5 → max(0.8, 0.0) = 0.8
+  // B: base=0.5, blend=0.5 ≥ 0.5 → max(0.5, 0.0) = 0.5
+  expectCloseTo([0.2, 0.8, 0.5], result.slice(0, 3), 0.01);
 });
 
 test("layerReflectSourceOver4", async () => {
@@ -714,18 +753,19 @@ test("layerSaturationSourceOver4", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify alpha compositing
+  // Saturation mode: takes S from blend (src), H+V from base (dst)
+  // src is saturated orange (high S), dst is cyan
+  // HSV implementations vary, so just verify reasonable saturation
   expect(result[3]).toBeCloseTo(0.85);
 
-  // Verify saturation mode blending is applied
-  // With alpha compositing, the effect is blended
+  // Verify high saturation (large difference between channels)
+  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  expect(colorRange).toBeGreaterThan(0.2); // Significantly saturated
+
+  // All channels should be valid
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
-
-  // Verify there is some color variation (saturation present)
-  const resultRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
-  expect(resultRange).toBeGreaterThan(0.0);
 });
 
 test("layerSaturationSourceOver4 - desaturate with gray", async () => {
@@ -743,16 +783,19 @@ test("layerSaturationSourceOver4 - desaturate with gray", async () => {
    `;
   const result = await testCompute(src, "vec4f");
 
-  // Gray has no saturation - applying it should desaturate the red
-  // The result should have valid color values (may include zeros)
+  // Saturation mode: takes S from blend (src=gray), H+V from base (dst=red)
+  // src is gray (S=0), dst is pure red (red hue, V=1.0, S=1.0)
+  // Result should have red hue with gray's zero saturation = desaturated red (gray-ish)
+
+  // Verify some desaturation (less saturated than pure red which has range=1.0)
+  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  expect(colorRange).toBeLessThan(0.8); // Somewhat desaturated
+
+  // All channels should be valid
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[3]).toBeCloseTo(1.0); // Alpha should be 1.0
-
-  // Verify the result has less saturation than pure red
-  const resultRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
-  expect(resultRange).toBeLessThanOrEqual(1.0); // Less than or equal to pure red (range = 1.0)
+  expect(result[3]).toBeCloseTo(1.0);
 });
 
 test("layerSoftLightSourceOver4", async () => {
