@@ -15,8 +15,10 @@ license:
     - MIT License (MIT) Copyright 2014, David Hoskins
 */
 
+// LATER @param const WESL
 const RANDOM_SINLESS: bool = true;
 
+// LATER @param const WESL
 const RANDOM_SCALE: vec4f = vec4f(.1031, .1030, .0973, .1099);
 
 fn random(p: f32) -> f32 {

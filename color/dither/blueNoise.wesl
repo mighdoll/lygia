@@ -20,6 +20,8 @@ license:
 // LATER make this a @param const when WESL supports that
 const DITHER_BLUENOISE_PRECISION: i32 = 256;
 
+// LATER add support for DITHER_BLUENOISE_TIME
+
 // Core blue noise generation function
 fn ditherBlueNoise(inp: vec2f) -> f32 {
     let SEED1 = 1.705;

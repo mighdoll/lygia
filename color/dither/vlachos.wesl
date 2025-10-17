@@ -18,6 +18,7 @@ license:
 
 // LATER make this a @param const when WESL supports that
 const DITHER_VLACHOS_PRECISION: i32 = 256;
+// LATER support DITHER_VLACHOS_TIME 
 
 // Core Vlachos noise function for scalar
 fn ditherVlachos(b: f32, ist: vec2f) -> f32 {
