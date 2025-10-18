@@ -496,8 +496,8 @@ test("gamma2linear", async () => {
      }
    `;
   const result = await testCompute(src, "vec3f");
-  // pow(0.5, 2.0) = 0.25 (mobile/webgl default gamma)
-  expectCloseTo([0.25, 0.25, 0.25], result, 0.01);
+  // pow(0.5, 2.2) ≈ 0.2181 (standard gamma 2.2)
+  expectCloseTo([0.2181, 0.2181, 0.2181], result, 0.01);
 });
 
 test("linear2gamma", async () => {
@@ -512,8 +512,8 @@ test("linear2gamma", async () => {
      }
    `;
   const result = await testCompute(src, "vec3f");
-  // sqrt(0.25) = 0.5 (mobile/webgl default gamma 2.0)
-  expectCloseTo([0.5, 0.5, 0.5], result, 0.01);
+  // pow(0.25, 1/2.2) ≈ 0.5277 (standard gamma 2.2)
+  expectCloseTo([0.5277, 0.5277, 0.5277], result, 0.01);
 });
 
 test("rgb2YCbCr", async () => {
@@ -1456,8 +1456,8 @@ test("gamma2linear - f32 overload", async () => {
      }
    `;
   const result = await testCompute(src);
-  // pow(0.5, 2.0) = 0.25 (mobile/webgl default gamma)
-  expectCloseTo([0.25], result, 0.01);
+  // pow(0.5, 2.2) ≈ 0.2181 (standard gamma 2.2)
+  expectCloseTo([0.2181], result, 0.01);
 });
 
 test("gamma2linear4 - vec4 with alpha preservation", async () => {
@@ -1472,8 +1472,8 @@ test("gamma2linear4 - vec4 with alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, "vec4f");
-  // pow(0.5, 2.0) = 0.25 for RGB, alpha unchanged
-  expectCloseTo([0.25, 0.25, 0.25, 0.7], result, 0.01);
+  // pow(0.5, 2.2) ≈ 0.2181 for RGB, alpha unchanged
+  expectCloseTo([0.2181, 0.2181, 0.2181, 0.7], result, 0.01);
 });
 
 test("linear2gamma - f32 overload", async () => {
@@ -1488,8 +1488,8 @@ test("linear2gamma - f32 overload", async () => {
      }
    `;
   const result = await testCompute(src);
-  // sqrt(0.25) = 0.5 (mobile/webgl default gamma 2.0)
-  expectCloseTo([0.5], result, 0.01);
+  // pow(0.25, 1/2.2) ≈ 0.5277 (standard gamma 2.2)
+  expectCloseTo([0.5277], result, 0.01);
 });
 
 test("linear2gamma4 - vec4 with alpha preservation", async () => {
@@ -1504,8 +1504,8 @@ test("linear2gamma4 - vec4 with alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, "vec4f");
-  // sqrt(0.25) = 0.5 for RGB, alpha unchanged
-  expectCloseTo([0.5, 0.5, 0.5, 0.4], result, 0.01);
+  // pow(0.25, 1/2.2) ≈ 0.5277 for RGB, alpha unchanged
+  expectCloseTo([0.5277, 0.5277, 0.5277, 0.4], result, 0.01);
 });
 
 // ============================================================================
