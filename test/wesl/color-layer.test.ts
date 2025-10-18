@@ -151,6 +151,7 @@ test("layerColorSourceOver4", async () => {
 
   // Color mode: takes H+S from blend (src), V from base (dst)
   // src is orange, dst is cyan. Result takes src's hue with dst's brightness
+
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify some color is present (not grayscale)
@@ -166,6 +167,9 @@ test("layerColorSourceOver4", async () => {
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
+
+  // Current implementation's specific output
+  expectCloseTo([0.17, 0.51, 0.68, 0.85], result);
 });
 
 test("layerColorSourceOver4 - grayscale dst", async () => {
@@ -199,6 +203,9 @@ test("layerColorSourceOver4 - grayscale dst", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+
+  // Current implementation's specific output
+  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("layerGlowSourceOver4", async () => {
@@ -358,6 +365,7 @@ test("layerHueSourceOver4", async () => {
   // Hue mode: takes H from blend (src), S+V from base (dst)
   // src is orange (warm hue), dst is cyan (high saturation, high V)
   // Result should have orange hue with cyan's saturation and brightness
+
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify the result has some color saturation (not gray)
@@ -372,6 +380,9 @@ test("layerHueSourceOver4", async () => {
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
+
+  // Current implementation's specific output
+  expectCloseTo([0.17, 0.51, 0.68, 0.85], result);
 });
 
 test("layerHueSourceOver4 - red to gray", async () => {
@@ -403,6 +414,9 @@ test("layerHueSourceOver4 - red to gray", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+
+  // Current implementation's specific output
+  expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3));
 });
 
 test("layerLinearBurnSourceOver4", async () => {
@@ -540,6 +554,9 @@ test("layerLinearLightSourceOver4 - extreme contrast", async () => {
   expect(result[1]).toBeGreaterThan(0.5);
 
   // Channel 2: blend = 0.5, boundary case (behavior depends on implementation)
+
+  // Current implementation's specific output
+  expectCloseTo([0.2, 0.8, 0.5], result.slice(0, 3));
 });
 
 test("layerLuminositySourceOver4", async () => {
@@ -560,6 +577,7 @@ test("layerLuminositySourceOver4", async () => {
   // Luminosity mode: takes H+S from base (dst), V from blend (src)
   // src is bright orange (V ≈ 0.8), dst is cyan
   // HSV implementations vary, so just verify reasonable output
+
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify reasonable brightness
@@ -571,6 +589,9 @@ test("layerLuminositySourceOver4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
+
+  // Current implementation's specific output
+  expectCloseTo([0.59, 0.37, 0.26, 0.85], result);
 });
 
 test("layerLuminositySourceOver4 - gray to color", async () => {
@@ -601,6 +622,9 @@ test("layerLuminositySourceOver4 - gray to color", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
+
+  // Current implementation's specific output
+  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("layerNegationSourceOver4", async () => {
@@ -756,6 +780,7 @@ test("layerSaturationSourceOver4", async () => {
   // Saturation mode: takes S from blend (src), H+V from base (dst)
   // src is saturated orange (high S), dst is cyan
   // HSV implementations vary, so just verify reasonable saturation
+
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify high saturation (large difference between channels)
@@ -766,6 +791,9 @@ test("layerSaturationSourceOver4", async () => {
   expect(result[0]).toBeGreaterThan(0.0);
   expect(result[1]).toBeGreaterThan(0.0);
   expect(result[2]).toBeGreaterThan(0.0);
+
+  // Current implementation's specific output
+  expectCloseTo([0.59, 0.37, 0.26, 0.85], result);
 });
 
 test("layerSaturationSourceOver4 - desaturate with gray", async () => {
@@ -796,6 +824,9 @@ test("layerSaturationSourceOver4 - desaturate with gray", async () => {
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[3]).toBeCloseTo(1.0);
+
+  // Current implementation's specific output
+  expectCloseTo([0.5, 0.0, 0.0], result.slice(0, 3));
 });
 
 test("layerSoftLightSourceOver4", async () => {
@@ -849,6 +880,9 @@ test("layerSoftLightSourceOver4 - subtle contrast", async () => {
 
   // Mid blend should be close to dst
   expect(result[2]).toBeCloseTo(0.5, 1);
+
+  // Current implementation's specific output
+  expectCloseTo([0.3, 0.7, 0.5], result.slice(0, 3));
 });
 
 test("layerVividLightSourceOver4", async () => {
@@ -900,4 +934,7 @@ test("layerVividLightSourceOver4 - extreme contrast", async () => {
 
   // Channel 2: blend = 0.5, boundary case (no change or minimal change)
   expect(result[2]).toBeCloseTo(0.5, 1);
+
+  // Current implementation's specific output
+  expectCloseTo([0.2, 0.8, 0.5], result.slice(0, 3));
 });
