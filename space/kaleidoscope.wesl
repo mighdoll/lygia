@@ -13,9 +13,9 @@ description: |
 fn kaleidoscope_full(coord: vec2f, segmentCount: f32, phase: f32) -> vec2f {
     var uv: vec2f;
 
-    @if(CENTER_2D)
-    uv = coord - CENTER_2D;
-    @if(!CENTER_2D)
+//    @if(CENTER_2D)
+//    uv = coord - CENTER_2D;
+//    @if(!CENTER_2D)
     uv = coord - 0.5;
 
     let radius = length(uv);
