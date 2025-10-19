@@ -15,7 +15,10 @@ fn linearizeDepth(depth: f32, near: f32, far: f32) -> f32 {
     return (2.0 * near * far) / (far + near - d * (far - near));
 }
 
+/*
+// TODO, not yet supported in WESL
 @if(CAMERA_NEAR_CLIP && CAMERA_FAR_CLIP)
 fn linearizeDepth_default(depth: f32) -> f32 {
     return linearizeDepth(depth, CAMERA_NEAR_CLIP, CAMERA_FAR_CLIP);
 }
+*/
