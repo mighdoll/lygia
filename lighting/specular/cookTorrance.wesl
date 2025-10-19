@@ -8,8 +8,6 @@ fn specularCookTorrance(L: vec3f, N: vec3f, H: vec3f, NoV: f32, NoL: f32, NoH: f
 
     let D = GGXPrecise(N, H, NoH, linearRoughness);
 
-    // Note: WESL doesn't support platform-specific optimizations like PLATFORM_RPI
-    // Using the standard version for all platforms
     let V = smithGGXCorrelated(NoV, NoL, linearRoughness);
 
     let F = fresnel(specularColor, LoH);
