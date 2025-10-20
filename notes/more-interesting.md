@@ -21,10 +21,13 @@ Generated: 2025-10-20
 
 **Issue**: Most InOut tests only validate at t=0.5 (midpoint), which returns 0.5 due to symmetry and doesn't test the actual easing behavior. Linear tests are pure identity.
 
-**Trivial tests:**
+**Trivial test for Trivial function:**
+These are fine as trivial tests, tested function is trivial pass through. 
 1. `linearIn` - Pass-through test (returns t unchanged)
 2. `linearOut` - Pass-through test (identical to linearIn)
 3. `linearInOut` - Pass-through test
+
+**Trivial tests:**
 4. `backInOut` - Only tests midpoint (0.5→0.5), missing overshoot behavior
 5. `bounceInOut` - Only tests midpoint, missing bounce behavior
 6. `circularInOut` - Only tests midpoint, missing circular curve
