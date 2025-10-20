@@ -101,10 +101,11 @@ test("quatLerp", async () => {
 
 test("quat2mat3", async () => {
   const src = `
+    import lygia::math::consts::INV_SQRT2;
     import lygia::math::quat::quat2mat3::quat2mat3;
     @compute @workgroup_size(1)
     fn foo() {
-      let q = normalize(vec4f(0.0, 0.0, 0.7071, 0.7071));
+      let q = normalize(vec4f(0.0, 0.0, INV_SQRT2, INV_SQRT2));
       let m = quat2mat3(q);
       test::results[0] = vec4f(m[0][0], m[1][1], m[2][2], 0.0);
     }
@@ -115,10 +116,11 @@ test("quat2mat3", async () => {
 
 test("quat2mat4", async () => {
   const src = `
+    import lygia::math::consts::INV_SQRT2;
     import lygia::math::quat::quat2mat4::quat2mat4;
     @compute @workgroup_size(1)
     fn foo() {
-      let q = normalize(vec4f(0.0, 0.0, 0.7071, 0.7071));
+      let q = normalize(vec4f(0.0, 0.0, INV_SQRT2, INV_SQRT2));
       let m = quat2mat4(q);
       test::results[0] = vec4f(m[0][0], m[1][1], m[2][2], m[3][3]);
     }

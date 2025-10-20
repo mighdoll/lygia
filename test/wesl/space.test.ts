@@ -1,6 +1,8 @@
 import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
+const QTR_PI = Math.PI / 4;
+
 test("cart2polar2", async () => {
   const src = `
     import lygia::space::cart2polar::cart2polar2;
@@ -11,15 +13,16 @@ test("cart2polar2", async () => {
     }
   `;
   const result = await testCompute(src, "vec2f");
-  expectCloseTo([0.7853981633974483, Math.SQRT2], result); // atan2(1,1) = π/4, length = sqrt(2)
+  expectCloseTo([QTR_PI, Math.SQRT2], result); // atan2(1,1) = π/4, length = sqrt(2)
 });
 
 test("polar2cart", async () => {
   const src = `
+    import lygia::math::consts::{QTR_PI, SQRT2};
     import lygia::space::polar2cart::polar2cart;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = polar2cart(vec2f(0.7853981633974483, 1.4142135623730951));
+      let result = polar2cart(vec2f(QTR_PI, SQRT2));
       test::results[0] = result;
     }
   `;
@@ -49,10 +52,11 @@ test("center2", async () => {
 
 test("rotateX3", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateX::rotateX3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateX3(vec3f(1.0, 1.0, 0.0), 1.5707963267948966); // 90 degrees (π/2)
+      let result = rotateX3(vec3f(1.0, 1.0, 0.0), HALF_PI); // 90 degrees (π/2)
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -63,10 +67,11 @@ test("rotateX3", async () => {
 
 test("rotateY3", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateY::rotateY3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateY3(vec3f(1.0, 1.0, 0.0), 1.5707963267948966); // 90 degrees
+      let result = rotateY3(vec3f(1.0, 1.0, 0.0), HALF_PI); // 90 degrees (π/2)
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -76,10 +81,11 @@ test("rotateY3", async () => {
 
 test("rotateZ3", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateZ::rotateZ3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateZ3(vec3f(1.0, 0.0, 1.0), 1.5707963267948966); // 90 degrees (π/2)
+      let result = rotateZ3(vec3f(1.0, 0.0, 1.0), HALF_PI); // 90 degrees (π/2)
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -461,10 +467,11 @@ test("tbn", async () => {
 
 test("perspective", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::perspective::perspective;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = perspective(1.5707963267948966, 16.0/9.0, 0.1, 100.0);
+      let mat = perspective(HALF_PI, 16.0/9.0, 0.1, 100.0);
       // Just verify it creates a matrix (check one element)
       test::results[0] = mat[0][0];
     }
@@ -491,6 +498,7 @@ test("orthographic", async () => {
 
 test("decimateNormal", async () => {
   const src = `
+    import lygia::math::consts::INV_SQRT2;
     import lygia::space::decimateNormal::decimateNormal;
     @compute @workgroup_size(1)
     fn foo() {
@@ -498,7 +506,7 @@ test("decimateNormal", async () => {
       let prec = 4.0;
 
       // Test 1: Known case - 45° normal
-      let n1 = normalize(vec3f(0.7071, 0.7071, 0.0));
+      let n1 = normalize(vec3f(INV_SQRT2, INV_SQRT2, 0.0));
       let d1 = decimateNormal(n1, prec);
 
       // Test 2: Nearby normal (should quantize similarly)
@@ -542,11 +550,12 @@ test("decimateNormal", async () => {
 
 test("eulerView", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::eulerView::eulerView;
     @compute @workgroup_size(1)
     fn foo() {
       // Test with camera at origin with 90° Y rotation
-      let viewMatrix = eulerView(vec3f(0.0, 0.0, 0.0), vec3f(0.0, 1.5707963267948966, 0.0));
+      let viewMatrix = eulerView(vec3f(0.0, 0.0, 0.0), vec3f(0.0, HALF_PI, 0.0));
       // Transform a point at (1, 0, 0) - should rotate around Y by 90°
       let testPoint = viewMatrix * vec4f(1.0, 0.0, 0.0, 1.0);
       test::results[0] = testPoint;
@@ -633,11 +642,12 @@ test("lookAtView", async () => {
 
 test("lookAtViewRoll", async () => {
   const src = `
+     import lygia::math::consts::HALF_PI;
      import lygia::space::lookAtView::lookAtViewRoll;
      @compute @workgroup_size(1)
      fn foo() {
        // Test with camera at (0,5,0) looking at origin with 90° roll
-       let viewMatrix = lookAtViewRoll(vec3f(0.0, 5.0, 0.0), vec3f(0.0, 0.0, 0.0), 1.5707963267948966);
+       let viewMatrix = lookAtViewRoll(vec3f(0.0, 5.0, 0.0), vec3f(0.0, 0.0, 0.0), HALF_PI);
        // Extract position from the matrix (should be in last column)
        let position = viewMatrix * vec4f(0.0, 0.0, 0.0, 1.0);
        test::results[0] = position;
@@ -742,11 +752,12 @@ test("ratio", async () => {
 
 test("rotate", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotate::rotate;
     @compute @workgroup_size(1)
     fn foo() {
       // Rotate vec2 by 90 degrees (π/2) around center (0.5, 0.5)
-      let result = rotate(vec2f(1.0, 0.5), 1.5707963267948966);
+      let result = rotate(vec2f(1.0, 0.5), HALF_PI);
       test::results[0] = result;
     }
   `;
@@ -758,11 +769,12 @@ test("rotate", async () => {
 
 test("rotate_c", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotate::rotate_c;
     @compute @workgroup_size(1)
     fn foo() {
       // Rotate vec2 by 90 degrees around custom center (0, 0)
-      let result = rotate_c(vec2f(1.0, 0.0), 1.5707963267948966, vec2f(0.0));
+      let result = rotate_c(vec2f(1.0, 0.0), HALF_PI, vec2f(0.0));
       test::results[0] = result;
     }
   `;
@@ -773,11 +785,12 @@ test("rotate_c", async () => {
 
 test("rotate3", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotate::rotate3;
     @compute @workgroup_size(1)
     fn foo() {
       // Rotate vec3 by 90 degrees around Z axis from origin
-      let result = rotate3(vec3f(1.0, 0.0, 0.0), 1.5707963267948966, vec3f(0.0, 0.0, 1.0));
+      let result = rotate3(vec3f(1.0, 0.0, 0.0), HALF_PI, vec3f(0.0, 0.0, 1.0));
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -903,11 +916,12 @@ test("scale3 - with custom CENTER_3D via constants", async () => {
 
 test("rotate - with custom CENTER_2D via constants", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotate::rotate;
     @compute @workgroup_size(1)
     fn foo() {
       // Rotate around custom center (0.3, 0.3)
-      let result = rotate(vec2f(0.8, 0.3), 1.5707963267948966); // 90 degrees
+      let result = rotate(vec2f(0.8, 0.3), HALF_PI); // 90 degrees
       test::results[0] = result;
     }
   `;
@@ -924,10 +938,11 @@ test("rotate - with custom CENTER_2D via constants", async () => {
 
 test("rotateX3 - with custom CENTER_3D via constants", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateX::rotateX3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateX3(vec3f(1.0, 1.5, 0.5), 1.5707963267948966); // 90 degrees
+      let result = rotateX3(vec3f(1.0, 1.5, 0.5), HALF_PI); // 90 degrees
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -945,10 +960,11 @@ test("rotateX3 - with custom CENTER_3D via constants", async () => {
 
 test("rotateY3 - with custom CENTER_3D via constants", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateY::rotateY3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateY3(vec3f(1.5, 1.0, 0.5), 1.5707963267948966); // 90 degrees
+      let result = rotateY3(vec3f(1.5, 1.0, 0.5), HALF_PI); // 90 degrees
       test::results[0] = vec4f(result, 0.0);
     }
   `;
@@ -966,10 +982,11 @@ test("rotateY3 - with custom CENTER_3D via constants", async () => {
 
 test("rotateZ3 - with custom CENTER_3D via constants", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::space::rotateZ::rotateZ3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = rotateZ3(vec3f(1.5, 0.5, 1.0), 1.5707963267948966); // 90 degrees
+      let result = rotateZ3(vec3f(1.5, 0.5, 1.0), HALF_PI); // 90 degrees
       test::results[0] = vec4f(result, 0.0);
     }
   `;

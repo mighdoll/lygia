@@ -1,6 +1,8 @@
 import { expect, test } from "vitest";
 import { expectCloseTo, testCompute, testFragment } from "./testUtil.ts";
 
+const INV_SQRT2 = Math.SQRT2 / 2;
+
 test("saturate", async () => {
   const src = `
     import lygia::math::saturate::saturate;
@@ -378,18 +380,19 @@ test("fmod4", async () => {
 // Quaternion operations
 test("quat - create from axis and angle", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::quat::quat;
     @compute @workgroup_size(1)
     fn foo() {
       let axis = normalize(vec3f(0.0, 1.0, 0.0));
-      let angle = 1.57079632679; // π/2 radians (90 degrees)
+      let angle = HALF_PI; // π/2 radians (90 degrees)
       let result = quat(axis, angle);
       test::results[0] = result;
     }
   `;
   const result = await testCompute(src, "vec4f");
-  // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, 0.707, 0, 0.707)
-  expectCloseTo([0.0, 0.707, 0.0, 0.707], result, 0.01);
+  // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, INV_SQRT2, 0, INV_SQRT2)
+  expectCloseTo([0.0, INV_SQRT2, 0.0, INV_SQRT2], result, 0.01);
 });
 
 test("quatDiv - divide quaternion by scalar", async () => {
@@ -442,10 +445,11 @@ test("quatInverse", async () => {
 // Rotation matrices
 test("rotate2d - 90 degree rotation", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate2d::rotate2d;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate2d(1.57079632679); // π/2 radians
+      let mat = rotate2d(HALF_PI); // π/2 radians
       let v = vec2f(1.0, 0.0);
       let result = mat * v;
       test::results[0] = vec4f(result.x, result.y, 0.0, 0.0);
@@ -458,11 +462,12 @@ test("rotate2d - 90 degree rotation", async () => {
 
 test("rotate3d - rotation around axis", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate3d::rotate3d;
     @compute @workgroup_size(1)
     fn foo() {
       let axis = normalize(vec3f(0.0, 0.0, 1.0)); // Z-axis
-      let mat = rotate3d(axis, 1.57079632679); // π/2 radians
+      let mat = rotate3d(axis, HALF_PI); // π/2 radians
       let v = vec3f(1.0, 0.0, 0.0);
       let result = mat * v;
       test::results[0] = vec4f(result.x, result.y, result.z, 0.0);
@@ -923,7 +928,7 @@ test("fcos - filtered cosine at known angles", async () => {
 
       // At very slow variation, fcos should match regular cos closely
       let at0 = fcos(x);                   // cos(~0) ≈ 1.0
-      let atPi4 = fcos(x + PI * 0.25);     // cos(π/4) ≈ 0.707
+      let atPi4 = fcos(x + PI * 0.25);     // cos(π/4) ≈ INV_SQRT2
       let atPi2 = fcos(x + PI * 0.5);      // cos(π/2) ≈ 0.0
       let atPi = fcos(x + PI);             // cos(π) ≈ -1.0
 
@@ -934,7 +939,7 @@ test("fcos - filtered cosine at known angles", async () => {
 
   // Verify cosine values with tighter tolerance for slow variation
   expectCloseTo([1.0], [result[0]], 0.05);      // cos(0) = 1.0
-  expectCloseTo([0.707], [result[1]], 0.05);    // cos(π/4) = √2/2
+  expectCloseTo([INV_SQRT2], [result[1]], 0.05);    // cos(π/4) = √2/2
   expectCloseTo([0.0], [result[2]], 0.05);      // cos(π/2) = 0.0
   expectCloseTo([-1.0], [result[3]], 0.05);     // cos(π) = -1.0
 });
@@ -1264,10 +1269,11 @@ test("powFast", async () => {
 
 test("rotate3dX", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate3dX::rotate3dX;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate3dX(1.57079632679); // π/2 radians
+      let mat = rotate3dX(HALF_PI); // π/2 radians
       let v = vec3f(0.0, 1.0, 0.0);
       let result = mat * v;
       test::results[0] = vec4f(result.x, result.y, result.z, 0.0);
@@ -1280,10 +1286,11 @@ test("rotate3dX", async () => {
 
 test("rotate3dY", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate3dY::rotate3dY;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate3dY(1.57079632679); // π/2 radians
+      let mat = rotate3dY(HALF_PI); // π/2 radians
       let v = vec3f(1.0, 0.0, 0.0);
       let result = mat * v;
       test::results[0] = vec4f(result.x, result.y, result.z, 0.0);
@@ -1296,10 +1303,11 @@ test("rotate3dY", async () => {
 
 test("rotate3dZ", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate3dZ::rotate3dZ;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate3dZ(1.57079632679); // π/2 radians
+      let mat = rotate3dZ(HALF_PI); // π/2 radians
       let v = vec3f(1.0, 0.0, 0.0);
       let result = mat * v;
       test::results[0] = vec4f(result.x, result.y, result.z, 0.0);
@@ -1312,11 +1320,12 @@ test("rotate3dZ", async () => {
 
 test("rotate4d - axis-angle rotation", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate4d::rotate4d;
     @compute @workgroup_size(1)
     fn foo() {
       let axis = normalize(vec3f(0.0, 0.0, 1.0));
-      let mat = rotate4d(axis, 1.57079632679); // π/2 radians around Z
+      let mat = rotate4d(axis, HALF_PI); // π/2 radians around Z
       let v = vec4f(1.0, 0.0, 0.0, 1.0);
       let result = mat * v;
       test::results[0] = result;
@@ -1329,10 +1338,11 @@ test("rotate4d - axis-angle rotation", async () => {
 
 test("rotate4dX", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate4dX::rotate4dX;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate4dX(1.57079632679); // π/2 radians
+      let mat = rotate4dX(HALF_PI); // π/2 radians
       let v = vec4f(0.0, 1.0, 0.0, 1.0);
       let result = mat * v;
       test::results[0] = result;
@@ -1345,10 +1355,11 @@ test("rotate4dX", async () => {
 
 test("rotate4dY", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate4dY::rotate4dY;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate4dY(1.57079632679); // π/2 radians
+      let mat = rotate4dY(HALF_PI); // π/2 radians
       let v = vec4f(1.0, 0.0, 0.0, 1.0);
       let result = mat * v;
       test::results[0] = result;
@@ -1361,10 +1372,11 @@ test("rotate4dY", async () => {
 
 test("rotate4dZ", async () => {
   const src = `
+    import lygia::math::consts::HALF_PI;
     import lygia::math::rotate4dZ::rotate4dZ;
     @compute @workgroup_size(1)
     fn foo() {
-      let mat = rotate4dZ(1.57079632679); // π/2 radians
+      let mat = rotate4dZ(HALF_PI); // π/2 radians
       let v = vec4f(1.0, 0.0, 0.0, 1.0);
       let result = mat * v;
       test::results[0] = result;

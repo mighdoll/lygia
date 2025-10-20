@@ -168,21 +168,22 @@ test("torusSDF", async () => {
 
 test("torusSDF4 with sin/cos", async () => {
   const src = `
+    import lygia::math::consts::INV_SQRT2;
     import lygia::sdf::torusSDF::torusSDF4;
 
     @compute @workgroup_size(1)
     fn foo() {
       let p = vec3f(1.0, 0.0, 0.0);
-      let sc = vec2f(0.7071, 0.7071); // sin/cos of 45 degrees
+      let sc = vec2f(INV_SQRT2, INV_SQRT2); // sin/cos of 45 degrees
       let distance = torusSDF4(p, sc, 1.0, 0.25);
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
   const result = await testCompute(src, "vec3f");
-  // Point at (1,0,0) with sc=(sin45,cos45)=(0.7071,0.7071), ra=1.0, rb=0.25
+  // Point at (1,0,0) with sc=(sin45,cos45)=(INV_SQRT2,INV_SQRT2), ra=1.0, rb=0.25
   // This is a partial torus (45 degree sector)
-  // pos.x=abs(1)=1, k=dot((1,0), (0.7071,0.7071))=0.7071
-  // sqrt(dot((1,0,0),(1,0,0)) + 1 - 2*1*0.7071) - 0.25 = sqrt(1 + 1 - 1.4142) - 0.25
+  // pos.x=abs(1)=1, k=dot((1,0), (INV_SQRT2,INV_SQRT2))=INV_SQRT2
+  // sqrt(dot((1,0,0),(1,0,0)) + 1 - 2*1*INV_SQRT2) - 0.25 = sqrt(1 + 1 - Math.SQRT2) - 0.25
   // = sqrt(0.5858) - 0.25 ≈ 0.765 - 0.25 = 0.515
   expectCloseTo([0.515, 0.0, 0.0], result, 0.01);
 });
