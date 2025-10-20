@@ -23,12 +23,12 @@ license:
 fn mixOklab(colA: vec3f, colB: vec3f, h: f32) -> vec3f {
     @if(MIXOKLAB_SRGB)
     let colorA = srgb2rgb(colA);
-    @if(!MIXOKLAB_SRGB)
+    @else
     let colorA = colA;
 
     @if(MIXOKLAB_SRGB)
     let colorB = srgb2rgb(colB);
-    @if(!MIXOKLAB_SRGB)
+    @else
     let colorB = colB;
 
     // rgb to cone (arg of pow can't be negative)
@@ -42,7 +42,7 @@ fn mixOklab(colA: vec3f, colB: vec3f, h: f32) -> vec3f {
 
     @if(MIXOKLAB_SRGB)
     return rgb2srgb(rgb);
-    @if(!MIXOKLAB_SRGB)
+    @else
     return rgb;
 }
 

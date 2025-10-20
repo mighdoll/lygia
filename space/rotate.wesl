@@ -32,21 +32,21 @@ fn rotate_c(v: vec2f, r: f32, c: vec2f) -> vec2f {
 fn rotate(v: vec2f, r: f32) -> vec2f {
     @if(CENTER_2D)
     return rotate_c(v, r, constants::CENTER_2D);
-    @if(!CENTER_2D)
+    @else
     return rotate_c(v, r, vec2f(0.5));
 }
 
 fn rotate_axis(v: vec2f, x_axis: vec2f) -> vec2f {
     @if(CENTER_2D)
     let centered = v - constants::CENTER_2D;
-    @if(!CENTER_2D)
+    @else
     let centered = v;
 
     let rta = vec2f(dot(centered, vec2f(-x_axis.y, x_axis.x)), dot(centered, x_axis));
 
     @if(CENTER_2D)
     return rta + constants::CENTER_2D;
-    @if(!CENTER_2D)
+    @else
     return rta;
 }
 
@@ -57,7 +57,7 @@ fn rotate3_c(v: vec3f, r: f32, axis: vec3f, c: vec3f) -> vec3f {
 fn rotate3(v: vec3f, r: f32, axis: vec3f) -> vec3f {
     @if(CENTER_3D)
     return rotate3_c(v, r, axis, constants::CENTER_3D);
-    @if(!CENTER_3D)
+    @else
     return rotate3_c(v, r, axis, vec3f(0.0));
 }
 
@@ -68,7 +68,7 @@ fn rotate4_c(v: vec4f, r: f32, axis: vec3f, c: vec4f) -> vec4f {
 fn rotate4(v: vec4f, r: f32, axis: vec3f) -> vec4f {
     @if(CENTER_4D)
     return rotate4_c(v, r, axis, constants::CENTER_4D);
-    @if(!CENTER_4D)
+    @else
     return rotate4_c(v, r, axis, vec4f(0.0));
 }
 

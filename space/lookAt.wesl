@@ -19,12 +19,12 @@ fn lookAt(forward: vec3f, up: vec3f) -> mat3x3f {
 
     @if(LOOK_AT_RIGHT_HANDED)
     let xaxis = normalize(cross(zaxis, up));
-    @if(!LOOK_AT_RIGHT_HANDED)
+    @else
     let xaxis = normalize(cross(up, zaxis));
 
     @if(LOOK_AT_RIGHT_HANDED)
     let yaxis = cross(xaxis, zaxis);
-    @if(!LOOK_AT_RIGHT_HANDED)
+    @else
     let yaxis = cross(zaxis, xaxis);
 
     return mat3x3f(xaxis, yaxis, zaxis);

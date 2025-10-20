@@ -12,27 +12,27 @@ const MEDIUMP_FLT_MAX: f32 = 65504.0;
 fn saturateMediump(v: f32) -> f32 {
     @if(TARGET_MOBILE)
     return min(v, MEDIUMP_FLT_MAX);
-    @if(!TARGET_MOBILE)
+    @else
     return v;
 }
 
 fn saturateMediump2(v: vec2f) -> vec2f {
     @if(TARGET_MOBILE)
     return min(v, vec2(MEDIUMP_FLT_MAX));
-    @if(!TARGET_MOBILE)
+    @else
     return v;
 }
 
 fn saturateMediump3(v: vec3f) -> vec3f {
     @if(TARGET_MOBILE)
     return min(v, vec3(MEDIUMP_FLT_MAX));
-    @if(!TARGET_MOBILE)
+    @else
     return v;
 }
 
 fn saturateMediump4(v: vec4f) -> vec4f {
     @if(TARGET_MOBILE)
     return min(v, vec4(MEDIUMP_FLT_MAX));
-    @if(!TARGET_MOBILE)
+    @else
     return v;
 }

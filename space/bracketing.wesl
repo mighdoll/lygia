@@ -16,7 +16,6 @@ import constants::BRACKETING_ANGLE_DELTA;
 // Parameter for bracketing - bracket size in radians. Large values create noticeable linear structure,
 // small values prone to simply replicating the issues with the brute force approach. In my use cases it
 // was quick and easy to find a sweet spot.
-@if(!BRACKETING_ANGLE_DELTA)
 const BRACKETING_ANGLE_DELTA_DEFAULT: f32 = PI / 20.0;
 
 // Vector field direction is used to drive UV coordinate frame, but instead
@@ -35,7 +34,7 @@ fn bracketing(dir: vec2f) -> BracketingResult {
 
     @if(BRACKETING_ANGLE_DELTA)
     let AngleDelta = constants::BRACKETING_ANGLE_DELTA;
-    @if(!BRACKETING_ANGLE_DELTA)
+    @else
     let AngleDelta = BRACKETING_ANGLE_DELTA_DEFAULT;
 
     // Snap to a first canonical direction by subtracting fractional angle

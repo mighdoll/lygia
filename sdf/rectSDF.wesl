@@ -26,7 +26,7 @@ fn rectSDF(st: vec2f, s: vec2f) -> f32 {
     var uv: vec2f;
     @if(CENTER_2D)
     uv = (st - constants::CENTER_2D) * 2.0;
-    @if(!CENTER_2D)
+    @else
     uv = st * 2.0 - 1.0;
 
     return max( abs(uv.x / s.x),

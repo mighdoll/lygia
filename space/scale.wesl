@@ -24,7 +24,7 @@ fn scale_f_c(st: f32, s: f32, center: vec2f) -> vec2f {
 fn scale_f(st: f32, s: f32) -> vec2f {
     @if(CENTER_2D)
     let center = constants::CENTER_2D;
-    @if(!CENTER_2D)
+    @else
     let center = vec2f(0.5);
 
     return (vec2f(st) - center) * s + center;
@@ -42,7 +42,7 @@ fn scale2_f_c(st: vec2f, s: f32, center: vec2f) -> vec2f {
 fn scale2(st: vec2f, s: vec2f) -> vec2f {
     @if(CENTER_2D)
     let center = constants::CENTER_2D;
-    @if(!CENTER_2D)
+    @else
     let center = vec2f(0.5);
 
     return (st - center) * s + center;
@@ -51,7 +51,7 @@ fn scale2(st: vec2f, s: vec2f) -> vec2f {
 fn scale2_f(st: vec2f, s: f32) -> vec2f {
     @if(CENTER_2D)
     let center = constants::CENTER_2D;
-    @if(!CENTER_2D)
+    @else
     let center = vec2f(0.5);
 
     return (st - center) * s + center;
@@ -69,7 +69,7 @@ fn scale3_f_c(st: vec3f, s: f32, center: vec3f) -> vec3f {
 fn scale3(st: vec3f, s: vec3f) -> vec3f {
     @if(CENTER_3D)
     let center = constants::CENTER_3D;
-    @if(!CENTER_3D)
+    @else
     let center = vec3f(0.5);
 
     return (st - center) * s + center;
@@ -78,7 +78,7 @@ fn scale3(st: vec3f, s: vec3f) -> vec3f {
 fn scale3_f(st: vec3f, s: f32) -> vec3f {
     @if(CENTER_3D)
     let center = constants::CENTER_3D;
-    @if(!CENTER_3D)
+    @else
     let center = vec3f(0.5);
 
     return (st - center) * s + center;
