@@ -21,8 +21,8 @@ Generated: 2025-10-20
 
 **Issue**: Most InOut tests only validate at t=0.5 (midpoint), which returns 0.5 due to symmetry and doesn't test the actual easing behavior. Linear tests are pure identity.
 
-**Trivial test for Trivial function:**
-These are fine as trivial tests, tested function is trivial pass through. 
+**Trivial test for Trivial function is ok:**
+These are low priority, don't change - fine as trivial tests, the tested function is trivial pass through. 
 1. `linearIn` - Pass-through test (returns t unchanged)
 2. `linearOut` - Pass-through test (identical to linearIn)
 3. `linearInOut` - Pass-through test

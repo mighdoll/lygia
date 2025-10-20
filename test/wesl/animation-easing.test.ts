@@ -25,10 +25,18 @@ test("backInOut", async () => {
   const src = `
     import lygia::animation::easing::backInOut::backInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = backInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show overshoot behavior
+      test::results[0] = vec4f(
+        backInOut(0.0),   // Start
+        backInOut(0.25),  // First half with overshoot
+        backInOut(0.75),  // Second half with overshoot
+        backInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, -0.3125, 1.3125, 1.0], result);
 });
 
 test("bounceIn", async () => {
@@ -55,10 +63,18 @@ test("bounceInOut", async () => {
   const src = `
     import lygia::animation::easing::bounceInOut::bounceInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = bounceInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show bounce behavior
+      test::results[0] = vec4f(
+        bounceInOut(0.0),   // Start
+        bounceInOut(0.25),  // First half bouncing in
+        bounceInOut(0.75),  // Second half bouncing out
+        bounceInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.140625, 0.859375, 1.0], result);
 });
 
 test("circularIn", async () => {
@@ -85,10 +101,18 @@ test("circularInOut", async () => {
   const src = `
     import lygia::animation::easing::circularInOut::circularInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = circularInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show circular curve
+      test::results[0] = vec4f(
+        circularInOut(0.0),   // Start
+        circularInOut(0.25),  // First quarter
+        circularInOut(0.75),  // Third quarter
+        circularInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.067, 0.933, 1.0], result);
 });
 
 test("cubicIn", async () => {
@@ -115,10 +139,18 @@ test("cubicInOut", async () => {
   const src = `
     import lygia::animation::easing::cubicInOut::cubicInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = cubicInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show cubic curve
+      test::results[0] = vec4f(
+        cubicInOut(0.0),   // Start
+        cubicInOut(0.25),  // First quarter
+        cubicInOut(0.75),  // Third quarter
+        cubicInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.0625, 0.9375, 1.0], result);
 });
 
 test("elasticIn", async () => {
@@ -145,10 +177,18 @@ test("elasticInOut", async () => {
   const src = `
     import lygia::animation::easing::elasticInOut::elasticInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = elasticInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show elastic oscillation
+      test::results[0] = vec4f(
+        elasticInOut(0.0),   // Start
+        elasticInOut(0.25),  // First quarter with oscillation
+        elasticInOut(0.75),  // Third quarter with oscillation
+        elasticInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, -0.011049, 1.011049, 1.0], result);
 });
 
 test("exponentialIn", async () => {
@@ -175,10 +215,18 @@ test("exponentialInOut", async () => {
   const src = `
     import lygia::animation::easing::exponentialInOut::exponentialInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = exponentialInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show exponential curve
+      test::results[0] = vec4f(
+        exponentialInOut(0.0),   // Start
+        exponentialInOut(0.25),  // First quarter
+        exponentialInOut(0.75),  // Third quarter
+        exponentialInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.015625, 0.984375, 1.0], result);
 });
 
 test("linearIn", async () => {
@@ -235,10 +283,18 @@ test("quadraticInOut", async () => {
   const src = `
     import lygia::animation::easing::quadraticInOut::quadraticInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = quadraticInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show quadratic curve
+      test::results[0] = vec4f(
+        quadraticInOut(0.0),   // Start
+        quadraticInOut(0.25),  // First quarter
+        quadraticInOut(0.75),  // Third quarter
+        quadraticInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.125, 0.875, 1.0], result);
 });
 
 test("quarticIn", async () => {
@@ -265,10 +321,18 @@ test("quarticInOut", async () => {
   const src = `
     import lygia::animation::easing::quarticInOut::quarticInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = quarticInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show quartic curve
+      test::results[0] = vec4f(
+        quarticInOut(0.0),   // Start
+        quarticInOut(0.25),  // First quarter
+        quarticInOut(0.75),  // Third quarter
+        quarticInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.03125, 0.96875, 1.0], result);
 });
 
 test("quinticIn", async () => {
@@ -325,8 +389,16 @@ test("sineInOut", async () => {
   const src = `
     import lygia::animation::easing::sineInOut::sineInOut;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = sineInOut(0.5); }
+    fn foo() {
+      // Test multiple points to show sine curve
+      test::results[0] = vec4f(
+        sineInOut(0.0),   // Start
+        sineInOut(0.25),  // First quarter
+        sineInOut(0.75),  // Third quarter
+        sineInOut(1.0)    // End
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([0.5], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([0.0, 0.1464, 0.8536, 1.0], result);
 });

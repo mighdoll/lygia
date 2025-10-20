@@ -81,14 +81,22 @@ test("pow7", async () => {
   expectCloseTo([128.0], result);
 });
 
-test("absi positive", async () => {
+test("absi", async () => {
   const src = `
     import lygia::math::absi::absi;
     @compute @workgroup_size(1)
-    fn foo() { test::results[0] = f32(absi(5)); }
+    fn foo() {
+      // Test both positive and negative values
+      test::results[0] = vec4f(
+        f32(absi(5)),   // Positive
+        f32(absi(-5)),  // Negative
+        f32(absi(0)),   // Zero
+        f32(absi(-12))  // Larger negative
+      );
+    }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([5.0], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([5.0, 5.0, 0.0, 12.0], result);
 });
 
 test("absi negative", async () => {
@@ -109,13 +117,20 @@ test("cubicMix", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       let result = cubicMix(0.0, 1.0, 0.5);
-       test::results[0] = result;
+       // Test cubic hermite interpolation at multiple points
+       test::results[0] = vec4f(
+         cubicMix(0.0, 1.0, 0.0),   // Start: should be 0
+         cubicMix(0.0, 1.0, 0.25),  // Quarter: smooth curve
+         cubicMix(0.0, 1.0, 0.75),  // Three-quarters
+         cubicMix(0.0, 1.0, 1.0)    // End: should be 1
+       );
      }
    `;
-  const result = await testCompute(src);
-  // Cubic interpolation at 0.5
-  expectCloseTo([0.5], result, 0.01);
+  const result = await testCompute(src, "vec4f");
+  // Cubic hermite: 3t² - 2t³
+  // t=0.25: 3(0.0625) - 2(0.015625) = 0.1875 - 0.03125 = 0.15625
+  // t=0.75: 3(0.5625) - 2(0.421875) = 1.6875 - 0.84375 = 0.84375
+  expectCloseTo([0.0, 0.15625, 0.84375, 1.0], result, 0.01);
 });
 
 test("smootherstep", async () => {
@@ -124,13 +139,20 @@ test("smootherstep", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       let result = smootherstep(0.0, 1.0, 0.5);
-       test::results[0] = result;
+       // Test smoother step (6t⁵ - 15t⁴ + 10t³) at multiple points
+       test::results[0] = vec4f(
+         smootherstep(0.0, 1.0, 0.0),   // Start: should be 0
+         smootherstep(0.0, 1.0, 0.25),  // Quarter: smooth acceleration
+         smootherstep(0.0, 1.0, 0.75),  // Three-quarters: smooth deceleration
+         smootherstep(0.0, 1.0, 1.0)    // End: should be 1
+       );
      }
    `;
-  const result = await testCompute(src);
-  // Smoother step at 0.5 should be 0.5
-  expectCloseTo([0.5], result, 0.01);
+  const result = await testCompute(src, "vec4f");
+  // Smootherstep: 6t⁵ - 15t⁴ + 10t³
+  // t=0.25: 6(0.00098) - 15(0.00391) + 10(0.01563) = 0.00586 - 0.05859 + 0.15625 = 0.10352
+  // t=0.75: 6(0.23730) - 15(0.31641) + 10(0.42188) = 1.42383 - 4.74609 + 4.21875 = 0.89648
+  expectCloseTo([0.0, 0.10352, 0.89648, 1.0], result, 0.01);
 });
 
 test("fmod2", async () => {
@@ -244,14 +266,18 @@ test("taylorInvSqrt", async () => {
     import lygia::math::taylorInvSqrt::taylorInvSqrt;
     @compute @workgroup_size(1)
     fn foo() {
-      // Test with 1.0, should approximate 1/sqrt(1) = 1
-      let result = taylorInvSqrt(1.0);
-      test::results[0] = result;
+      // Test Taylor series approximation of 1/sqrt(x) at multiple points
+      test::results[0] = vec4f(
+        taylorInvSqrt(1.0),   // 1/sqrt(1) = 1
+        taylorInvSqrt(4.0),   // 1/sqrt(4) = 0.5
+        taylorInvSqrt(0.25),  // 1/sqrt(0.25) = 2
+        taylorInvSqrt(2.0)    // 1/sqrt(2) ≈ 0.707
+      );
     }
   `;
-  const result = await testCompute(src);
-  // Fast approximation should be close to 1.0
-  expectCloseTo([1.0], result, 0.1);
+  const result = await testCompute(src, "vec4f");
+  // Fast approximation should be reasonably close
+  expectCloseTo([1.0, 0.5, 2.0, 0.707], result, 0.1);
 });
 
 // Anti-aliased functions (require derivatives, use fragment shaders)
@@ -504,26 +530,27 @@ test("saturateMediump", async () => {
       // On desktop (TARGET_MOBILE=false), it's a pass-through
       // IMPORTANT: It does NOT clamp the lower bound to 0!
 
-      // Test pass-through behavior (desktop)
-      let v1 = saturateMediump(-0.5);     // Passes through as -0.5 (desktop) or -0.5 (mobile)
-      let v2 = saturateMediump(0.5);      // Passes through
-      let v3 = saturateMediump(1000.0);   // Passes through (desktop) or clamped to 65504 (mobile)
-      let v4 = saturateMediump(100000.0); // Passes through (desktop) or clamped to 65504 (mobile)
+      let v1 = saturateMediump(-0.5);      // Negative passes through
+      let v2 = saturateMediump(0.5);       // Normal value passes through
+      let v3 = saturateMediump(1000.0);    // Below limit passes through
+      let v4 = saturateMediump(100000.0);  // Above limit: desktop passes, mobile clamps to 65504
 
       test::results[0] = vec4f(v1, v2, v3, v4);
     }
   `;
   const result = await testCompute(src, "vec4f");
 
-  // On desktop: pass-through behavior
-  // v1: -0.5 passes through
+  // Test specific behavior
   expectCloseTo([-0.5], [result[0]], 0.01);
-  // v2: 0.5 passes through
   expectCloseTo([0.5], [result[1]], 0.01);
-  // v3 and v4: On desktop pass through, on mobile clamped to 65504
-  // We test that they're either the original value or clamped
-  expect(result[2]).toBeGreaterThan(0.0);
-  expect(result[3]).toBeGreaterThan(0.0);
+  expectCloseTo([1000.0], [result[2]], 0.01);
+
+  // v4: On desktop should be 100000, on mobile should be clamped to 65504
+  // Test that it's either original or clamped (platform-dependent)
+  const MEDIUMP_FLT_MAX = 65504.0;
+  const isDesktop = Math.abs(result[3] - 100000.0) < 0.01;
+  const isMobile = Math.abs(result[3] - MEDIUMP_FLT_MAX) < 0.01;
+  expect(isDesktop || isMobile).toBe(true);
 });
 
 test("sum2", async () => {
@@ -531,12 +558,17 @@ test("sum2", async () => {
     import lygia::math::sum::sum2;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = sum2(vec2f(3.0, 7.0));
-      test::results[0] = result;
+      // Test multiple cases including negative values
+      test::results[0] = vec4f(
+        sum2(vec2f(3.0, 7.0)),      // Positive
+        sum2(vec2f(-5.0, 8.0)),     // Mixed
+        sum2(vec2f(-2.0, -3.0)),    // Negative
+        sum2(vec2f(0.5, 0.25))      // Fractional
+      );
     }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([10.0], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([10.0, 3.0, -5.0, 0.75], result);
 });
 
 test("sum3", async () => {
@@ -544,12 +576,17 @@ test("sum3", async () => {
     import lygia::math::sum::sum3;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = sum3(vec3f(3.0, 7.0, 5.0));
-      test::results[0] = result;
+      // Test multiple cases including negative and fractional values
+      test::results[0] = vec4f(
+        sum3(vec3f(3.0, 7.0, 5.0)),     // Positive
+        sum3(vec3f(-2.0, 6.0, -1.0)),   // Mixed signs
+        sum3(vec3f(-1.0, -2.0, -3.0)),  // All negative
+        sum3(vec3f(0.25, 0.5, 0.75))    // Fractional
+      );
     }
   `;
-  const result = await testCompute(src);
-  expectCloseTo([15.0], result);
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([15.0, 3.0, -6.0, 1.5], result);
 });
 
 test("within - scalar", async () => {

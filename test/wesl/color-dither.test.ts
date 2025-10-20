@@ -66,66 +66,78 @@ test("ditherBayer - 8x8 pattern verification", async () => {
 test("ditherBayerPrecision - f32 with precision control", async () => {
   const src = `
     import lygia::color::dither::bayer::ditherBayerPrecision;
+    import lygia::color::dither::bayer::ditherBayer;
 
     @compute @workgroup_size(1)
     fn foo() {
-      // Test dithering a mid-gray value
+      // Test quantization formula: floor(value * precision + bayer) / precision
       let val = 0.5;
       let xy = vec2f(2.0, 3.0);
+      let bayer = ditherBayer(xy);
 
-      // Test with different precisions
-      let result8 = ditherBayerPrecision(val, xy, 8);   // 8 levels
-      let result16 = ditherBayerPrecision(val, xy, 16); // 16 levels
-      let result256 = ditherBayerPrecision(val, xy, 256); // 256 levels (default)
+      // With precision=4, value should snap to 0.0, 0.25, 0.5, 0.75, or 1.0
+      let result4 = ditherBayerPrecision(val, xy, 4);
+      // Expected: floor(0.5 * 4 + bayer) / 4 = floor(2.0 + bayer) / 4
 
-      test::results[0] = vec4f(result8, result16, result256, 0.0);
+      // With precision=8, finer quantization
+      let result8 = ditherBayerPrecision(val, xy, 8);
+
+      // Test another value that will quantize differently
+      let val2 = 0.3;
+      let result4_v2 = ditherBayerPrecision(val2, xy, 4);
+
+      test::results[0] = vec4f(result4, result8, result4_v2, bayer);
     }
   `;
   const result = await testCompute(src, "vec4f");
 
-  // All results should be in valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
+  // With precision=4, should be quantized to 0.25 increments
+  expect(result[0] % 0.25).toBeCloseTo(0.0, 2);
 
-  // Lower precision should have more coarse quantization
-  // Higher precision should be closer to original value
-  expect(result[2]).toBeCloseTo(0.5, 1); // 256 levels should be close to 0.5
+  // With precision=8, should be quantized to 0.125 increments
+  expect(result[1] % 0.125).toBeCloseTo(0.0, 2);
+
+  // Different input value should produce different quantized output
+  expect(Math.abs(result[0] - result[2])).toBeGreaterThan(0.1);
+
+  // Results should be close to original values
+  expect(result[0]).toBeCloseTo(0.5, 1);
+  expect(result[2]).toBeCloseTo(0.3, 1);
 });
 
 test("ditherBayer3 - vec3 dithering", async () => {
   const src = `
     import lygia::color::dither::bayer::ditherBayer3;
+    import lygia::color::dither::bayer::ditherBayer;
 
     @compute @workgroup_size(1)
     fn foo() {
-      // Test dithering an orange color
+      // Test that each channel is quantized independently
       let color = vec3f(0.8, 0.5, 0.2);
       let xy = vec2f(3.0, 4.0);
 
       let result = ditherBayer3(color, xy);
+
+      // Test with gray to verify consistent dithering
+      let gray = vec3f(0.5, 0.5, 0.5);
+      let result_gray = ditherBayer3(gray, xy);
+
       test::results[0] = vec4f(result, 1.0);
+      test::results[1] = vec4f(result_gray, 1.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, "vec4f", 2);
 
-  // Result should maintain approximate color relationships
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
-
-  // Orange should maintain R > G > B relationship
+  // Orange should maintain R > G > B relationship after quantization
   expect(result[0]).toBeGreaterThan(result[1]);
   expect(result[1]).toBeGreaterThan(result[2]);
 
+  // Gray should have all channels equal (same dither threshold applied to all)
+  expectCloseTo([result[4], result[4], result[4]], result.slice(4, 7), 0.001);
+
   // Should be close to original values
   expectCloseTo([0.8, 0.5, 0.2], result.slice(0, 3), 0.1);
+  expectCloseTo([0.5], [result[4]], 0.1);
 });
 
 test("ditherBayer4 - vec4 dithering preserves alpha", async () => {
@@ -162,32 +174,41 @@ test("ditherBayer - gradient banding reduction", async () => {
 
     @compute @workgroup_size(1)
     fn foo() {
-      // Simulate a gradient with low precision causing banding
-      // Without dithering, these would all quantize to the same value
-      let val1 = 0.500;
-      let val2 = 0.502;
-      let val3 = 0.504;
+      // Test that gradient values near a quantization boundary
+      // get distributed across multiple quantized levels based on position
+      let val = 0.5; // Right at midpoint
 
-      // Use different positions in the Bayer matrix
-      let d1 = ditherBayerPrecision(val1, vec2f(0.0, 0.0), 64);
-      let d2 = ditherBayerPrecision(val2, vec2f(1.0, 0.0), 64);
-      let d3 = ditherBayerPrecision(val3, vec2f(2.0, 0.0), 64);
+      // Sample 8 adjacent pixels - should show spatial distribution
+      let d0 = ditherBayerPrecision(val, vec2f(0.0, 0.0), 16);
+      let d1 = ditherBayerPrecision(val, vec2f(1.0, 0.0), 16);
+      let d2 = ditherBayerPrecision(val, vec2f(2.0, 0.0), 16);
+      let d3 = ditherBayerPrecision(val, vec2f(3.0, 0.0), 16);
 
-      test::results[0] = vec4f(d1, d2, d3, 0.0);
+      test::results[0] = vec4f(d0, d1, d2, d3);
+      test::results[1] = vec4f(
+        ditherBayerPrecision(val, vec2f(4.0, 0.0), 16),
+        ditherBayerPrecision(val, vec2f(5.0, 0.0), 16),
+        ditherBayerPrecision(val, vec2f(6.0, 0.0), 16),
+        ditherBayerPrecision(val, vec2f(7.0, 0.0), 16)
+      );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, "vec4f", 2);
 
-  // All should be in valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
+  // With precision=16, values should be quantized to 1/16 = 0.0625 increments
+  // All values should snap to valid quantization levels
+  for (let i = 0; i < 8; i++) {
+    expect(result[i] % 0.0625).toBeCloseTo(0.0, 2);
+  }
 
-  // Dithering should create variation even with similar input values
-  // The spatial variation from different Bayer matrix positions
-  // helps break up banding artifacts in gradients
-  expect(result[0]).toBeCloseTo(0.5, 1);
-  expect(result[1]).toBeCloseTo(0.5, 1);
-  expect(result[2]).toBeCloseTo(0.5, 1);
+  // Not all values should be identical - spatial variation breaks up banding
+  const uniqueValues = new Set(result.slice(0, 8).map(v => Math.round(v * 16)));
+  expect(uniqueValues.size).toBeGreaterThan(1);
+
+  // All values should be close to 0.5 (the input)
+  result.slice(0, 8).forEach(v => {
+    expect(Math.abs(v - 0.5)).toBeLessThan(0.2);
+  });
 });
 
 test("ditherBayer - quantization levels", async () => {
@@ -200,26 +221,34 @@ test("ditherBayer - quantization levels", async () => {
       let color = vec3f(0.5, 0.5, 0.5);
       let xy = vec2f(0.0, 0.0);
 
-      // With precision=2, should snap to 0.0, 0.5, or 1.0
+      // With precision=2, only 2 levels: 0.0 or 1.0 (step of 1.0)
       let result2 = ditherBayer3Precision(color, xy, 2);
-      // With precision=4, should have more levels
-      let result4 = ditherBayer3Precision(color, xy, 4);
-      // With precision=256, should be nearly unchanged
-      let result256 = ditherBayer3Precision(color, xy, 256);
 
-      test::results[0] = vec4f(result2.r, result4.r, result256.r, 0.0);
+      // With precision=4, levels: 0.0, 0.25, 0.5, 0.75, 1.0 (step of 0.25)
+      let result4 = ditherBayer3Precision(color, xy, 4);
+
+      // Test a darker value to see different quantization behavior
+      let dark = vec3f(0.2, 0.2, 0.2);
+      let dark2 = ditherBayer3Precision(dark, xy, 4);
+      let dark256 = ditherBayer3Precision(dark, xy, 256);
+
+      test::results[0] = vec4f(result2.r, result4.r, dark2.r, dark256.r);
     }
   `;
   const result = await testCompute(src, "vec4f");
 
-  // Verify all results are valid
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Precision=2: should be either 0.0 or 1.0
+  expect(result[0] === 0.0 || result[0] === 1.0).toBe(true);
 
-  // Higher precision = closer to original value
-  expect(Math.abs(result[2] - 0.5)).toBeLessThan(0.05);
+  // Precision=4: should be multiple of 0.25
+  expect(result[1] % 0.25).toBeCloseTo(0.0, 2);
+
+  // Dark value with precision=4 should also be multiple of 0.25
+  expect(result[2] % 0.25).toBeCloseTo(0.0, 2);
+
+  // Higher precision should be closer to original
+  expect(Math.abs(result[3] - 0.2)).toBeLessThan(0.02);
+
+  // Lower precision has coarser steps
+  expect(Math.abs(result[2] - 0.2)).toBeLessThan(0.15);
 });
