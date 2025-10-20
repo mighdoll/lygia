@@ -187,15 +187,12 @@ import lygia::math::saturate::saturate;
 
 ```wgsl
 // WESL
-@if(CENTER_2D)
-const center: vec2f = CENTER_2D;
-
 fn circleSDF(v: vec2f) -> f32 {
     var pos = v;
-    @if(CENTER_2D)
-    pos -= center;
+    @if(USE_CUSTOM_CENTER)
+    pos -= vec2f(0.3, 0.7);  // custom center point
     @else
-    pos -= 0.5;
+    pos -= 0.5;              // default center
 
     return length(pos) * 2.0;
 }
@@ -204,10 +201,11 @@ fn circleSDF(v: vec2f) -> f32 {
 **Key differences:**
 - Use `@if(feature)` instead of `#ifdef feature`
 - Use `@else` instead of `#else`
-- Use `@elseif(condition)` instead of `#elif condition`
+- Use `@elif(condition)` instead of `#elif condition`
+- **Conditions are strictly boolean expressions** (true/false), unlike GLSL's `#ifdef` which tests if something is defined
 - Supports boolean expressions: `@if(DEBUG && !RELEASE)`
 - Supports logical operators: `@if(A || B)`, `@if(!C)`
-- Features are passed to the WESL compiler/translator
+- Condition values are set via the WESL linker API (see "How to set conditions" below)
 - No include guards needed (WESL handles this automatically)
 - No macro functions like `#define FUNC(x) expr` - use regular functions instead
 
@@ -216,11 +214,11 @@ fn circleSDF(v: vec2f) -> f32 {
 ```wgsl
 // Simple feature flag
 @if(USE_TEXTURE)
-const texture_flag: bool = true;
+fn textured_version() -> vec4f { /* ... */ }
 
 // Complex boolean expression
 @if(LEGACY_MODE || (WEB_VERSION && !XYZ_SUPPORTED))
-fn legacy_implementation() -> f32 { ... }
+fn legacy_implementation() -> f32 { /* ... */ }
 
 // Alternative implementations
 @if(FAST_PATH)
@@ -228,6 +226,32 @@ fn compute() -> f32 { /* fast version */ }
 @else
 fn compute() -> f32 { /* accurate version */ }
 ```
+
+**How to set conditions:**
+
+Conditions are set via the WESL linker API:
+
+```typescript
+// JavaScript/TypeScript
+import { link } from "wesl";
+
+const linked = await link(shaderSource, {
+  conditions: {
+    USE_TEXTURE: true,
+    LEGACY_MODE: false,
+    FAST_PATH: true,
+  }
+});
+```
+
+```rust
+// Rust
+let shader = Wesl::new("src/shaders")
+    .with_conditions([("USE_TEXTURE", true), ("FAST_PATH", true)])
+    .compile("main.wesl")?;
+```
+
+See the [WESL Conditional Translation spec](https://wesl-lang.dev/spec/ConditionalTranslation) for more details.
 
 ---
 
@@ -296,7 +320,7 @@ fn circlesdf_fnc(pos_uv: vec2f) -> f32 {
 
 ### 3. Options/Configuration
 
-Many GLSL files use `#ifdef` for optional features. In WESL, use `@if()`:
+Many GLSL files use `#ifdef` for optional features. In WESL, use `@if()` with conditions set via the linker:
 
 ```glsl
 // GLSL
@@ -309,7 +333,7 @@ Many GLSL files use `#ifdef` for optional features. In WESL, use `@if()`:
 
 ```wgsl
 // WESL
-const RANDOM_SINLESS: bool = true;  // or set via compiler
+// RANDOM_SINLESS is set via linker API (see "How to set conditions" above)
 
 fn random(p: f32) -> f32 {
     var x = p;
