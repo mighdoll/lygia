@@ -38,7 +38,7 @@ test("GGXPrecise", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       // GGXPrecise uses Lagrange's identity for better mediump precision
+       // GGXPrecise uses Lagrange's identity on TARGET_MOBILE for better mediump precision
        // It should match standard GGX but handle edge cases better
        let N = vec3f(0.0, 0.0, 1.0);
        let H = vec3f(0.0, 0.0, 1.0);  // Perfect alignment
@@ -53,7 +53,7 @@ test("GGXPrecise", async () => {
      }
    `;
   const result = await testCompute(src, "vec2f");
-  // GGXPrecise should produce similar results to standard GGX
+  // GGXPrecise should produce similar results to standard GGX (identical on desktop)
   expectCloseTo([result[0]], [result[1]], 0.01);
   // Both should be positive and reasonable
   expect(result[0]).toBeGreaterThan(0.3);

@@ -33,10 +33,10 @@ This document summarizes the findings from a comprehensive review of mediump pre
 
 ### 2. Platform Conditional Issues in Existing Files
 
-| File | Issue | Fix Required |
-|------|-------|--------------|
-| **ggx.wesl** | Platform conditional removed | Lagrange's identity always used instead of only on TARGET_MOBILE |
-| **cookTorrance.wesl** | PLATFORM_RPI conditional missing | Should use smithGGXCorrelated_Fast on RPI |
+| File | Issue | Status |
+|------|-------|--------|
+| **ggx.wesl** | ✅ FIXED | Added @if(TARGET_MOBILE) conditional in GGXPrecise() - Lagrange's identity now only used on mobile |
+| **cookTorrance.wesl** | ✅ FIXED | Added @if(PLATFORM_RPI) conditional to use smithGGXCorrelated_Fast on RPI |
 
 ### 3. Correctly Implemented Files
 
@@ -124,7 +124,25 @@ When reviewing or creating new mediump translations:
 
 The mediump translation strategy for LYGIA is well-defined and mostly well-implemented. The main issues are:
 1. A few missing conversions (kelemen being most critical)
-2. Some platform conditionals that got lost in translation (ggx.wesl)
+2. ~~Some platform conditionals that got lost in translation (ggx.wesl)~~ ✅ FIXED
 3. Several precision-sensitive functions that haven't been converted yet
 
 The recommended f32-only approach with saturateMediump clamping is the correct strategy for maximum compatibility.
+
+## Fixes Applied (2025-10-20)
+
+### ✅ Fixed Platform Conditionals
+
+**ggx.wesl** (lighting/common/ggx.wesl:15-45)
+- Added `@if(TARGET_MOBILE)` conditional within `GGXPrecise()` function
+- Lagrange's identity optimization now only used on mobile platforms (matching GLSL behavior)
+- Desktop platforms use standard computation path
+- Tests passing: test/wesl/lighting-common.test.ts
+
+**cookTorrance.wesl** (lighting/specular/cookTorrance.wesl:11-15)
+- Added `@if(PLATFORM_RPI)` conditional for visibility term selection
+- Raspberry Pi now uses `smithGGXCorrelated_Fast()` for better performance
+- Other platforms use full `smithGGXCorrelated()` implementation
+- Tests passing: test/wesl/lighting-misc.test.ts
+
+Both fixes ensure the WESL translations now match the GLSL platform-specific optimizations.

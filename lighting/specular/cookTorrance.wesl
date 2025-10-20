@@ -8,7 +8,11 @@ fn specularCookTorrance(L: vec3f, N: vec3f, H: vec3f, NoV: f32, NoL: f32, NoH: f
 
     let D = GGXPrecise(N, H, NoH, linearRoughness);
 
-    let V = smithGGXCorrelated(NoV, NoL, linearRoughness);
+    @if(TARGET_MOBILE) 
+      let V = smithGGXCorrelated_Fast(NoV, NoL, linearRoughness);
+    @else 
+     let V = smithGGXCorrelated(NoV, NoL, linearRoughness);
+    
 
     let F = fresnel(specularColor, LoH);
 
