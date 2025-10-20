@@ -220,11 +220,21 @@ fn textured_version() -> vec4f { /* ... */ }
 @if(LEGACY_MODE || (WEB_VERSION && !XYZ_SUPPORTED))
 fn legacy_implementation() -> f32 { /* ... */ }
 
-// Alternative implementations
+// Alternative implementations (use @else for clarity)
 @if(FAST_PATH)
 fn compute() -> f32 { /* fast version */ }
 @else
 fn compute() -> f32 { /* accurate version */ }
+
+// Inline conditionals for single statements
+fn scale(v: vec2f, s: f32) -> vec2f {
+    @if(USE_CUSTOM_CENTER)
+    let center = constants::CENTER;
+    @else
+    let center = vec2f(0.5);
+
+    return (v - center) * s + center;
+}
 ```
 
 **How to set conditions:**
@@ -337,14 +347,13 @@ Many GLSL files use `#ifdef` for optional features. In WESL, use `@if()` with co
 
 fn random(p: f32) -> f32 {
     var x = p;
-    @if(RANDOM_SINLESS) {
-        x = fract(x * RANDOM_SCALE.x);
-        x *= x + 33.33;
-        x *= x + x;
-        return fract(x);
-    } @else {
-        return fract(sin(x) * 43758.5453);
-    }
+    @if(RANDOM_SINLESS)
+    x = fract(x * RANDOM_SCALE.x);
+    x *= x + 33.33;
+    x *= x + x;
+    return fract(x);
+    @else
+    return fract(sin(x) * 43758.5453);
 }
 ```
 
