@@ -97,29 +97,6 @@ fn main() {
 - Sequential execution (but still very fast)
 - Requires larger buffer size parameter
 
-### Option B: Parallel Workgroups (Future Optimization)
-
-Use multiple workgroups to collect samples in parallel:
-
-```wgsl
-@compute @workgroup_size(256)
-fn main(@builtin(global_invocation_id) id: vec3<u32>) {
-  let sample = random(f32(id.x));
-  test::results[id.x] = sample;
-}
-```
-
-**Pros:**
-- True parallel execution
-- More GPU-idiomatic
-
-**Cons:**
-- Requires more test harness changes
-- Need to dispatch with appropriate workgroup count
-- Not needed for current performance requirements
-
-**Decision:** Start with Option A. It's simpler and sufficient for our needs.
-
 ## Helper Functions to Add
 
 ### 1. `testDistribution()` - Collect Samples
@@ -127,6 +104,9 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
 Add to `test/wesl/testUtil.ts`:
 
 ```typescript
+// Add this import at the top of the file
+import { elementStride } from "wesl-debug";
+
 /**
  * Test distribution properties of a random function.
  * Collects multiple samples and returns them for statistical analysis.
@@ -134,12 +114,14 @@ Add to `test/wesl/testUtil.ts`:
  * @param src - WESL shader source that writes samples to test::results
  * @param sampleCount - Number of samples to collect
  * @param elem - Element type (default "f32")
+ * @param constants - Constants to pass via constants:: namespace (e.g., SAMPLE_COUNT)
  * @returns Array of sample values
  */
 export async function testDistribution(
   src: string,
   sampleCount: number,
-  elem: WgslElementType = "f32"
+  elem: WgslElementType = "f32",
+  constants?: Record<string, string | number>
 ): Promise<number[]> {
   const device = await getGPUDevice();
   const bufferSize = sampleCount * elementStride(elem);
@@ -149,7 +131,8 @@ export async function testDistribution(
     device,
     src,
     resultFormat: elem,
-    size: bufferSize
+    size: bufferSize,
+    constants
   });
 }
 ```
@@ -473,35 +456,218 @@ Test one component of vector outputs:
   Distribution: 9.8%, 10.1%, 9.5%, 15.2%, 8.9%, 10.3%, 8.7%, 9.2%, 10.4%, 7.9%
 ```
 
-## Integration with Existing Tests
+## Test Consolidation Strategy
 
-Distribution tests should **complement** (not replace) existing tests:
+Once distribution tests are in place, we can **consolidate and simplify** existing tests. The distribution test validates multiple properties at once, so many individual checks become redundant.
+
+### What Distribution Tests Validate
+
+A single distribution test validates:
+1. ✅ **Range bounds** - All 1024 samples must be within [0,1] or [-1,1] (implicitly checked)
+2. ✅ **Mean** - Average value is correct (no systematic bias)
+3. ✅ **Uniformity** - Values spread evenly (no clustering)
+4. ✅ **Coverage** - Min/max near edges (full range usage)
+
+### Current Test Structure (BEFORE)
 
 ```typescript
-// Existing test - keep this
 test("random", async () => {
   const src = `...`;
   const result = await testCompute(src, "vec4f");
 
-  // Test determinism
+  // Test 1: Determinism
   expectCloseTo([result[0]], [result[1]]);
 
-  // Test range
+  // Test 2: Different inputs → different outputs
+  expect(result[0]).not.toBeCloseTo(result[2], 1);
+
+  // Test 3: Range bounds ← REDUNDANT with distribution test
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
 
-  // Test different inputs produce different outputs
-  expect(result[0]).not.toBeCloseTo(result[2], 1);
+  // Test 4: Exact value (GLSL parity)
+  expectCloseTo([0.7629680633544922], [result[0]]);
+});
+```
+
+### Recommended Test Structure (AFTER)
+
+```typescript
+// Test 1: Determinism + Exact Value (GLSL parity)
+test("random", async () => {
+  const src = `
+    import lygia::generative::random::random;
+    @compute @workgroup_size(1)
+    fn main() {
+      let r1 = random(1.0);
+      let r2 = random(1.0); // Same input
+      test::results[0] = vec4f(r1, r2, 0.0, 0.0);
+    }
+  `;
+  const result = await testCompute(src, "vec4f");
+
+  // Determinism: same input → same output
+  expectCloseTo([result[0]], [result[1]]);
+
+  // GLSL parity: verify exact output value
+  expectCloseTo([0.7629680633544922], [result[0]]);
 });
 
-// New test - add this separately
+// Test 2: Distribution (validates range, mean, uniformity, coverage)
 test("random - distribution", async () => {
   const sampleCount = 1024;
-  const src = `...`;
-  const samples = await testDistribution(src, sampleCount);
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random;
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        test::results[i] = random(f32(i));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount
+  });
   expectDistribution(samples, [0.0, 1.0]);
 });
 ```
+
+### What to Keep vs Remove
+
+| Test Check | Keep? | Rationale |
+|------------|-------|-----------|
+| **Determinism** (same input → same output) | ✅ KEEP | Not validated by distribution test; important property |
+| **Exact value** (GLSL parity regression test) | ✅ KEEP | Critical for ensuring GLSL↔WESL parity |
+| **Range bounds** (value in [0,1]) | ❌ REMOVE | Redundant - distribution test checks 1024 samples |
+| **Different inputs** (r1 ≠ r2 for different inputs) | 🤔 OPTIONAL | Somewhat redundant - distribution test checks 1024 different inputs |
+| **Distribution** (new) | ✅ ADD | New high-value test |
+
+### Consolidation Examples
+
+#### Example 1: `random` Function
+
+**BEFORE (5 checks, 2 samples):**
+```typescript
+test("random", async () => {
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([result[0]], [result[1]]);  // Determinism
+  expect(result[0]).not.toBeCloseTo(result[2], 1);  // Different inputs
+  expect(result[0]).toBeGreaterThanOrEqual(0.0);  // Range min
+  expect(result[0]).toBeLessThanOrEqual(1.0);  // Range max
+  expectCloseTo([0.7629680633544922], [result[0]]);  // Exact value
+});
+```
+
+**AFTER (2 separate tests, 2 + 1024 samples):**
+```typescript
+// Test 1: Determinism + Exact Value
+test("random", async () => {
+  const result = await testCompute(src, "vec4f");
+  expectCloseTo([result[0]], [result[1]]);  // Determinism
+  expectCloseTo([0.7629680633544922], [result[0]]);  // Exact value (GLSL parity)
+});
+
+// Test 2: Distribution (replaces range bounds + uniformity)
+test("random - distribution", async () => {
+  const samples = await testDistribution(src, 1024, "f32", { SAMPLE_COUNT: 1024 });
+  expectDistribution(samples, [0.0, 1.0]);
+});
+```
+
+**Result:**
+- Removed: 3 redundant checks (range min/max, different inputs)
+- Added: 1 comprehensive distribution test
+- Kept: Determinism + exact value (important properties)
+
+#### Example 2: `random42` (Hash Properties)
+
+**BEFORE (Multiple separate tests):**
+```typescript
+test("random42 - hash properties", async () => {
+  // Determinism test
+  const determinism = await testCompute(src1, "vec4f");
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
+
+  // Range test
+  const result = await testCompute(src2, "vec4f");
+  result.forEach(v => {
+    expect(v).toBeGreaterThanOrEqual(0.0);  // ← REDUNDANT
+    expect(v).toBeLessThanOrEqual(1.0);  // ← REDUNDANT
+  });
+
+  // Independence test
+  const allSame = result.every(v => Math.abs(v - result[0]) < 0.001);
+  expect(allSame).toBe(false);
+
+  // Avalanche test
+  const avalanche = await testCompute(src3, "vec4f");
+  const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
+  expect(avgDiff).toBeGreaterThan(0.03);
+});
+```
+
+**AFTER (Consolidate into 2 tests):**
+```typescript
+// Test 1: Determinism + Avalanche
+test("random42 - hash properties", async () => {
+  // Determinism
+  const determinism = await testCompute(src1, "vec4f");
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
+
+  // Avalanche effect
+  const avalanche = await testCompute(src3, "vec4f");
+  const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
+  expect(avgDiff).toBeGreaterThan(0.03);
+});
+
+// Test 2: Distribution (replaces range + independence checks)
+test("random42 - distribution (x component)", async () => {
+  const samples = await testDistribution(src, 512, "f32", { SAMPLE_COUNT: 512 });
+  expectDistribution(samples, [0.0, 1.0]);
+});
+```
+
+**Result:**
+- Removed: Range bounds check (redundant)
+- Kept: Determinism, avalanche, independence tests (hash-specific properties)
+- Added: Distribution test (validates range + uniformity for x component)
+
+### Functions Without Distribution Tests
+
+Some functions don't need distribution tests:
+
+| Function Type | Example | Distribution Test? | Rationale |
+|---------------|---------|-------------------|-----------|
+| **Noise functions** | `cnoise`, `snoise` | ❌ NO | Designed for smoothness, not uniformity |
+| **Worley functions** | `worley`, `worley22` | ❌ NO | Distance-based, not uniform random |
+| **Wavelet functions** | `wavelet`, `waveletScaled` | ❌ NO | Structured patterns, not uniform |
+| **Periodic functions** | `pnoise` | ❌ NO | Periodicity is more important than distribution |
+
+For these functions, keep existing tests focused on their specific properties:
+- Noise: determinism, continuity, periodicity
+- Worley: F1 ≤ F2 property, determinism
+- Wavelet: phase/scale behavior
+
+### Consolidation Checklist
+
+When adding distribution tests, follow this checklist for each function:
+
+- [ ] **Add** distribution test (new)
+- [ ] **Keep** determinism check (if it exists)
+- [ ] **Keep** exact value / GLSL parity check (if it exists)
+- [ ] **Remove** range bounds checks (toBeGreaterThanOrEqual / toBeLessThanOrEqual)
+- [ ] **Consider removing** "different inputs" check (may be redundant)
+- [ ] **Keep** function-specific properties (e.g., avalanche effect for hashes)
+
+### Migration Strategy
+
+1. **Add distribution tests first** (don't remove anything yet)
+2. **Run all tests** to ensure distribution tests work correctly
+3. **Remove redundant checks** one function at a time
+4. **Verify tests still pass** after each consolidation
+
+This conservative approach ensures we don't accidentally remove important coverage.
 
 ## Adding Tests Conveniently
 
@@ -583,38 +749,89 @@ for (const config of distributionTests) {
 }
 ```
 
-### Approach 3: Manual but Consistent (Simplest)
+### Approach 3: Manual but Consistent (Simplest) ⭐ RECOMMENDED
 
-Just copy-paste the pattern for each function with minor tweaks:
+Just copy-paste the pattern for each function with minor tweaks.
+
+**IMPORTANT:** Use the `constants::` mechanism to pass the sample count to WESL, not string interpolation!
 
 ```typescript
 // Pattern for scalar functions
 test("random - distribution", async () => {
   const sampleCount = 1024;
   const src = `
+    import constants::SAMPLE_COUNT;
     import lygia::generative::random::random;
+
     @compute @workgroup_size(1)
     fn main() {
-      for (var i = 0u; i < ${sampleCount}u; i++) {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
         test::results[i] = random(f32(i));
       }
     }
   `;
-  const samples = await testDistribution(src, sampleCount);
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount
+  });
   expectDistribution(samples, [0.0, 1.0]);
 });
 
-// Repeat for each function...
+// Pattern for vector input functions
+test("random2 - distribution", async () => {
+  const sampleCount = 512;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random2;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 32u);
+        let y = f32(i / 32u);
+        test::results[i] = random2(vec2f(x, y));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount
+  });
+  expectDistribution(samples, [0.0, 1.0]);
+});
+
+// Pattern for signed functions
+test("srandom - distribution", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::srandom::srandom;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        test::results[i] = srandom(f32(i));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount
+  });
+  expectDistribution(samples, [-1.0, 1.0]);
+});
 ```
 
-**Recommendation:** Start with Approach 3 (manual) for the first 4-5 tests. If it feels too repetitive, refactor to Approach 2 (batch) or Approach 1 (generator).
+**Recommendation:** Start with Approach 3 (manual) for the first 4-5 tests. It's simple, explicit, and follows WESL best practices.
 
 ## Implementation Sequence
 
+### Phase 1: Add Infrastructure (Low Risk)
+
 1. **Add helper functions to `testUtil.ts`:**
-   - `testDistribution()`
-   - `expectDistribution()`
    - Import `elementStride` from wesl-debug
+   - Add `testDistribution()` function
+   - Add `expectDistribution()` function
+   - Add `expectMean()` function (optional, simpler alternative)
+
+### Phase 2: Add Distribution Tests (Medium Risk)
 
 2. **Add 2-3 initial tests to `generative.test.ts`:**
    - `random - distribution`
@@ -622,8 +839,9 @@ test("random - distribution", async () => {
    - `srandom - distribution`
 
 3. **Run tests and tune thresholds if needed:**
-   - If tests are too flaky, increase tolerances slightly
+   - If tests are too flaky, increase tolerances slightly (±0.05 mean, ±0.02 bucket)
    - If tests pass with obviously bad distributions, decrease tolerances
+   - Document any threshold adjustments in this file
 
 4. **Add remaining high-priority tests:**
    - `random3 - distribution`
@@ -632,11 +850,30 @@ test("random - distribution", async () => {
 5. **Add medium-priority tests (optional):**
    - `random22 - distribution` (test x component)
    - `random33 - distribution` (test x component)
+   - `srandom22 - distribution` (test x component)
 
-6. **Document learnings:**
+### Phase 3: Consolidate Existing Tests (Conservative)
+
+6. **Consolidate one function at a time:**
+   - Follow the consolidation checklist (see "Test Consolidation Strategy")
+   - Start with `random()` as the example
+   - Remove redundant range checks
+   - Keep determinism + exact value tests
+   - Verify tests still pass
+
+7. **Apply to remaining functions:**
+   - `random2`, `random3`, `random4`
+   - `random21`, `random22`, `random23`
+   - `random31`, `random32`, `random33`
+   - `random41`, `random42`, `random43`, `random44`
+   - `srandom`, `srandom2`, `srandom3`, `srandom4`
+   - `srandom22`, `srandom33`
+
+8. **Document learnings:**
    - Update this file with any discoveries
    - Note any functions that needed different thresholds
    - Record any interesting distribution issues found
+   - Document which tests were consolidated vs removed
 
 ## Future Enhancements
 
@@ -686,3 +923,49 @@ function generateHistogram(samples: number[], bucketCount = 10): string {
 - **Test best practices**: notes/test-review.md
 - **LYGIA WESL tests**: test/wesl/generative.test.ts
 - **Statistical testing**: Chi-squared goodness of fit test
+- **WESL best practices**: CLAUDE.md (no string interpolation in WESL code)
+
+## Summary
+
+### Key Decisions
+
+1. ✅ **Use constants:: mechanism** - Pass sample counts via `constants::SAMPLE_COUNT`, not string interpolation
+2. ✅ **GPU loop approach** - Collect samples in a single workgroup loop (Option A)
+3. ✅ **Manual test pattern** - Use Approach 3 (copy-paste) for initial tests
+4. ✅ **Conservative consolidation** - Add distribution tests first, then remove redundant checks
+
+### What Gets Tested
+
+**After implementation, each random function will have:**
+- ✅ Determinism test (same input → same output)
+- ✅ Exact value test (GLSL↔WESL parity)
+- ✅ Distribution test (mean + uniformity across 10 buckets)
+
+**What gets removed:**
+- ❌ Range bounds checks (redundant with distribution test)
+- ❌ "Different inputs" checks (redundant with 1024 diverse inputs)
+
+### Sample Sizes
+
+| Input Type | Samples | Buffer Size | Rationale |
+|-----------|---------|-------------|-----------|
+| Scalar (f32) | 1024 | 4096 bytes | Simple sequence needs more samples |
+| Vector (vec2f/vec3f) | 512 | 2048 bytes | 2D/3D space provides variation |
+
+### Statistical Thresholds
+
+| Test | Expected | Tolerance | Detects |
+|------|----------|-----------|---------|
+| Mean | 0.5 for [0,1]<br>0.0 for [-1,1] | ±0.05 | Systematic bias |
+| Buckets | 10% per bucket | ±2% (8-12%) | Clustering patterns |
+
+### Implementation Effort
+
+| Phase | Effort | Risk | Task |
+|-------|--------|------|------|
+| 1. Infrastructure | ~30 min | Low | Add 2 helper functions |
+| 2. Initial tests | ~30 min | Medium | Add 3 distribution tests |
+| 3. Tune thresholds | ~15 min | Low | Adjust if too flaky |
+| 4. Consolidation | ~2 hours | Low | Remove redundant checks from ~20 functions |
+
+**Total: ~3-4 hours** for complete implementation
