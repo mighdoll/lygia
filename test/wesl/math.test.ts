@@ -967,7 +967,6 @@ test("fcos - band limiting at high frequency", async () => {
   expect(Math.abs(result[1])).toBeGreaterThan(0.3);
 });
 
-// Compute-compatible tests
 test("adaptiveThreshold", async () => {
   const src = `
     import lygia::math::adaptiveThreshold::adaptiveThreshold;

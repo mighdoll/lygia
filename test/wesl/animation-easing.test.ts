@@ -1,7 +1,6 @@
 import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-// Animation easing functions
 test("backIn", async () => {
   const src = `
     import lygia::animation::easing::backIn::backIn;

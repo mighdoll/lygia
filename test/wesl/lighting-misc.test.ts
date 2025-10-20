@@ -101,8 +101,8 @@ test("fresnelRoughness", async () => {
   expect(result[3]).toBeLessThan(result[1]);     // Mid < grazing (smooth)
 
   // Test 4: Roughness effect should be stronger at grazing angles
-  let normalDiff = 0.0;  // At normal incidence, roughness has no effect
-  let grazingDiff = Math.abs(result[1] - result[2]);
+  // let normalDiff = 0.0;  // At normal incidence, roughness has no effect
+  const grazingDiff = Math.abs(result[1] - result[2]);
   expect(grazingDiff).toBeGreaterThan(0.4);  // Large difference at grazing angles
 });
 
@@ -209,8 +209,8 @@ test("specularCookTorrance", async () => {
 
   // Test 3: Roughness effect on specular falloff
   // Smooth surfaces have sharper falloff (larger ratio)
-  let smoothRatio = result[0] / (result[2] + 0.001);  // Peak / off-spec
-  let roughRatio = result[1] / (result[3] + 0.001);
+  const smoothRatio = result[0] / (result[2] + 0.001);  // Peak / off-spec
+  const roughRatio = result[1] / (result[3] + 0.001);
   expect(smoothRatio).toBeGreaterThan(roughRatio);  // Smooth falls off faster
 });
 
@@ -267,5 +267,3 @@ test("toShininess", async () => {
   expect(result[0]).toBeLessThan(250.0);   // Max is 240 * 0.95^4
   expect(result[1]).toBeGreaterThan(0.0);  // Min is positive
 });
-
-// Space Function Test
