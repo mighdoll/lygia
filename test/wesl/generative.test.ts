@@ -67,6 +67,8 @@ test("cnoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // TODO: Add GLSL parity test - verify result[0] matches GLSL cnoise2(vec2(1.0, 2.0))
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("cnoise3", async () => {
@@ -94,6 +96,8 @@ test("cnoise3", async () => {
   // Classic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("cnoise4", async () => {
@@ -121,6 +125,8 @@ test("cnoise4", async () => {
   // Classic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("snoise2", async () => {
@@ -149,6 +155,8 @@ test("snoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // TODO: Add GLSL parity test - verify result[0] matches GLSL snoise2(vec2(1.0, 2.0))
+  // Regression: exact output value
+  expectCloseTo([0.36833828687667847], [result[0]]);
 });
 
 test("snoise3", async () => {
@@ -176,6 +184,8 @@ test("snoise3", async () => {
   // Simplex noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.7335153818130493], [result[0]]);
 });
 
 test("pnoise2", async () => {
@@ -201,6 +211,8 @@ test("pnoise2", async () => {
   // Periodic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("pnoise3", async () => {
@@ -226,6 +238,8 @@ test("pnoise3", async () => {
   // Periodic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("pnoise4", async () => {
@@ -251,6 +265,8 @@ test("pnoise4", async () => {
   // Periodic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0], [result[0]]);
 });
 
 test("srandom2", async () => {
@@ -278,6 +294,8 @@ test("srandom2", async () => {
   // Signed random returns values in [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.7109375], [result[0]]);
 });
 
 test("worley2", async () => {
@@ -305,6 +323,8 @@ test("worley2", async () => {
   // Worley noise returns distance in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.7470544576644897], [result[0]]);
 });
 
 // Noise with derivatives
@@ -336,6 +356,8 @@ test("noised2", async () => {
   // Derivatives should be in reasonable range
   expect(Math.abs(result[0])).toBeLessThan(5.0);
   expect(Math.abs(result[2])).toBeLessThan(5.0);
+  // Regression: exact output value
+  expectCloseTo([-0.3647780418395996], [result[0]]);
 });
 
 test("noised3", async () => {
@@ -368,6 +390,8 @@ test("noised3", async () => {
   // Derivatives should be in reasonable range
   expect(Math.abs(result[0])).toBeLessThan(5.0);
   expect(Math.abs(result[2])).toBeLessThan(5.0);
+  // Regression: exact output value
+  expectCloseTo([-0.59765625], [result[0]]);
 });
 
 test("wavelet2", async () => {
@@ -395,6 +419,8 @@ test("wavelet2", async () => {
   // Wavelet noise should return values in reasonable range
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.19464324414730072], [result[0]]);
 });
 
 test("wavelet3", async () => {
@@ -423,6 +449,8 @@ test("wavelet3", async () => {
   // Wavelet noise should return values in reasonable range
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.19464324414730072], [result[0]]);
 });
 
 test("waveletScaled2", async () => {
@@ -450,6 +478,8 @@ test("waveletScaled2", async () => {
   // Wavelet noise should return values in reasonable range
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.11138363927602768], [result[0]]);
 });
 
 test("waveletScaled3 - with custom scale parameter", async () => {
@@ -480,6 +510,8 @@ test("waveletScaled3 - with custom scale parameter", async () => {
   // Wavelet noise should return values in reasonable range
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.094538614153862], [result[0]]);
 });
 
 test("random", async () => {
@@ -504,6 +536,8 @@ test("random", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // TODO: Add GLSL parity test - verify result[0] matches GLSL random(1.0)
+  // Regression: exact output value
+  expectCloseTo([0.7629680633544922], [result[0]]);
 });
 
 test("random2", async () => {
@@ -528,6 +562,8 @@ test("random2", async () => {
   // Random should return values in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.61529541015625], [result[0]]);
 });
 
 test("random3", async () => {
@@ -552,6 +588,8 @@ test("random3", async () => {
   // Random should return values in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.37200927734375], [result[0]]);
 });
 
 test("random4", async () => {
@@ -576,6 +614,8 @@ test("random4", async () => {
   // Random should return values in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.51806640625], [result[0]]);
 });
 
 test("random21 - basic output", async () => {
@@ -600,6 +640,8 @@ test("random21 - basic output", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.8786392211914062], [result[0]]);
 });
 
 test("random22 - basic output", async () => {
@@ -624,6 +666,8 @@ test("random22 - basic output", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.2332763671875], [result[0]]);
 });
 
 test("random23 - basic output", async () => {
@@ -648,6 +692,8 @@ test("random23 - basic output", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.683746337890625], [result[0]]);
 });
 
 test("random31 - basic output", async () => {
@@ -673,6 +719,8 @@ test("random31 - basic output", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.8786392211914062], [result[0]]);
 });
 
 test("random32 - basic output", async () => {
@@ -699,6 +747,8 @@ test("random32 - basic output", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.25337982177734375], [result[0]]);
 });
 
 test("random33 - basic output", async () => {
@@ -725,6 +775,8 @@ test("random33 - basic output", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.45416259765625], [result[0]]);
 });
 
 test("random41 - determinism and range", async () => {
@@ -747,6 +799,9 @@ test("random41 - determinism and range", async () => {
     expect(v).toBeGreaterThanOrEqual(0.0);
     expect(v).toBeLessThanOrEqual(1.0);
   });
+
+  // Regression: exact output value
+  expectCloseTo([0.382354736328125, 0.42840576171875, 0.5390167236328125, 0.4849395751953125], result1);
 });
 
 test("random42 - hash properties", async () => {
@@ -796,6 +851,9 @@ test("random42 - hash properties", async () => {
   const avalanche = await testCompute(src3, "vec4f");
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.03); // Hash property: small input → significant output change
+
+  // Regression: exact output value
+  expectCloseTo([0.66876220703125, 0.996826171875, 0.603179931640625, 0.9088134765625], result);
 });
 
 test("random43 - hash properties", async () => {
@@ -845,6 +903,9 @@ test("random43 - hash properties", async () => {
   const avalanche = await testCompute(src3, "vec4f");
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.1);
+
+  // Regression: exact output value
+  expectCloseTo([0.407958984375, 0.216583251953125, 0.96063232421875, 0.4371337890625], result);
 });
 
 test("random44 - hash properties", async () => {
@@ -894,6 +955,9 @@ test("random44 - hash properties", async () => {
   const avalanche = await testCompute(src3, "vec4f");
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.1);
+
+  // Regression: exact output value
+  expectCloseTo([0.81640625, 0.07281494140625, 0.7236328125, 0.70635986328125], result);
 });
 
 // Simplex noise variants - vector outputs
@@ -952,6 +1016,8 @@ test("snoise33", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.7335153818130493], [result[0]]);
 });
 
 test("snoise34", async () => {
@@ -982,6 +1048,8 @@ test("snoise34", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.37476846575737], [result[0]]);
 });
 
 test("snoise4", async () => {
@@ -1009,6 +1077,8 @@ test("snoise4", async () => {
   // Simplex noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.37476846575737], [result[0]]);
 });
 
 // Signed random variants
@@ -1033,6 +1103,8 @@ test("srandom", async () => {
   // Signed random returns values in [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.455078125], [result[0]]);
 });
 
 test("srandom22", async () => {
@@ -1060,6 +1132,8 @@ test("srandom22", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(-1.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.3647780418395996], [result[0]]);
 });
 
 test("srandom3", async () => {
@@ -1087,6 +1161,8 @@ test("srandom3", async () => {
   // Signed random returns values in [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.1328125], [result[0]]);
 });
 
 test("srandom33", async () => {
@@ -1114,6 +1190,8 @@ test("srandom33", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.58984375], [result[0]]);
 });
 
 test("srandom4", async () => {
@@ -1141,6 +1219,8 @@ test("srandom4", async () => {
   // Signed random returns values in [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.6796875], [result[0]]);
 });
 
 test("srandom_tile22", async () => {
@@ -1168,6 +1248,8 @@ test("srandom_tile22", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(-1.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.3647780418395996], [result[0]]);
 });
 
 test("srandom_tile33", async () => {
@@ -1197,6 +1279,8 @@ test("srandom_tile33", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([-0.58984375], [result[0]]);
 });
 
 // Worley noise variants
@@ -1227,6 +1311,8 @@ test("worley22", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.5);
   // F1 should be less than or equal to F2 (closest point <= second closest)
   expect(result[0]).toBeLessThanOrEqual(result[1] + 0.001);
+  // Regression: exact output value
+  expectCloseTo([0.25294554233551025], [result[0]]);
 });
 
 test("worley3", async () => {
@@ -1254,6 +1340,8 @@ test("worley3", async () => {
   // Worley noise returns 1.0 - distance, so values in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.38763654232025146], [result[0]]);
 });
 
 test("worley32", async () => {
@@ -1281,6 +1369,8 @@ test("worley32", async () => {
   expect(result[1]).toBeLessThanOrEqual(2.0);
   // F1 should be less than or equal to F2 (closest point <= second closest)
   expect(result[0]).toBeLessThanOrEqual(result[1] + 0.001);
+  // Regression: exact output value
+  expectCloseTo([0.6123634576797485], [result[0]]);
 });
 
 test("wavelet - base function with custom phase and scale", async () => {
@@ -1316,4 +1406,6 @@ test("wavelet - base function with custom phase and scale", async () => {
   // Wavelet noise should return values in reasonable range
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
+  // Regression: exact output value
+  expectCloseTo([0.18840710818767548], [result[0]]);
 });
