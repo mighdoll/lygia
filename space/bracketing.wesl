@@ -1,9 +1,6 @@
 import lygia::math::consts::PI;
 import lygia::math::consts::TWO_PI;
 
-@if(BRACKETING_ANGLE_DELTA)
-import constants::BRACKETING_ANGLE_DELTA;
-
 /*
 contributors: Huw Bowles ( @hdb1 )
 description: Bracketing technique maps a texture to a plane using any arbitrary 2D vector field to give orientation. From https://www.shadertoy.com/view/NddcDr
@@ -12,6 +9,9 @@ options:
     - BRACKETING_ANGLE_DELTA: boolean condition for custom angle delta (requires constants::BRACKETING_ANGLE_DELTA f32 from linker)
 license: MIT license (MIT) Copyright Huw Bowles May 2022
 */
+
+@if(BRACKETING_ANGLE_DELTA)
+import constants::BRACKETING_ANGLE_DELTA;
 
 // Parameter for bracketing - bracket size in radians. Large values create noticeable linear structure,
 // small values prone to simply replicating the issues with the brute force approach. In my use cases it
