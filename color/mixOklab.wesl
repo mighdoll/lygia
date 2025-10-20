@@ -20,26 +20,15 @@ license:
     - MIT License (MIT) Copyright (c) 2020 Inigo Quilez
 */
 
-@if(MIXOKLAB_SRGB)
 fn mixOklab(colA: vec3f, colB: vec3f, h: f32) -> vec3f {
+    @if(MIXOKLAB_SRGB)
     let colorA = srgb2rgb(colA);
-    let colorB = srgb2rgb(colB);
-
-    // rgb to cone (arg of pow can't be negative)
-    let lmsA = pow(RGB2OKLAB_B * colorA, vec3f(0.33333));
-    let lmsB = pow(RGB2OKLAB_B * colorB, vec3f(0.33333));
-
-    let lms = mix(lmsA, lmsB, h);
-
-    // cone to rgb
-    let rgb = OKLAB2RGB_B * (lms * lms * lms);
-
-    return rgb2srgb(rgb);
-}
-
-@if(!MIXOKLAB_SRGB)
-fn mixOklab(colA: vec3f, colB: vec3f, h: f32) -> vec3f {
+    @if(!MIXOKLAB_SRGB)
     let colorA = colA;
+
+    @if(MIXOKLAB_SRGB)
+    let colorB = srgb2rgb(colB);
+    @if(!MIXOKLAB_SRGB)
     let colorB = colB;
 
     // rgb to cone (arg of pow can't be negative)
@@ -51,6 +40,9 @@ fn mixOklab(colA: vec3f, colB: vec3f, h: f32) -> vec3f {
     // cone to rgb
     let rgb = OKLAB2RGB_B * (lms * lms * lms);
 
+    @if(MIXOKLAB_SRGB)
+    return rgb2srgb(rgb);
+    @if(!MIXOKLAB_SRGB)
     return rgb;
 }
 

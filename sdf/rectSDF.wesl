@@ -22,17 +22,13 @@ fn rectSDF2Round(p: vec2f, b: f32, r: f32) -> f32 {
     return rectSDF3(p, vec2f(b), r);
 }
 
-@if(CENTER_2D)
 fn rectSDF(st: vec2f, s: vec2f) -> f32 {
-    var uv = st - constants::CENTER_2D;
-    uv *= 2.0;
-    return max( abs(uv.x / s.x),
-                abs(uv.y / s.y) );
-}
+    var uv: vec2f;
+    @if(CENTER_2D)
+    uv = (st - constants::CENTER_2D) * 2.0;
+    @if(!CENTER_2D)
+    uv = st * 2.0 - 1.0;
 
-@if(!CENTER_2D)
-fn rectSDF(st: vec2f, s: vec2f) -> f32 {
-    let uv = st * 2.0 - 1.0;
     return max( abs(uv.x / s.x),
                 abs(uv.y / s.y) );
 }

@@ -17,13 +17,11 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
-@if(CAMERA_ORTHOGRAPHIC_PROJECTION)
 fn depth2viewZ(depth: f32, near: f32, far: f32) -> f32 {
+    @if(CAMERA_ORTHOGRAPHIC_PROJECTION)
     // ORTHOGRAPHIC
     return depth * (near - far) - near;
-}
-@if(!CAMERA_ORTHOGRAPHIC_PROJECTION)
-fn depth2viewZ(depth: f32, near: f32, far: f32) -> f32 {
+    @if(!CAMERA_ORTHOGRAPHIC_PROJECTION)
     // PERSPECTIVE
     return (near * far) / ((far - near) * depth - far);
 }

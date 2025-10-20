@@ -14,19 +14,19 @@ license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
-@if(LOOK_AT_RIGHT_HANDED)
 fn lookAt(forward: vec3f, up: vec3f) -> mat3x3f {
     let zaxis = normalize(forward);
-    let xaxis = normalize(cross(zaxis, up));
-    let yaxis = cross(xaxis, zaxis);
-    return mat3x3f(xaxis, yaxis, zaxis);
-}
 
-@if(!LOOK_AT_RIGHT_HANDED)
-fn lookAt(forward: vec3f, up: vec3f) -> mat3x3f {
-    let zaxis = normalize(forward);
+    @if(LOOK_AT_RIGHT_HANDED)
+    let xaxis = normalize(cross(zaxis, up));
+    @if(!LOOK_AT_RIGHT_HANDED)
     let xaxis = normalize(cross(up, zaxis));
+
+    @if(LOOK_AT_RIGHT_HANDED)
+    let yaxis = cross(xaxis, zaxis);
+    @if(!LOOK_AT_RIGHT_HANDED)
     let yaxis = cross(zaxis, xaxis);
+
     return mat3x3f(xaxis, yaxis, zaxis);
 }
 

@@ -22,24 +22,34 @@ fn rotateX4_c(v: vec4f, r: f32, c: vec4f) -> vec4f {
     return rotate4dX(r) * (v - c) + c;
 }
 
-@if(CENTER_4D)
 fn rotateX4(v: vec4f, r: f32) -> vec4f {
-    return rotate4dX(r) * (v - constants::CENTER_4D) + constants::CENTER_4D;
-}
-@if(!CENTER_4D)
-fn rotateX4(v: vec4f, r: f32) -> vec4f {
-    return rotate4dX(r) * v;
+    @if(CENTER_4D)
+    let centered = v - constants::CENTER_4D;
+    @if(!CENTER_4D)
+    let centered = v;
+
+    let result = rotate4dX(r) * centered;
+
+    @if(CENTER_4D)
+    return result + constants::CENTER_4D;
+    @if(!CENTER_4D)
+    return result;
 }
 
 fn rotateX3_c(v: vec3f, r: f32, c: vec3f) -> vec3f {
     return (rotate4dX(r) * vec4f(v - c, 1.0)).xyz + c;
 }
 
-@if(CENTER_3D)
 fn rotateX3(v: vec3f, r: f32) -> vec3f {
-    return (rotate4dX(r) * vec4f(v - constants::CENTER_3D, 1.0)).xyz + constants::CENTER_3D;
-}
-@if(!CENTER_3D)
-fn rotateX3(v: vec3f, r: f32) -> vec3f {
-    return (rotate4dX(r) * vec4f(v, 1.0)).xyz;
+    @if(CENTER_3D)
+    let centered = v - constants::CENTER_3D;
+    @if(!CENTER_3D)
+    let centered = v;
+
+    let result = (rotate4dX(r) * vec4f(centered, 1.0)).xyz;
+
+    @if(CENTER_3D)
+    return result + constants::CENTER_3D;
+    @if(!CENTER_3D)
+    return result;
 }

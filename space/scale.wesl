@@ -21,14 +21,13 @@ fn scale_f_c(st: f32, s: f32, center: vec2f) -> vec2f {
     return (vec2f(st) - center) * s + center;
 }
 
-@if(CENTER_2D)
 fn scale_f(st: f32, s: f32) -> vec2f {
-    return scale_f_c(st, s, constants::CENTER_2D);
-}
+    @if(CENTER_2D)
+    let center = constants::CENTER_2D;
+    @if(!CENTER_2D)
+    let center = vec2f(0.5);
 
-@if(!CENTER_2D)
-fn scale_f(st: f32, s: f32) -> vec2f {
-    return scale_f_c(st, s, vec2f(0.5));
+    return (vec2f(st) - center) * s + center;
 }
 
 // vec2 variants
@@ -40,24 +39,22 @@ fn scale2_f_c(st: vec2f, s: f32, center: vec2f) -> vec2f {
     return scale2_c(st, vec2f(s), center);
 }
 
-@if(CENTER_2D)
 fn scale2(st: vec2f, s: vec2f) -> vec2f {
-    return (st - constants::CENTER_2D) * s + constants::CENTER_2D;
+    @if(CENTER_2D)
+    let center = constants::CENTER_2D;
+    @if(!CENTER_2D)
+    let center = vec2f(0.5);
+
+    return (st - center) * s + center;
 }
 
-@if(!CENTER_2D)
-fn scale2(st: vec2f, s: vec2f) -> vec2f {
-    return (st - 0.5) * s + 0.5;
-}
-
-@if(CENTER_2D)
 fn scale2_f(st: vec2f, s: f32) -> vec2f {
-    return (st - constants::CENTER_2D) * s + constants::CENTER_2D;
-}
+    @if(CENTER_2D)
+    let center = constants::CENTER_2D;
+    @if(!CENTER_2D)
+    let center = vec2f(0.5);
 
-@if(!CENTER_2D)
-fn scale2_f(st: vec2f, s: f32) -> vec2f {
-    return (st - 0.5) * s + 0.5;
+    return (st - center) * s + center;
 }
 
 // vec3 variants
@@ -69,24 +66,22 @@ fn scale3_f_c(st: vec3f, s: f32, center: vec3f) -> vec3f {
     return (st - center) * s + center;
 }
 
-@if(CENTER_3D)
 fn scale3(st: vec3f, s: vec3f) -> vec3f {
-    return (st - constants::CENTER_3D) * s + constants::CENTER_3D;
+    @if(CENTER_3D)
+    let center = constants::CENTER_3D;
+    @if(!CENTER_3D)
+    let center = vec3f(0.5);
+
+    return (st - center) * s + center;
 }
 
-@if(!CENTER_3D)
-fn scale3(st: vec3f, s: vec3f) -> vec3f {
-    return (st - 0.5) * s + 0.5;
-}
-
-@if(CENTER_3D)
 fn scale3_f(st: vec3f, s: f32) -> vec3f {
-    return (st - constants::CENTER_3D) * s + constants::CENTER_3D;
-}
+    @if(CENTER_3D)
+    let center = constants::CENTER_3D;
+    @if(!CENTER_3D)
+    let center = vec3f(0.5);
 
-@if(!CENTER_3D)
-fn scale3_f(st: vec3f, s: f32) -> vec3f {
-    return (st - 0.5) * s + 0.5;
+    return (st - center) * s + center;
 }
 
 // For tiles
