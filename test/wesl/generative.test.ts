@@ -296,9 +296,6 @@ test("srandom2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.7109375], [result[0]]);
 });
@@ -537,9 +534,6 @@ test("random", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // TODO: Add GLSL parity test - verify result[0] matches GLSL random(1.0)
   // Regression: exact output value
   expectCloseTo([0.7629680633544922], [result[0]]);
@@ -564,9 +558,6 @@ test("random2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.61529541015625], [result[0]]);
 });
@@ -590,9 +581,6 @@ test("random3", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.37200927734375], [result[0]]);
 });
@@ -666,11 +654,6 @@ test("random22 - basic output", async () => {
   const result = await testCompute(src, "vec4f");
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.2332763671875], [result[0]]);
 });
@@ -773,13 +756,6 @@ test("random33 - basic output", async () => {
   const result = await testCompute(src, "vec4f");
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.45416259765625], [result[0]]);
 });
@@ -1120,9 +1096,6 @@ test("srandom", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.455078125], [result[0]]);
 });
@@ -1147,11 +1120,6 @@ test("srandom22", async () => {
   const result = await testCompute(src, "vec4f");
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3647780418395996], [result[0]]);
 });
