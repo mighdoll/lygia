@@ -7,12 +7,18 @@ import lygia::color::space::{
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: Perceptual distance between two color according to CIE94 https://en.wikipedia.org/wiki/Color_difference#CIE94
-use: colorDistance(<vec3|vec4> rgbA, <vec3|vec4> rgbA)
-options:
-    - COLORDISTANCE_FNC: |
-        colorDistanceLABCIE94, colorDistanceLAB, colorDistanceYCbCr,
-        colorDistanceYPbPr, colorDistanceYUV, colorDistanceOKLAB
+description: |
+    Perceptual distance between two colors. The default implementation uses CIE94.
+    See https://en.wikipedia.org/wiki/Color_difference#CIE94
+use: colorDistance(<vec3|vec4> rgbA, <vec3|vec4> rgbB)
+note: |
+    Multiple distance metric functions are available:
+    - colorDistanceLABCIE94 (default)
+    - colorDistanceLAB
+    - colorDistanceYCbCr
+    - colorDistanceYPbPr
+    - colorDistanceYUV
+    - colorDistanceOKLAB
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

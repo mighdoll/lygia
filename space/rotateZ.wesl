@@ -8,11 +8,17 @@ import lygia::math::rotate4dZ::rotate4dZ;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: rotate a 2D space by a radian angle
-use: rotateZ(<vec3|vec4> pos, float radian [, vec3 center])
-options:
-    - CENTER_3D: boolean condition to enable custom 3D center point (requires constants::CENTER_3D vec3f value from linker)
-    - CENTER_4D: boolean condition to enable custom 4D center point (requires constants::CENTER_4D vec4f value from linker)
+description: |
+    Rotate a 3D/4D space around the Z axis by a radian angle
+
+    WESL conditionals:
+    - @if(CENTER_3D): Uses custom 3D center point for vec3 rotations
+    - @if(CENTER_4D): Uses custom 4D center point for vec4 rotations
+use: |
+    rotateZ3(v: vec3f, r: f32) -> vec3f
+    rotateZ3_c(v: vec3f, r: f32, c: vec3f) -> vec3f
+    rotateZ4(v: vec4f, r: f32) -> vec4f
+    rotateZ4_c(v: vec4f, r: f32, c: vec4f) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

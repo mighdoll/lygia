@@ -1,12 +1,12 @@
 /*
 contributors: bacondither
 description: Adaptive sharpening. For strength values between 0.3 <-> 2.0 are a reasonable range
-use: sharpen(<SAMPLER_TYPE> texture, <vec2> st, <vec2> renderSize [, float streanght])
+use:
+    - sharpenContrastAdaptive(texture, sampler, st, pixel, strength) -> vec3f
+    - sharpenAdaptive4(texture, sampler, st, pixel, strength) -> vec4f
+    - sharpenAdaptive(texture, sampler, st, pixel) -> vec4f (strength defaults to 1.0)
 options:
-    - SAMPLER_FNC(TEX, UV): optional depending the target version of GLSL (texture2D(...) or texture(...))
-    - SHARPENADAPTIVE_TYPE: defaults to vec3
-    - SHARPENDADAPTIVE_SAMPLER_FNC(TEX, UV): defaults to texture2D(TEX, UV).rgb
-    - SHARPENADAPTIVE_ANIME: only darken edges. Defaults to false
+    - SHARPENADAPTIVE_ANIME: const bool, set to true to only darken edges. Defaults to false (line 64)
 examples:
     - /shaders/filter_sharpen2D.frag
 */

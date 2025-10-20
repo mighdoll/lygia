@@ -3,10 +3,15 @@ import lygia::math::{mmin::mmin3, mmax::mmax3};
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: Convert from RYB to RGB color space. Based on http://nishitalab.org/user/UEI/publication/Sugita_IWAIT2015.pdf http://vis.computer.org/vis2004/DVD/infovis/papers/gossett.pdf
+description: |
+    Convert from RYB to RGB color space.
+    Based on http://nishitalab.org/user/UEI/publication/Sugita_IWAIT2015.pdf
+    and http://vis.computer.org/vis2004/DVD/infovis/papers/gossett.pdf
 use: <vec3|vec4> ryb2rgb(<vec3|vec4> ryb)
-options:
-    - RYB_FAST: Use a non-homogeneous version of the conversion. Default is the homogeneous version.
+note: |
+    Two implementations are provided via WESL conditionals:
+    - @if(RYB_FAST): Non-homogeneous version (faster)
+    - @if(!RYB_FAST): Homogeneous version using cubic interpolation (default)
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/color_ryb.frag
 license:

@@ -1,7 +1,7 @@
 /*
 contributors: Shadi El Hajj
 description: A simple low-pass filter which attenuates high-frequencies.
-use: <f32> nyquist(<f32> value, <f32> width)
+use: nyquist(value: f32, width: f32) -> f32
 license: MIT License (MIT) Copyright (c) 2024 Shadi EL Hajj
 */
 

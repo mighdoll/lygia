@@ -8,8 +8,10 @@ description: blue noise dithering
 use:
     - <vec4f|vec3f|f32> ditherBlueNoise(<vec4f|vec3f|f32> value, <vec2f> st, <i32> precision)
     - <vec4f|vec3f|f32> ditherBlueNoise(<vec4f|vec3f|f32> value, <vec2f> st)
-options:
+note: |
+    Constants can be customized:
     - DITHER_BLUENOISE_PRECISION: precision for decimation (default: 256)
+    - DITHER_BLUENOISE_TIME: time offset (default: 0.0, requires DITHER_BLUENOISE_TIME_ENABLED)
 examples:
     - /shaders/color_dither.frag
 license:

@@ -7,15 +7,12 @@ description: "Resolve fresnel coefficient and apply it to a reflection. It can a
 use:
     - <vec3f> fresnelReflection(<vec3f> R, <vec3f> f0, <f32> NoV)
     - <vec3f> fresnelReflection(<vec3f> R, <vec3f> Fr)
-options:
-    - FRESNEL_REFLECTION_RGB: <vec3f> RGB values of the reflection (default: vec3(612.0, 549.0, 464.0))
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
-// LATER make this a @param const when WESL supports
-// Default wavelengths for Fresnel reflection
+// Default wavelengths for Fresnel reflection (RGB: 612nm, 549nm, 464nm)
 const FRESNEL_REFLECTION_RGB: vec3f = vec3f(612.0, 549.0, 464.0);
 
 // Note: fresnelReflection requires envMap function which is not yet available in WESL

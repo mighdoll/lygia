@@ -1,7 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: clamp a value between 0 and 1
-use: <f32|vec2f|vec3f|vec4f> saturate(<f32|vec2f|vec3f|vec4f> value)
+use: saturate(v: f32) -> f32 | saturate2(v: vec2f) -> vec2f | saturate3(v: vec3f) -> vec3f | saturate4(v: vec4f) -> vec4f
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/math_functions.frag
 license:

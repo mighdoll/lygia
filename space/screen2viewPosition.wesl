@@ -8,11 +8,14 @@ import constants::INVERSE_CAMERA_PROJECTION_MATRIX;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: derive view surface position from screen coordinates and depth
-use: <vec4f> screen2viewPosition(<vec2f> screenPosition, <f32> depth, <f32> viewZ)
-options:
-    - CAMERA_PROJECTION_MATRIX: boolean condition for using projection matrix (requires constants::CAMERA_PROJECTION_MATRIX mat4x4f from linker)
-    - INVERSE_CAMERA_PROJECTION_MATRIX: boolean condition for using inverse projection matrix (requires constants::INVERSE_CAMERA_PROJECTION_MATRIX mat4x4f from linker)
+description: |
+    Derive view surface position from screen coordinates and depth
+
+    WESL conditionals:
+    - @if(CAMERA_PROJECTION_MATRIX && INVERSE_CAMERA_PROJECTION_MATRIX): Uses provided inverse matrix
+    - @if(CAMERA_PROJECTION_MATRIX && !INVERSE_CAMERA_PROJECTION_MATRIX): Computes inverse matrix on the fly
+    - Note: CAMERA_PROJECTION_MATRIX is required; function not defined if absent
+use: screen2viewPosition(screenPosition: vec2f, depth: f32, viewZ: f32) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
@@ -32,6 +35,3 @@ fn screen2viewPosition(screenPosition: vec2f, depth: f32, viewZ: f32) -> vec4f {
     let clipPosition = vec4f((vec3f(screenPosition, depth) - 0.5) * 2.0, 1.0) * clipW;
     return INVERSE_CAMERA_PROJECTION_MATRIX * clipPosition;
 }
-
-// Note: If CAMERA_PROJECTION_MATRIX is not defined, this function cannot be used.
-// Please define CAMERA_PROJECTION_MATRIX before using this function.

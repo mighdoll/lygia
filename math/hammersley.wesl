@@ -3,7 +3,7 @@ import lygia::math::consts::PI;
 /*
 contributors: Holger Dammertz
 description: Return a Hammersley point
-use: <vec2f> hammersley(<u32> index, <i32> numSamples)
+use: hammersley(index: u32, numSamples: i32) -> vec2f
 license: CC BY 3.0 Copyright (c) 2012 Holger Dammertz
 */
 

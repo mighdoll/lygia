@@ -3,7 +3,7 @@ contributors: Patricio Gonzalez Vivo
 description: |
     Linear interpolation between two quaternions.
     This function is based on the implementation of slerp() found in the GLM library.
-use: <QUAT> quatLerp(<QUAT> a, <QUAT> b, <float> t)
+use: quatLerp(qa: vec4f, qb: vec4f, t: f32) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

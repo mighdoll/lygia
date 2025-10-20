@@ -10,8 +10,8 @@ use:
     - <vec4f|vec3f|f32> ditherBayer(<vec4f|vec3f|f32> value, <i32> precision)
     - <vec4f|vec3f|f32> ditherBayer(<vec4f|vec3f|f32> value)
     - <f32> ditherBayer(<vec2f> xy)
-options:
-    - DITHER_BAYER_PRECISION: precision for decimation (default: 256)
+note: |
+    The constant DITHER_BAYER_PRECISION can be customized (default: 256)
 examples:
     - /shaders/color_dither_bayer.frag
 license:

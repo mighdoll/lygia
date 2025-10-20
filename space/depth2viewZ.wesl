@@ -6,12 +6,13 @@ import constants::CAMERA_FAR_CLIP;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: Convert camera depth to view depth. based on https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/ShaderChunk/packing.glsl.js
-use: <float> depth2viewZ( <float> depth [, <float> near, <float> far] )
-options:
-    - CAMERA_NEAR_CLIP: boolean condition for using near clip value (requires constants::CAMERA_NEAR_CLIP f32 from linker)
-    - CAMERA_FAR_CLIP: boolean condition for using far clip value (requires constants::CAMERA_FAR_CLIP f32 from linker)
-    - CAMERA_ORTHOGRAPHIC_PROJECTION: boolean condition for orthographic vs perspective projection
+description: |
+    Convert camera depth to view depth. Based on https://github.com/mrdoob/three.js/blob/master/src/renderers/shaders/ShaderChunk/packing.glsl.js
+
+    WESL conditionals:
+    - @if(CAMERA_ORTHOGRAPHIC_PROJECTION): Uses orthographic projection formula, otherwise perspective
+    - @if(CAMERA_NEAR_CLIP && CAMERA_FAR_CLIP): Defines depth2viewZ_default(depth) overload using constants
+use: depth2viewZ(depth: f32, near: f32, far: f32) -> f32
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

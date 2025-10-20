@@ -5,9 +5,11 @@ import lygia::math::saturate::saturate3;
 contributors: Patricio Gonzalez Vivo
 description: Convert from HSV to RYB color space
 use: <vec3> hsv2ryb(<vec3> hsv)
-options:
-    - HSV2RYB_FAST: if defined, use CMY bias version
-    - RYB_FAST: if defined, use fast RYB conversion
+note: |
+    Three implementations are provided via WESL conditionals:
+    - @if(HSV2RYB_FAST): CMY bias version (fastest)
+    - @elif(RYB_FAST): Fast RYB conversion via HSV->RGB->RYB
+    - @else: Default version with saturation adjustment
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/color_ryb.frag
 license:

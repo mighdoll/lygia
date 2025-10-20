@@ -3,10 +3,12 @@ import lygia::math::consts::TWO_PI;
 
 /*
 contributors: Huw Bowles ( @hdb1 )
-description: Bracketing technique maps a texture to a plane using any arbitrary 2D vector field to give orientation. From https://www.shadertoy.com/view/NddcDr
-use: sampleBracketing(<SAMPLER_TYPE> texture, <vec2> st, <vec2> direction [, <float> scale] )
-options:
-    - BRACKETING_ANGLE_DELTA: boolean condition for custom angle delta (requires constants::BRACKETING_ANGLE_DELTA f32 from linker)
+description: |
+    Bracketing technique maps a texture to a plane using any arbitrary 2D vector field to give orientation. From https://www.shadertoy.com/view/NddcDr
+
+    WESL conditionals:
+    - @if(BRACKETING_ANGLE_DELTA): Uses custom angle delta constant, otherwise uses PI/20.0 default
+use: bracketing(dir: vec2f) -> BracketingResult
 license: MIT license (MIT) Copyright Huw Bowles May 2022
 */
 

@@ -8,11 +8,13 @@ contributors:
     - Inigo Quiles
 description: |
     Mix function by Inigo Quiles (https://www.shadertoy.com/view/ttcyRS)
-    utilizing Bjorn Ottosso's OkLab color space, which provides smooth transitions
-    Learn more about it [his article](https://bottosson.github.io/posts/oklab/)
+    utilizing Bjorn Ottosson's OkLab color space, which provides smooth transitions.
+    Learn more about it in [his article](https://bottosson.github.io/posts/oklab/)
 use: <vec3f|vec4f> mixOklab(<vec3f|vec4f> colorA, <vec3f|vec4f> colorB, <f32> pct)
-options:
-    - MIXOKLAB_SRGB: color arguments are in sRGB and returns sRGB
+note: |
+    Two modes are provided via WESL conditionals:
+    - @if(!MIXOKLAB_SRGB): Linear RGB input/output (default)
+    - @if(MIXOKLAB_SRGB): sRGB input/output - performs conversion before/after mixing
 examples:
     - /shaders/color_mix.frag
 license:

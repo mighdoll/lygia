@@ -2,13 +2,15 @@ import lygia::color::space::xyz2rgb::XYZ2RGB;
 
 /*
 contributors: Ronald van Wijnen (@OneDayOfCrypto)
-description: | 
-    Spectral mix allows you to achieve realistic color mixing in your projects. 
-    It is based on the Kubelka-Munk theory, a proven scientific model that simulates 
-    how light interacts with paint to produce lifelike color mixing. 
+description: |
+    Spectral mix allows you to achieve realistic color mixing in your projects.
+    It is based on the Kubelka-Munk theory, a proven scientific model that simulates
+    how light interacts with paint to produce lifelike color mixing.
     Find more information on Ronald van Wijnen's [original repository](https://github.com/rvanwijnen/spectral.js)
-options:
-    - MIXSPECTRAL_SRGB: by default A and B are linear RGB. If you want to use sRGB, define this flag.
+use: <vec3f|vec4f> mixSpectral(<vec3f|vec4f> colorA, <vec3f|vec4f> colorB, <f32> pct)
+note: |
+    By default, this function expects linear RGB inputs.
+    For sRGB inputs, use the MIXSPECTRAL_SRGB conditional (not yet implemented in WESL).
 examples:
     - /shaders/color_mix.frag
 license: MIT License Copyright (c) 2023 Ronald van Wijnen

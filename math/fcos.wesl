@@ -3,7 +3,7 @@ import lygia::math::consts::TWO_PI;
 /*
 contributors: Inigo Quiles
 description: A band-limited variant of cos(x) which reduces aliasing at high frequencies. From https://iquilezles.org/articles/bandlimiting/
-use: <f32> fcos(<f32> value)
+use: fcos(value: f32) -> f32
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

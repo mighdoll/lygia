@@ -1,7 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: "Quaternion subtraction. \n"
-use: <QUAT> quatNeg(<QUAT> a, <QUAT> b)
+use: quatSub(a: vec4f, b: vec4f) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

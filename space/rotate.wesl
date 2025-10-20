@@ -12,12 +12,21 @@ import constants::CENTER_4D;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: rotate a 2D space by a radian r
-use: rotate(<vec3|vec2> v, float r [, vec2 c])
-options:
-    - CENTER_2D: boolean condition to enable custom 2D center point (requires constants::CENTER_2D vec2f value from linker)
-    - CENTER_3D: boolean condition to enable custom 3D center point (requires constants::CENTER_3D vec3f value from linker)
-    - CENTER_4D: boolean condition to enable custom 4D center point (requires constants::CENTER_4D vec4f value from linker)
+description: |
+    Rotate a 2D/3D/4D space by a radian angle
+
+    WESL conditionals:
+    - @if(CENTER_2D): Uses custom 2D center point for vec2 rotations (default: vec2f(0.5))
+    - @if(CENTER_3D): Uses custom 3D center point for vec3 rotations (default: vec3f(0.0))
+    - @if(CENTER_4D): Uses custom 4D center point for vec4 rotations (default: vec4f(0.0))
+use: |
+    rotate(v: vec2f, r: f32) -> vec2f
+    rotate_c(v: vec2f, r: f32, c: vec2f) -> vec2f
+    rotate_axis(v: vec2f, x_axis: vec2f) -> vec2f
+    rotate3(v: vec3f, r: f32, axis: vec3f) -> vec3f
+    rotate3_c(v: vec3f, r: f32, axis: vec3f, c: vec3f) -> vec3f
+    rotate4(v: vec4f, r: f32, axis: vec3f) -> vec4f
+    rotate4_c(v: vec4f, r: f32, axis: vec3f, c: vec4f) -> vec4f
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/draw_shapes.frag
 license:

@@ -7,8 +7,9 @@ contributors:
     - Patricio Gonzalez Vivo
 description: Shifts color hue in the RYB color space
 use: hueShiftRYB(<vec3f|vec4f> color, <f32> angle)
-options:
-    - HUESHIFT_AMOUNT: if defined, it uses a normalized value instead of an angle
+note: |
+    This function internally uses hueShift, which supports both angle and normalized modes.
+    See hueShift.wesl for the HUESHIFT_AMOUNT conditional implementation.
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/color_ryb.frag
 license:

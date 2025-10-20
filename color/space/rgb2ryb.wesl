@@ -8,8 +8,10 @@ description: |
     Based on http://nishitalab.org/user/UEI/publication/Sugita_IWAIT2015.pdf
     and https://bahamas10.github.io/ryb/assets/ryb.pdf
 use: <vec3|vec4> rgb2ryb(<vec3|vec4> rgb)
-options:
-    - RYB_FAST: Use a non-homogeneous version of the conversion. Default is the homogeneous version.
+note: |
+    Two implementations are provided via WESL conditionals:
+    - @if(RYB_FAST): Non-homogeneous version (faster)
+    - @if(!RYB_FAST): Homogeneous version using cubic interpolation (default)
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/color_ryb.frag
 license:

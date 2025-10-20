@@ -3,7 +3,7 @@ import lygia::math::nyquist::nyquist;
 /*
 contributors: Shadi El Hajj
 description: An anti-aliased triangle wave function.
-use: <f32> aamirror(<f32> x)
+use: aamirror(x: f32) -> f32
 license: MIT License (MIT) Copyright (c) 2024 Shadi EL Hajj
 */
 

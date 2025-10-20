@@ -2,13 +2,15 @@ import lygia::math::decimate::decimate3;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: 'Vlachos 2016, "Advanced VR Rendering" http://alex.vlachos.com/graphics/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf'
+description: |
+    Vlachos 2016, "Advanced VR Rendering"
+    http://alex.vlachos.com/graphics/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf
 use:
     - <vec4f|vec3f|f32> ditherVlachos(<vec4f|vec3f|f32> value, <vec2f> st, <i32> precision)
     - <vec4f|vec3f|f32> ditherVlachos(<vec4f|vec3f|f32> value, <vec2f> st)
     - <vec3f> ditherVlachos(<vec2f> st)
-options:
-    - DITHER_VLACHOS_PRECISION: precision for decimation (default: 256)
+note: |
+    The constant DITHER_VLACHOS_PRECISION can be customized (default: 256)
 examples:
     - /shaders/color_dither.frag
 license:

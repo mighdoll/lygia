@@ -1,14 +1,14 @@
 /*
 contributors: Patricio Gonzalez Vivo
-description: create a look at matrix. Right handed by default.
+description: |
+    Create a look at matrix. Right handed by default.
+    To use left-handed coordinate system, define LOOK_AT_LEFT_HANDED at link time.
+    To explicitly use right-handed, define LOOK_AT_RIGHT_HANDED at link time.
 use:
     - <mat3f> lookAt(<vec3f> forward, <vec3f> up)
     - <mat3f> lookAt3(<vec3f> eye, <vec3f> center, <vec3f> up)
     - <mat3f> lookAt3Roll(<vec3f> eye, <vec3f> center, <f32> roll)
     - <mat3f> lookAt1(<vec3f> forward)
-options:
-    - LOOK_AT_LEFT_HANDED: assume a left-handed coordinate system
-    - LOOK_AT_RIGHT_HANDED: assume a right-handed coordinate system
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

@@ -1,10 +1,24 @@
 /*
 contributors: Patricio Gonzalez Vivo
-description: scale a 2D space variable
-use: scale(<vec2> st, <vec2|float> scale_factor [, <vec2> center])
-options:
-    - CENTER_2D: boolean condition to enable custom 2D center point (requires constants::CENTER_2D vec2f value from linker)
-    - CENTER_3D: boolean condition to enable custom 3D center point (requires constants::CENTER_3D vec3f value from linker)
+description: |
+    Scale a 2D/3D space variable
+
+    WESL conditionals:
+    - @if(CENTER_2D): Uses custom 2D center point for scaling (default: vec2f(0.5))
+    - @if(CENTER_3D): Uses custom 3D center point for scaling (default: vec3f(0.5))
+use: |
+    scale_f(st: f32, s: f32) -> vec2f
+    scale_f_c(st: f32, s: f32, center: vec2f) -> vec2f
+    scale2(st: vec2f, s: vec2f) -> vec2f
+    scale2_f(st: vec2f, s: f32) -> vec2f
+    scale2_c(st: vec2f, s: vec2f, center: vec2f) -> vec2f
+    scale2_f_c(st: vec2f, s: f32, center: vec2f) -> vec2f
+    scale3(st: vec3f, s: vec3f) -> vec3f
+    scale3_f(st: vec3f, s: f32) -> vec3f
+    scale3_c(st: vec3f, s: vec3f, center: vec3f) -> vec3f
+    scale3_f_c(st: vec3f, s: f32, center: vec3f) -> vec3f
+    scale4_f(st: vec4f, s: f32) -> vec4f
+    scale4(st: vec4f, s: vec2f) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

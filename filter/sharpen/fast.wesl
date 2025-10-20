@@ -2,12 +2,11 @@
 /*
 contributors: Johan Ismael
 description: Sharpening convolutional operation
-use: sharpen(<SAMPLER_TYPE> texture, <vec2> st, <vec2> pixel)
+use:
+    - sharpenFast4(texture, sampler, coords, pixel, strength) -> vec4f
+    - sharpenFast(texture, sampler, coords, pixel) -> vec4f
 options:
-    - SAMPLER_FNC(TEX, UV): optional depending the target version of GLSL (texture2D(...) or texture(...))
-    - SHARPENFAST_KERNELSIZE: Defaults 2
-    - SHARPENFAST_TYPE: defaults to vec3
-    - SHARPENFAST_SAMPLER_FNC(TEX, UV): defaults to texture2D(tex, TEX, UV).rgb
+    - SHARPENFAST_KERNELSIZE: const i32, defaults to 2 (line 13)
 */
 
 const SHARPENFAST_KERNELSIZE = 2;

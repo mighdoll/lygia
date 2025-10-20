@@ -1,7 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: 'Quaternion multiplication. Based on http://mathworld.wolfram.com/Quaternion.html'
-use: <vec4f> quatMul(<vec4f> a, <vec4f> b)
+use: quatMul(q1: vec4f, q2: vec4f) -> vec4f | quatMulScalar(q: vec4f, s: f32) -> vec4f | quatMulVec3(q: vec4f, v: vec3f) -> vec3f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

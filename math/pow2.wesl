@@ -1,7 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: power of 2
-use: <f32|vec2f|vec3f|vec4f> pow2(<f32|vec2f|vec3f|vec4f> v)
+use: pow2(v: f32) -> f32 | pow22(v: vec2f) -> vec2f | pow23(v: vec3f) -> vec3f | pow24(v: vec4f) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

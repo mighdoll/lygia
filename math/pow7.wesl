@@ -1,7 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: power of 7
-use: <f32|vec2f|vec3f|vec4f> pow7(<f32|vec2f|vec3f|vec4f> v)
+use: pow7(v: f32) -> f32 | pow72(v: vec2f) -> vec2f | pow73(v: vec3f) -> vec3f | pow74(v: vec4f) -> vec4f
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

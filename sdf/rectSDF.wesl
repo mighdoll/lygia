@@ -3,9 +3,17 @@ import constants::CENTER_2D;
 
 /*
 contributors: Patricio Gonzalez Vivo
-description: Returns a rectangular SDF
-options:
-    - CENTER_2D: boolean condition to enable custom 2D center point (requires constants::CENTER_2D vec2f value from linker)
+description: |
+    Returns a rectangular signed distance field (SDF)
+
+    WESL conditionals:
+    - @if(CENTER_2D): Uses custom 2D center point instead of default centering (st * 2.0 - 1.0)
+use: |
+    rectSDF(st: vec2f, s: vec2f) -> f32
+    rectSDF1(st: vec2f, s: f32) -> f32
+    rectSDFDefault(st: vec2f) -> f32
+    rectSDF3(p: vec2f, b: vec2f, r: f32) -> f32
+    rectSDF2Round(p: vec2f, b: f32, r: f32) -> f32
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/draw_shapes.frag
 license:
