@@ -1,4 +1,5 @@
 import { expect } from "vitest";
+import { elementStride } from "thimbleberry";
 import type { WgslElementType } from "wesl-debug";
 import {
   createCheckerboardTexture,
@@ -62,32 +63,6 @@ export async function testFragment(
 }
 
 /**
- * Get the byte size for a WGSL element type
- */
-function getElementStride(elem: WgslElementType): number {
-  switch (elem) {
-    case "f32":
-    case "i32":
-    case "u32":
-      return 4;
-    case "vec2f":
-    case "vec2i":
-    case "vec2u":
-      return 8;
-    case "vec3f":
-    case "vec3i":
-    case "vec3u":
-      return 12;
-    case "vec4f":
-    case "vec4i":
-    case "vec4u":
-      return 16;
-    default:
-      return 4; // default to f32 size
-  }
-}
-
-/**
  * Test distribution properties of a random function.
  * Collects multiple samples and returns them for statistical analysis.
  *
@@ -104,7 +79,7 @@ export async function testDistribution(
   constants?: Record<string, string | number>,
 ): Promise<number[]> {
   const device = await getGPUDevice();
-  const bufferSize = sampleCount * getElementStride(elem);
+  const bufferSize = sampleCount * elementStride(elem);
 
   return testComputeShader({
     projectDir,
