@@ -1,4 +1,5 @@
 import { expect } from "vitest";
+import type { WgslElementType } from "wesl-debug";
 import {
   createCheckerboardTexture,
   createGradientTexture,
@@ -7,7 +8,6 @@ import {
   getGPUDevice,
   testComputeShader,
   testFragmentShader,
-  type WgslElementType,
 } from "wesl-debug";
 
 const projectDir = import.meta.url;
@@ -61,16 +61,10 @@ export async function testFragment(
   });
 }
 
-// Re-export sprite sheet utilities from spriteTestUtil
-export {
-  createSpriteSheetTexture,
-  createSimpleSpriteSheet,
-} from "./spriteTestUtil.ts";
-
 // Re-export texture helpers for convenience
 export {
-  createSolidTexture,
-  createGradientTexture,
   createCheckerboardTexture,
+  createGradientTexture,
   createSampler,
+  createSolidTexture,
 };

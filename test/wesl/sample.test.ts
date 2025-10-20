@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { createSampler, getGPUDevice, testFragmentShader } from "wesl-debug";
-import { createSpriteSheetTexture } from "./testUtil.ts";
+import { createSpriteSheetTexture } from "./spriteTestUtil.ts";
 
 const projectDir = import.meta.url;
 

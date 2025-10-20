@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { createSampler, getGPUDevice, testFragmentShader } from "wesl-debug";
-import { createSimpleSpriteSheet } from "./testUtil.ts";
+import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
 
 const projectDir = import.meta.url;
 
