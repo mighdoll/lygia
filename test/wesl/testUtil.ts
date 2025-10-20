@@ -23,7 +23,7 @@ export function expectCloseTo(
   expect.fail(`arrays don't match:\n  ${a}\n  ${b}`);
 }
 
-/** utility function to test WGSL compute shader */
+/** test WGSL compute shader with typical defaults */
 export async function testCompute(
   src: string,
   elem: WgslElementType = "f32",
@@ -39,7 +39,7 @@ export async function testCompute(
   });
 }
 
-/** utility function to test WGSL fragment shader */
+/** test WGSL fragment shader with typical defaults */
 export async function testFragment(
   src: string,
   size?: [number, number],
