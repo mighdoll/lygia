@@ -155,7 +155,9 @@ test("layerColorSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify some color is present (not grayscale)
-  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  const colorRange =
+    Math.max(result[0], result[1], result[2]) -
+    Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeGreaterThan(0.15);
 
   // Verify moderate brightness (from dst)
@@ -369,7 +371,9 @@ test("layerHueSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify the result has some color saturation (not gray)
-  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  const colorRange =
+    Math.max(result[0], result[1], result[2]) -
+    Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeGreaterThan(0.1);
 
   // Verify reasonably bright (from dst's high V)
@@ -583,7 +587,7 @@ test("layerLuminositySourceOver4", async () => {
   // Verify reasonable brightness
   const maxChannel = Math.max(result[0], result[1], result[2]);
   expect(maxChannel).toBeGreaterThan(0.2); // Reasonably bright
-  expect(maxChannel).toBeLessThan(1.0);    // Not overly bright
+  expect(maxChannel).toBeLessThan(1.0); // Not overly bright
 
   // All channels should be valid
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -649,7 +653,7 @@ test("layerNegationSourceOver4", async () => {
   // G: 1 - abs(1 - 0.6 - 0.5) = 1 - abs(-0.1) = 0.9
   // B: 1 - abs(1 - 0.8 - 0.3) = 1 - abs(-0.1) = 0.9
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.62, 0.66, 0.70, 0.8], result, 0.01);
+  expectCloseTo([0.62, 0.66, 0.7, 0.8], result, 0.01);
 });
 
 test("layerNegationSourceOver4 - complementary colors", async () => {
@@ -784,7 +788,9 @@ test("layerSaturationSourceOver4", async () => {
   expect(result[3]).toBeCloseTo(0.85);
 
   // Verify high saturation (large difference between channels)
-  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  const colorRange =
+    Math.max(result[0], result[1], result[2]) -
+    Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeGreaterThan(0.2); // Significantly saturated
 
   // All channels should be valid
@@ -816,7 +822,9 @@ test("layerSaturationSourceOver4 - desaturate with gray", async () => {
   // Result should have red hue with gray's zero saturation = desaturated red (gray-ish)
 
   // Verify some desaturation (less saturated than pure red which has range=1.0)
-  const colorRange = Math.max(result[0], result[1], result[2]) - Math.min(result[0], result[1], result[2]);
+  const colorRange =
+    Math.max(result[0], result[1], result[2]) -
+    Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeLessThan(0.8); // Somewhat desaturated
 
   // All channels should be valid
@@ -852,7 +860,7 @@ test("layerSoftLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → sqrt(0.6)*0 + 2*0.6*0.5 = 0.6
   // B: dst=0.7 ≥ 0.5 → sqrt(0.4)*0.4 + 2*0.4*0.3 ≈ 0.253 + 0.24 = 0.493
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.325, 0.495, 0.450, 0.85], result, 0.01);
+  expectCloseTo([0.325, 0.495, 0.45, 0.85], result, 0.01);
 });
 
 test("layerSoftLightSourceOver4 - subtle contrast", async () => {

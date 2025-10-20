@@ -101,9 +101,6 @@ test("absi negative", async () => {
   expectCloseTo([5.0], result);
 });
 
-
-
-
 // Anti-aliased floor tests (require derivatives, use fragment shaders)
 
 test("cubicMix", async () => {
@@ -120,7 +117,6 @@ test("cubicMix", async () => {
   // Cubic interpolation at 0.5
   expectCloseTo([0.5], result, 0.01);
 });
-
 
 test("smootherstep", async () => {
   const src = `
@@ -197,8 +193,6 @@ test("fmod4", async () => {
   expectCloseTo([1.0, 2.0, 0.0, 0.0], result, 0.01);
 });
 
-
-
 test("map - remap value between ranges", async () => {
   const src = `
     import lygia::math::map::map;
@@ -244,7 +238,6 @@ test("decimate - quantize value", async () => {
 });
 
 // Utility functions
-
 
 test("taylorInvSqrt", async () => {
   const src = `
@@ -303,10 +296,10 @@ test("atan2Custom", async () => {
   const TAU = 2 * PI;
 
   // Verify normalized angles [0, 2π]
-  expectCloseTo([3*PI/2], [result[0]], 0.01);   // 3π/2 ≈ 4.7124
-  expectCloseTo([PI], [result[1]], 0.01);       // π ≈ 3.1416
-  expectCloseTo([PI/2], [result[2]], 0.01);     // π/2 ≈ 1.5708
-  expectCloseTo([0.0], [result[3]], 0.01);      // 0
+  expectCloseTo([(3 * PI) / 2], [result[0]], 0.01); // 3π/2 ≈ 4.7124
+  expectCloseTo([PI], [result[1]], 0.01); // π ≈ 3.1416
+  expectCloseTo([PI / 2], [result[2]], 0.01); // π/2 ≈ 1.5708
+  expectCloseTo([0.0], [result[3]], 0.01); // 0
 
   // All angles should be in [0, 2π) range
   for (let i = 0; i < 4; i++) {
@@ -332,7 +325,7 @@ test("atan2Custom - additional angles", async () => {
   const PI = Math.PI;
 
   // Verify diagonal angle
-  expectCloseTo([5*PI/4], [result[0]], 0.01);     // 5π/4 ≈ 3.927
+  expectCloseTo([(5 * PI) / 4], [result[0]], 0.01); // 5π/4 ≈ 3.927
 });
 
 test("bump", async () => {
@@ -405,8 +398,6 @@ test("inside2", async () => {
   const result = await testCompute(src, "vec4f");
   expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
 });
-
-
 
 test("mod2 - mutates pointer", async () => {
   const src = `
@@ -488,7 +479,6 @@ test("powFast", async () => {
   expectCloseTo([1.0], [result[3]], 0.01);
 });
 
-
 test("round", async () => {
   const src = `
     import lygia::math::round::round;
@@ -535,7 +525,6 @@ test("saturateMediump", async () => {
   expect(result[2]).toBeGreaterThan(0.0);
   expect(result[3]).toBeGreaterThan(0.0);
 });
-
 
 test("sum2", async () => {
   const src = `
@@ -591,5 +580,3 @@ test("within2", async () => {
   const result = await testCompute(src, "vec4f");
   expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
 });
-
-

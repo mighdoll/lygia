@@ -1,5 +1,5 @@
-import { expect } from "vitest";
 import { elementStride } from "thimbleberry";
+import { expect } from "vitest";
 import type { WgslElementType } from "wesl-debug";
 import {
   createCheckerboardTexture,
@@ -145,7 +145,7 @@ export function expectDistribution(
       ];
       expect.fail(
         `Bucket ${i} [${bucketRange[0]}, ${bucketRange[1]}) has ${(ratio * 100).toFixed(1)}% of samples (expected ${expectedRatio * 100}% ± ${bucketTolerance * 100}%)\n` +
-          `Distribution: ${buckets.map((b) => ((b / samples.length) * 100).toFixed(1) + "%").join(", ")}`,
+          `Distribution: ${buckets.map((b) => `${((b / samples.length) * 100).toFixed(1)}%`).join(", ")}`,
       );
     }
   }

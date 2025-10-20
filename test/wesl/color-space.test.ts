@@ -885,7 +885,7 @@ test("xyz2xyY", async () => {
    `;
   const result = await testCompute(src, "vec3f");
   // XYZ -> xyY
-  expectCloseTo([0.3127, 0.3290, 1.0], result, 0.01);
+  expectCloseTo([0.3127, 0.329, 1.0], result, 0.01);
 });
 
 test("xyz2srgb", async () => {
@@ -1927,7 +1927,7 @@ test("xyz2xyY4 - alpha preservation", async () => {
    `;
   const result = await testCompute(src, "vec4f");
   // XYZ -> xyY with alpha
-  expectCloseTo([0.3127, 0.3290, 1.0, 0.75], result, 0.01);
+  expectCloseTo([0.3127, 0.329, 1.0, 0.75], result, 0.01);
 });
 
 test("yiq2rgb4 - alpha preservation", async () => {

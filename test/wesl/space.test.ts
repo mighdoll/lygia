@@ -229,7 +229,9 @@ test("triTile", async () => {
 
   // Verify tiles have different indices (difference should be non-zero)
   if (r[2] < 0.1) {
-    throw new Error(`Expected different tile indices for adjacent tiles, but difference was ${r[2]}`);
+    throw new Error(
+      `Expected different tile indices for adjacent tiles, but difference was ${r[2]}`,
+    );
   }
 });
 
@@ -257,7 +259,9 @@ test("hexTile", async () => {
 
   // Verify shifted point has different tile index
   if (r[2] < 0.1) {
-    throw new Error(`Expected different tile indices for adjacent tiles, but difference was ${r[2]}`);
+    throw new Error(
+      `Expected different tile indices for adjacent tiles, but difference was ${r[2]}`,
+    );
   }
 });
 
@@ -286,12 +290,16 @@ test("mirrorTile2", async () => {
 
   // Verify tile2 is in correct tile (1,1)
   if (r[2] > 0.1) {
-    throw new Error(`Expected tile2 to be in tile (1,1), but tile index sum difference was ${r[2]}`);
+    throw new Error(
+      `Expected tile2 to be in tile (1,1), but tile index sum difference was ${r[2]}`,
+    );
   }
 
   // Verify that different within-tile positions (0.3 vs 0.7) produce different coords
   if (r[3] < 0.1) {
-    throw new Error(`Expected different within-tile coords for 0.3 and 0.7, but difference was ${r[3]}`);
+    throw new Error(
+      `Expected different within-tile coords for 0.3 and 0.7, but difference was ${r[3]}`,
+    );
   }
 });
 
@@ -323,7 +331,9 @@ test("windmillTile2", async () => {
 
   // Adjacent tile (1,0) rotates 90°, so (0.2, 0.5) should move significantly
   if (r[2] < 0.1) {
-    throw new Error(`Expected rotation in adjacent tile (1,0), but rotation amount was only ${r[2]}`);
+    throw new Error(
+      `Expected rotation in adjacent tile (1,0), but rotation amount was only ${r[2]}`,
+    );
   }
 
   // Verify tile index is correct (1,0) -> sum = 1.0
@@ -406,7 +416,9 @@ test("kaleidoscope", async () => {
 
   // Verify output is in valid range [0,1]
   if (r[3] < 0.5) {
-    throw new Error(`Kaleidoscope output out of range [0,1]: (${r[0]}, ${r[1]})`);
+    throw new Error(
+      `Kaleidoscope output out of range [0,1]: (${r[0]}, ${r[1]})`,
+    );
   }
 });
 
@@ -438,12 +450,16 @@ test("bracketing", async () => {
 
   // Test 2: Between canonical angles
   if (r[2] < 0.2 || r[2] > 0.8) {
-    throw new Error(`Expected blendAlpha in [0.2, 0.8] for in-between angle, got ${r[2]}`);
+    throw new Error(
+      `Expected blendAlpha in [0.2, 0.8] for in-between angle, got ${r[2]}`,
+    );
   }
 
   // vAxis0 and vAxis1 should differ (bracketing the input direction)
   if (r[3] < 0.01) {
-    throw new Error(`Expected vAxis0 and vAxis1 to bracket input, but difference was ${r[3]}`);
+    throw new Error(
+      `Expected vAxis0 and vAxis1 to bracket input, but difference was ${r[3]}`,
+    );
   }
 });
 
@@ -532,19 +548,23 @@ test("decimateNormal", async () => {
   const r = result as number[];
 
   // Test 1: Known expected output for 45° normal with precision 4.0
-  expectCloseTo([0.730], [r[0]], 0.05);
+  expectCloseTo([0.73], [r[0]], 0.05);
 
   // Verify unit length
   expectCloseTo([1.0], [r[1]], 0.01);
 
   // d1 and d2 should be close (nearby normals quantize similarly)
   if (r[2] > 0.2) {
-    throw new Error(`Expected nearby normals to quantize similarly, but difference was ${r[2]}`);
+    throw new Error(
+      `Expected nearby normals to quantize similarly, but difference was ${r[2]}`,
+    );
   }
 
   // d3 should differ significantly (distant normal, different quantization bin)
   if (r[3] < 0.3) {
-    throw new Error(`Expected distant normal to quantize differently, but difference was only ${r[3]}`);
+    throw new Error(
+      `Expected distant normal to quantize differently, but difference was only ${r[3]}`,
+    );
   }
 });
 

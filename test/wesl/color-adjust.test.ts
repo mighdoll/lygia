@@ -292,7 +292,7 @@ test("levels4Float", async () => {
   //   g: 0.2 + 0.8618 * 0.7 = 0.803
   //   b: 0.2 + 0.0 * 0.7 = 0.2
   //   a: preserved at 0.85
-  expectCloseTo([0.580, 0.803, 0.2, 0.85], result, 0.001);
+  expectCloseTo([0.58, 0.803, 0.2, 0.85], result, 0.001);
 });
 
 // Gamma function tests
@@ -330,7 +330,7 @@ test("levelsGamma4", async () => {
   // g: pow(0.5, 1/1.5) = pow(0.5, 0.6667) = 0.6300
   // b: pow(0.75, 1/3.0) = 0.9086
   // a: preserved at 0.9
-  expectCloseTo([0.5, 0.6300, 0.9086, 0.9], result, 0.001);
+  expectCloseTo([0.5, 0.63, 0.9086, 0.9], result, 0.001);
 });
 
 test("levelsGamma4Float", async () => {
@@ -751,8 +751,8 @@ test("ditherBlueNoise3Precision", async () => {
   const result = await testCompute(src, "vec4f");
 
   // Should quantize to 16 levels: either 8/16 or 9/16
-  const quantLevel8 = 8.0 / 16.0;  // 0.5
-  const quantLevel9 = 9.0 / 16.0;  // 0.5625
+  const quantLevel8 = 8.0 / 16.0; // 0.5
+  const quantLevel9 = 9.0 / 16.0; // 0.5625
 
   // All channels should be one of these two values
   expect([quantLevel8, quantLevel9]).toContain(result[0]);
@@ -787,13 +787,23 @@ test("ditherVlachos3", async () => {
 
   // Vlachos adds noise in range [-1/255, 1/255] then quantizes to 256 levels
   // For input 0.5, result should be close to 0.5 (within one quantization step)
-  expectCloseTo([0.5, 0.5, 0.5], [result[0], result[1], result[2]], 1.0 / 256.0);
+  expectCloseTo(
+    [0.5, 0.5, 0.5],
+    [result[0], result[1], result[2]],
+    1.0 / 256.0,
+  );
 
   // All three channels should be quantized (multiples of 1/256)
   const tolerance = 0.0001;
-  expect(Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0))).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0)),
+  ).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0)),
+  ).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0)),
+  ).toBeLessThan(tolerance);
 
   // Undithered should be exactly 0.5 (no noise added)
   expectCloseTo([0.5], [result[3]], 0.0001);
@@ -817,15 +827,25 @@ test("ditherVlachos4", async () => {
 
   // RGB channels should be dithered and quantized
   const tolerance = 0.0001;
-  expect(Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0))).toBeLessThan(tolerance);
-  expect(Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0))).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[0] * 256.0 - Math.round(result[0] * 256.0)),
+  ).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[1] * 256.0 - Math.round(result[1] * 256.0)),
+  ).toBeLessThan(tolerance);
+  expect(
+    Math.abs(result[2] * 256.0 - Math.round(result[2] * 256.0)),
+  ).toBeLessThan(tolerance);
 
   // Alpha should be preserved exactly
   expectCloseTo([0.85], [result[3]], 0.0001);
 
   // RGB should be in valid range and close to original
-  expectCloseTo([0.7, 0.5, 0.3], [result[0], result[1], result[2]], 1.0 / 256.0);
+  expectCloseTo(
+    [0.7, 0.5, 0.3],
+    [result[0], result[1], result[2]],
+    1.0 / 256.0,
+  );
 });
 
 // Blend Mode Tests

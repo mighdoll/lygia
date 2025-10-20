@@ -24,7 +24,7 @@ test("GGX", async () => {
    `;
   const result = await testCompute(src, "vec3f");
   // GGX distribution peaks at NoH=1.0
-  expect(result[0]).toBeGreaterThan(0.3);  // Peak value with roughness=0.5
+  expect(result[0]).toBeGreaterThan(0.3); // Peak value with roughness=0.5
   // GGX decreases as NoH decreases
   expect(result[1]).toBeLessThan(result[0]);
   // Lower roughness produces sharper, higher peak

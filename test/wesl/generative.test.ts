@@ -1,5 +1,10 @@
 import { expect, test } from "vitest";
-import { expectCloseTo, expectDistribution, testCompute, testDistribution } from "./testUtil.ts";
+import {
+  expectCloseTo,
+  expectDistribution,
+  testCompute,
+  testDistribution,
+} from "./testUtil.ts";
 
 /**
  * Generative Functions Test Suite
@@ -795,13 +800,19 @@ test("random41 - determinism and range", async () => {
   expectCloseTo(result1, result2);
 
   // Range check: all components in [0, 1]
-  result1.forEach(v => {
+  result1.forEach((v) => {
     expect(v).toBeGreaterThanOrEqual(0.0);
     expect(v).toBeLessThanOrEqual(1.0);
   });
 
   // Regression: exact output value
-  expectCloseTo([0.382354736328125, 0.42840576171875, 0.5390167236328125, 0.4849395751953125], result1);
+  expectCloseTo(
+    [
+      0.382354736328125, 0.42840576171875, 0.5390167236328125,
+      0.4849395751953125,
+    ],
+    result1,
+  );
 });
 
 test("random42 - hash properties", async () => {
@@ -829,13 +840,13 @@ test("random42 - hash properties", async () => {
   const result = await testCompute(src2, "vec4f");
 
   // All components in [0, 1]
-  result.forEach(v => {
+  result.forEach((v) => {
     expect(v).toBeGreaterThanOrEqual(0.0);
     expect(v).toBeLessThanOrEqual(1.0);
   });
 
   // Components should differ (not all identical)
-  const allSame = result.every(v => Math.abs(v - result[0]) < 0.001);
+  const allSame = result.every((v) => Math.abs(v - result[0]) < 0.001);
   expect(allSame).toBe(false);
 
   // Test avalanche effect: small input change causes significant output change
@@ -853,7 +864,10 @@ test("random42 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.03); // Hash property: small input → significant output change
 
   // Regression: exact output value
-  expectCloseTo([0.66876220703125, 0.996826171875, 0.603179931640625, 0.9088134765625], result);
+  expectCloseTo(
+    [0.66876220703125, 0.996826171875, 0.603179931640625, 0.9088134765625],
+    result,
+  );
 });
 
 test("random43 - hash properties", async () => {
@@ -881,13 +895,13 @@ test("random43 - hash properties", async () => {
   const result = await testCompute(src2, "vec4f");
 
   // All components in [0, 1]
-  result.forEach(v => {
+  result.forEach((v) => {
     expect(v).toBeGreaterThanOrEqual(0.0);
     expect(v).toBeLessThanOrEqual(1.0);
   });
 
   // Components should differ (not all identical)
-  const allSame = result.every(v => Math.abs(v - result[0]) < 0.001);
+  const allSame = result.every((v) => Math.abs(v - result[0]) < 0.001);
   expect(allSame).toBe(false);
 
   // Test avalanche effect
@@ -905,7 +919,10 @@ test("random43 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.1);
 
   // Regression: exact output value
-  expectCloseTo([0.407958984375, 0.216583251953125, 0.96063232421875, 0.4371337890625], result);
+  expectCloseTo(
+    [0.407958984375, 0.216583251953125, 0.96063232421875, 0.4371337890625],
+    result,
+  );
 });
 
 test("random44 - hash properties", async () => {
@@ -933,13 +950,13 @@ test("random44 - hash properties", async () => {
   const result = await testCompute(src2, "vec4f");
 
   // All components in [0, 1]
-  result.forEach(v => {
+  result.forEach((v) => {
     expect(v).toBeGreaterThanOrEqual(0.0);
     expect(v).toBeLessThanOrEqual(1.0);
   });
 
   // Components should differ (not all identical)
-  const allSame = result.every(v => Math.abs(v - result[0]) < 0.001);
+  const allSame = result.every((v) => Math.abs(v - result[0]) < 0.001);
   expect(allSame).toBe(false);
 
   // Test avalanche effect
@@ -957,7 +974,10 @@ test("random44 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.1);
 
   // Regression: exact output value
-  expectCloseTo([0.81640625, 0.07281494140625, 0.7236328125, 0.70635986328125], result);
+  expectCloseTo(
+    [0.81640625, 0.07281494140625, 0.7236328125, 0.70635986328125],
+    result,
+  );
 });
 
 // Simplex noise variants - vector outputs

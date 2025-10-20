@@ -156,7 +156,6 @@ test("ditherBayer4 - vec4 dithering preserves alpha", async () => {
   expect(result[1]).toBeGreaterThan(result[2]);
 });
 
-
 test("ditherBayer - gradient banding reduction", async () => {
   const src = `
     import lygia::color::dither::bayer::ditherBayerPrecision;

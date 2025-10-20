@@ -38,10 +38,7 @@
       ]
     },
     "space-from-functions.test.ts": {
-      "tests": [
-        "fisheye2xyz",
-        "fisheye2xyz - division by zero at center"
-      ]
+      "tests": ["fisheye2xyz", "fisheye2xyz - division by zero at center"]
     }
   }
 }

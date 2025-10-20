@@ -29,7 +29,7 @@ export function createSpriteSheetTexture(
 
       // Generate distinct colors using a simple gradient per frame
       // Each frame gets a different primary color combination
-      const r = ((frameIndex * 37) % 256) / 255;  // Pseudo-random but deterministic
+      const r = ((frameIndex * 37) % 256) / 255; // Pseudo-random but deterministic
       const g = ((frameIndex * 113) % 256) / 255;
       const b = ((frameIndex * 191) % 256) / 255;
 

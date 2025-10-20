@@ -2,8 +2,16 @@
   "header": "import { expect, test } from \"vitest\";\nimport { expectCloseTo, testCompute } from \"./testUtil.ts\";\n\n",
   "categories": {
     "math.test.ts": {
-      "tests": ["aafloor", "aafract", "cubicMix", "smootherstep", "permute",
-                "fmod2", "fmod3", "fmod4"]
+      "tests": [
+        "aafloor",
+        "aafract",
+        "cubicMix",
+        "smootherstep",
+        "permute",
+        "fmod2",
+        "fmod3",
+        "fmod4"
+      ]
     },
     "noise.test.ts": {
       "patterns": ["noise", "wavelet", "random", "worley"]

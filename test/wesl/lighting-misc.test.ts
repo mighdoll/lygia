@@ -92,18 +92,18 @@ test("fresnelRoughness", async () => {
   expectCloseTo([0.04], [result[0]], 0.01);
 
   // Test 2: At grazing angle, smooth surface should have much higher Fresnel than rough
-  expect(result[1]).toBeGreaterThan(0.4);  // Smooth should be significantly elevated
-  expect(result[2]).toBeLessThan(0.3);     // Rough is attenuated
-  expect(result[1]).toBeGreaterThan(result[2] * 1.5);  // At least 1.5x difference
+  expect(result[1]).toBeGreaterThan(0.4); // Smooth should be significantly elevated
+  expect(result[2]).toBeLessThan(0.3); // Rough is attenuated
+  expect(result[1]).toBeGreaterThan(result[2] * 1.5); // At least 1.5x difference
 
   // Test 3: Mid-angle should show intermediate values between normal and grazing
-  expect(result[3]).toBeGreaterThan(result[0]);  // Mid > normal incidence
-  expect(result[3]).toBeLessThan(result[1]);     // Mid < grazing (smooth)
+  expect(result[3]).toBeGreaterThan(result[0]); // Mid > normal incidence
+  expect(result[3]).toBeLessThan(result[1]); // Mid < grazing (smooth)
 
   // Test 4: Roughness effect should be stronger at grazing angles
   // let normalDiff = 0.0;  // At normal incidence, roughness has no effect
   const grazingDiff = Math.abs(result[1] - result[2]);
-  expect(grazingDiff).toBeGreaterThan(0.4);  // Large difference at grazing angles
+  expect(grazingDiff).toBeGreaterThan(0.4); // Large difference at grazing angles
 });
 
 test.skip("fresnelReflection", async () => {
@@ -199,19 +199,19 @@ test("specularCookTorrance", async () => {
 
   // Test 1: Perfect alignment produces strongest specular
   // Smooth surfaces have sharper, taller peaks
-  expect(result[0]).toBeGreaterThan(0.1);  // Strong specular for smooth
-  expect(result[0]).toBeGreaterThan(result[1]);  // Smooth > rough at peak
+  expect(result[0]).toBeGreaterThan(0.1); // Strong specular for smooth
+  expect(result[0]).toBeGreaterThan(result[1]); // Smooth > rough at peak
 
   // Test 2: Off-specular should be dimmer than perfect specular
-  expect(result[2]).toBeLessThan(result[0]);  // Off-spec < perfect (smooth)
+  expect(result[2]).toBeLessThan(result[0]); // Off-spec < perfect (smooth)
   // Note: For rough surfaces, off-specular may be similar to or even slightly higher than perfect
   // due to broader light scattering. The key test is the ratio difference.
 
   // Test 3: Roughness effect on specular falloff
   // Smooth surfaces have sharper falloff (larger ratio)
-  const smoothRatio = result[0] / (result[2] + 0.001);  // Peak / off-spec
+  const smoothRatio = result[0] / (result[2] + 0.001); // Peak / off-spec
   const roughRatio = result[1] / (result[3] + 0.001);
-  expect(smoothRatio).toBeGreaterThan(roughRatio);  // Smooth falls off faster
+  expect(smoothRatio).toBeGreaterThan(roughRatio); // Smooth falls off faster
 });
 
 test("toShininess", async () => {
@@ -241,29 +241,29 @@ test("toShininess", async () => {
   const result = await testCompute(src, "vec4f");
 
   // Test 1: Very smooth has highest shininess
-  expect(result[0]).toBeGreaterThan(150.0);  // Should be ~194
+  expect(result[0]).toBeGreaterThan(150.0); // Should be ~194
   expectCloseTo([194.4], [result[0]], 5.0);
 
   // Very rough has low shininess
-  expect(result[1]).toBeLessThan(15.0);  // Should be ~9.8
+  expect(result[1]).toBeLessThan(15.0); // Should be ~9.8
   expectCloseTo([9.8], [result[1]], 2.0);
 
   // Test 2: Inverse relationship - smooth >> rough
-  expect(result[0]).toBeGreaterThan(result[1] * 10);  // At least 10x difference
+  expect(result[0]).toBeGreaterThan(result[1] * 10); // At least 10x difference
 
   // Test 3: Mid-roughness is between extremes
-  expect(result[2]).toBeGreaterThan(result[1]);  // Mid > rough
-  expect(result[2]).toBeLessThan(result[0]);     // Mid < smooth
+  expect(result[2]).toBeGreaterThan(result[1]); // Mid > rough
+  expect(result[2]).toBeLessThan(result[0]); // Mid < smooth
   expectCloseTo([57.6], [result[2]], 5.0);
 
   // Test 4: Metallic reduces shininess (smaller multiplier)
   // Note: dielectric was removed to fit in vec4f, so we test against expected value
   // Metallic: roughness=0.3, metallic=1.0 -> s = 0.8^4 * 80 ≈ 32.77
-  expect(result[3]).toBeLessThan(40.0);  // Metallic should be low
-  expect(result[3]).toBeGreaterThan(25.0);  // But not too low
+  expect(result[3]).toBeLessThan(40.0); // Metallic should be low
+  expect(result[3]).toBeGreaterThan(25.0); // But not too low
   expectCloseTo([32.77], [result[3]], 2.0);
 
   // Test 5: All values should be in valid shininess range
-  expect(result[0]).toBeLessThan(250.0);   // Max is 240 * 0.95^4
-  expect(result[1]).toBeGreaterThan(0.0);  // Min is positive
+  expect(result[0]).toBeLessThan(250.0); // Max is 240 * 0.95^4
+  expect(result[1]).toBeGreaterThan(0.0); // Min is positive
 });

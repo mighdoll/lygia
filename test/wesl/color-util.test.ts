@@ -211,7 +211,7 @@ test("paletteHue", async () => {
   // Then smoothstep: v*v*(3-2*v)
   // For x=0.5, ratio=1/3: [0.5, 0.833, 0.167] -> fmod -> [0.5, 0.833, 0.167]
   // -> *2-1 -> [0, 0.666, -0.666] -> abs -> [0, 0.666, 0.666] -> smoothstep
-  expectCloseTo([0.0, 0.740, 0.743], result, 0.05);
+  expectCloseTo([0.0, 0.74, 0.743], result, 0.05);
 });
 
 test("hueDefault", async () => {
@@ -229,7 +229,7 @@ test("hueDefault", async () => {
   const result = await testCompute(src, "vec3f");
   // hueDefault(0.5) should match paletteHue test: hue(0.5, 0.333)
   // Result should be [0.0, 0.740, 0.743] from paletteHue test
-  expectCloseTo([0.0, 0.740, 0.743], result, 0.05);
+  expectCloseTo([0.0, 0.74, 0.743], result, 0.05);
 });
 
 test("mixSpectral", async () => {
@@ -266,10 +266,10 @@ test("mixSpectral", async () => {
   expect(mixed[0]).toBeLessThan(0.15); // Red is low
 
   expect(mixed[1]).toBeGreaterThan(0.0);
-  expect(mixed[1]).toBeLessThan(0.1);  // Green is very low
+  expect(mixed[1]).toBeLessThan(0.1); // Green is very low
 
   expect(mixed[2]).toBeGreaterThan(0.0);
-  expect(mixed[2]).toBeLessThan(0.1);  // Blue is also low (darken effect from mixing)
+  expect(mixed[2]).toBeLessThan(0.1); // Blue is also low (darken effect from mixing)
 
   // Overall, the spectral mix should be notably darker than either input color
   const maxComponent = Math.max(...mixed);
@@ -352,8 +352,8 @@ test("whiteBalance4", async () => {
 
   // Tint behavior: magenta tint reduces green, green tint increases green
   expect(greenG).toBeGreaterThan(magentaG); // green tint increases G
-  expect(magentaG).toBeLessThan(0.5);       // magenta tint decreases G
-  expect(greenG).toBeGreaterThan(0.5);      // green tint increases G
+  expect(magentaG).toBeLessThan(0.5); // magenta tint decreases G
+  expect(greenG).toBeGreaterThan(0.5); // green tint increases G
 });
 
 test("saturationMatrix", async () => {
@@ -733,7 +733,7 @@ test("mixSpectral_linear_to_reflectance", async () => {
   // For pure red input:
   // - Short wavelengths (blue) should have low reflectance
   // - Long wavelengths (red) should have high reflectance
-  expect(result[0]).toBeLessThan(0.2);    // Blue end - low reflectance
+  expect(result[0]).toBeLessThan(0.2); // Blue end - low reflectance
   expect(result[2]).toBeGreaterThan(0.8); // Red end - high reflectance
   expect(result[2]).toBeGreaterThan(result[0]); // Red > Blue
 });
