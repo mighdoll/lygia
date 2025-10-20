@@ -854,9 +854,6 @@ test("scale3", async () => {
   expectCloseTo([1.0, 0.375, 0.5, 0.0], result);
 });
 
-// TODO: Enable these tests once wesl-debug supports constants parameter
-// See notes/test-constants.md for proposal
-/*
 test("scale2 - with custom CENTER_2D via constants", async () => {
   const src = `
     import lygia::space::scale::scale2;
@@ -903,7 +900,6 @@ test("scale3 - with custom CENTER_3D via constants", async () => {
   // (0.9 - 0.4) * 0.5 + 0.4 = 0.5 * 0.5 + 0.4 = 0.65
   expectCloseTo([1.2, 1.8, 0.65, 0.0], result);
 });
-*/
 
 test("sprite", async () => {
   const src = `

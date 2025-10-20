@@ -66,13 +66,16 @@ fn scale2(st: vec2f, s: vec2f) -> vec2f {
 ## Testing
 
 ### Current Status
-Testing with `constants::` is currently **blocked** because wesl-debug doesn't yet support the `constants` parameter in its test APIs.
+✅ **RESOLVED** - wesl-debug now supports the `constants` parameter!
 
-See **notes/test-constants.md** for a proposal to add this support.
-
-### Testing Strategy (once wesl-debug supports constants)
+### Testing Strategy
 Each fixed file should have a test that:
 1. Tests default behavior (condition = false)
 2. Tests with constants:: values (condition = true, constants provided via linker)
 
-Example tests are prepared in test/wesl/space.test.ts but commented out until wesl-debug is updated.
+### Example Tests (space.test.ts)
+See `test/wesl/space.test.ts` for working examples:
+- `scale2 - with custom CENTER_2D via constants` ✅ Passing
+- `scale3 - with custom CENTER_3D via constants` ✅ Passing
+
+These demonstrate the pattern for testing constants:: usage.

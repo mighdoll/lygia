@@ -28,7 +28,7 @@ export async function testCompute(
   src: string,
   elem: WgslElementType = "f32",
   conditions?: Record<string, boolean>,
-  // constants?: Record<string, string | number>, // TODO: Add when wesl-debug supports it (see notes/test-constants.md)
+  constants?: Record<string, string | number>,
 ) {
   const device = await getGPUDevice();
   return testComputeShader({
@@ -37,7 +37,7 @@ export async function testCompute(
     src,
     resultFormat: elem,
     conditions,
-    // constants, // TODO: Add when wesl-debug supports it
+    constants,
   });
 }
 
@@ -47,7 +47,7 @@ export async function testFragment(
   size?: [number, number],
   textureFormat: GPUTextureFormat = "rgba32float",
   conditions?: Record<string, boolean>,
-  // constants?: Record<string, string | number>, // TODO: Add when wesl-debug supports it (see notes/test-constants.md)
+  constants?: Record<string, string | number>,
 ) {
   const device = await getGPUDevice();
   return await testFragmentShader({
@@ -57,7 +57,7 @@ export async function testFragment(
     textureFormat,
     size,
     conditions,
-    // constants, // TODO: Add when wesl-debug supports it
+    constants,
   });
 }
 
