@@ -131,6 +131,160 @@ WGSL requires explicit type suffixes or decimal points:
 
 ---
 
+## Precision and mediump Translation
+
+### Strategy: Use f32 with saturateMediump Pattern
+
+WESL/WGSL doesn't have precision qualifiers like GLSL's `highp`, `mediump`, and `lowp`. While WebGPU supports f16 via `enable f16;`, LYGIA uses **f32 throughout** for maximum compatibility.
+
+#### Key Principles
+
+1. **Always use f32** - Never use f16 or enable half-precision
+2. **Keep saturateMediump pattern** - Clamps values to mediump range on mobile platforms
+3. **Preserve mathematical workarounds** - Keep precision-improving algorithms
+4. **Use @if(TARGET_MOBILE)** - For platform-specific optimizations
+
+### GLSL mediump → WESL Translation
+
+```glsl
+// GLSL with mediump precision
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+float computeValue(float input) {
+    float result = /* complex calculation */;
+    return saturateMediump(result);
+}
+```
+
+```wgsl
+// WESL translation - use f32 with clamping
+import lygia::math::saturateMediump::saturateMediump;
+
+fn computeValue(input: f32) -> f32 {
+    let result = /* complex calculation */;
+    return saturateMediump(result);  // Clamps to 65504.0 on mobile
+}
+```
+
+### saturateMediump Pattern
+
+The `saturateMediump` functions clamp values to the maximum representable in mediump (65504.0):
+
+```wgsl
+// From math/saturateMediump.wesl
+const MEDIUMP_FLT_MAX: f32 = 65504.0;
+
+fn saturateMediump(v: f32) -> f32 {
+    @if(TARGET_MOBILE)
+    return min(v, MEDIUMP_FLT_MAX);
+    @else
+    return v;  // Pass through on desktop
+}
+```
+
+### Precision-Sensitive Functions
+
+Some functions require special handling for mediump precision issues:
+
+#### Example: GGX Lighting Function
+
+```glsl
+// GLSL - precision issue with 1.0 - NoH²
+float GGX(vec3 N, vec3 H, float NoH, float roughness) {
+#if defined(TARGET_MOBILE) || defined(PLATFORM_WEBGL)
+    // Use Lagrange's identity to avoid cancellation
+    vec3 NxH = cross(N, H);
+    float oneMinusNoHSquared = dot(NxH, NxH);
+#else
+    float oneMinusNoHSquared = 1.0 - NoH * NoH;
+#endif
+    // ... rest of calculation
+    return saturateMediump(d);
+}
+```
+
+```wgsl
+// WESL - preserve the mathematical workaround
+fn GGXPrecise(N: vec3f, H: vec3f, NoH: f32, roughness: f32) -> f32 {
+    // Lagrange's identity: ||N x H||² = 1.0 - NoH²
+    // Avoids floating point cancellation in highlights
+    let NxH = cross(N, H);
+    let oneMinusNoHSquared = dot(NxH, NxH);
+    // ... rest of calculation
+    return saturateMediump(d);
+}
+```
+
+### Platform Conditionals
+
+Only use `TARGET_MOBILE` for platform-specific optimizations:
+
+```wgsl
+// ✅ CORRECT - Only TARGET_MOBILE
+@if(TARGET_MOBILE)
+    // Mobile-specific code
+@else
+    // Desktop code
+
+// ❌ WRONG - Don't use these in WESL
+@if(PLATFORM_WEBGL)    // Not supported
+@if(PLATFORM_RPI)      // Not supported
+@if(GL_ES)             // Not supported
+```
+
+### Functions Requiring saturateMediump
+
+Common patterns that need clamping to prevent overflow:
+
+1. **Division by small values** - Can produce infinity
+   ```wgsl
+   fn kelemen(LoH: f32) -> f32 {
+       return saturateMediump(0.25 / (LoH * LoH));  // Can overflow
+   }
+   ```
+
+2. **Lighting calculations** - Often produce large values
+   ```wgsl
+   fn smithGGXCorrelated(NoV: f32, NoL: f32, roughness: f32) -> f32 {
+       // ... calculation ...
+       let v = 0.5 / (lambdaV + lambdaL);  // Can approach infinity
+       return saturateMediump(v);
+   }
+   ```
+
+3. **Exponential growth** - Results can exceed mediump range
+   ```wgsl
+   fn specularBRDF(/* params */) -> vec3f {
+       let result = D * V * F;  // Product can be very large
+       return saturateMediump3(result);
+   }
+   ```
+
+### Why Not Use f16?
+
+While WebGPU supports `enable f16;`, LYGIA avoids it because:
+
+1. **Limited device support** - Qualcomm Android devices can't use f16 with uniforms/storage
+2. **Texture restrictions** - Can't use f16 with texture sampling
+3. **Browser compatibility** - Only Chromium browsers support it
+4. **Library philosophy** - LYGIA prioritizes cross-platform compatibility
+
+### Translation Checklist for mediump
+
+When translating GLSL with mediump considerations:
+
+- [ ] Use `f32` for all floating-point types
+- [ ] Import and use `saturateMediump` for overflow-prone calculations
+- [ ] Preserve mathematical workarounds (like Lagrange's identity)
+- [ ] Use `@if(TARGET_MOBILE)` for mobile-specific paths
+- [ ] Don't use `enable f16;` or half-precision types
+- [ ] Keep comments explaining precision issues
+- [ ] Test on both desktop and mobile platforms if possible
+
+---
+
 ## Import System
 
 ### GLSL Includes → WESL Imports
