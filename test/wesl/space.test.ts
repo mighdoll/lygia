@@ -901,6 +901,90 @@ test("scale3 - with custom CENTER_3D via constants", async () => {
   expectCloseTo([1.2, 1.8, 0.65, 0.0], result);
 });
 
+test("rotate - with custom CENTER_2D via constants", async () => {
+  const src = `
+    import lygia::space::rotate::rotate;
+    @compute @workgroup_size(1)
+    fn foo() {
+      // Rotate around custom center (0.3, 0.3)
+      let result = rotate(vec2f(0.8, 0.3), 1.5707963267948966); // 90 degrees
+      test::results[0] = result;
+    }
+  `;
+  const result = await testCompute(
+    src,
+    "vec2f",
+    { CENTER_2D: true },
+    { CENTER_2D: "vec2f(0.3, 0.3)" },
+  );
+  // Rotating (0.8, 0.3) around (0.3, 0.3) by 90°
+  // Offset: (0.5, 0.0), rotated 90° -> (0.0, 0.5), result: (0.3, 0.8)
+  expectCloseTo([0.3, 0.8], result, 0.01);
+});
+
+test("rotateX3 - with custom CENTER_3D via constants", async () => {
+  const src = `
+    import lygia::space::rotateX::rotateX3;
+    @compute @workgroup_size(1)
+    fn foo() {
+      let result = rotateX3(vec3f(1.0, 1.5, 0.5), 1.5707963267948966); // 90 degrees
+      test::results[0] = vec4f(result, 0.0);
+    }
+  `;
+  const result = await testCompute(
+    src,
+    "vec4f",
+    { CENTER_3D: true },
+    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
+  );
+  // Offset from center: (0.5, 1.0, 0.0)
+  // Rotate X by 90°: x stays same, (y,z) -> (0.0, -1.0) from (1.0, 0.0)
+  // (0.5, 1.0, 0.0) -> (0.5, 0.0, -1.0) + center = (1.0, 0.5, -0.5)
+  expectCloseTo([1.0, 0.5, -0.5, 0.0], result, 0.01);
+});
+
+test("rotateY3 - with custom CENTER_3D via constants", async () => {
+  const src = `
+    import lygia::space::rotateY::rotateY3;
+    @compute @workgroup_size(1)
+    fn foo() {
+      let result = rotateY3(vec3f(1.5, 1.0, 0.5), 1.5707963267948966); // 90 degrees
+      test::results[0] = vec4f(result, 0.0);
+    }
+  `;
+  const result = await testCompute(
+    src,
+    "vec4f",
+    { CENTER_3D: true },
+    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
+  );
+  // Offset from center: (1.0, 0.5, 0.0)
+  // Rotate Y by 90°: (x,z) -> (z, -x), y stays same
+  // (1.0, 0.5, 0.0) -> (0.0, 0.5, -1.0) + center = (0.5, 1.0, -0.5)
+  expectCloseTo([0.5, 1.0, -0.5, 0.0], result, 0.01);
+});
+
+test("rotateZ3 - with custom CENTER_3D via constants", async () => {
+  const src = `
+    import lygia::space::rotateZ::rotateZ3;
+    @compute @workgroup_size(1)
+    fn foo() {
+      let result = rotateZ3(vec3f(1.5, 0.5, 1.0), 1.5707963267948966); // 90 degrees
+      test::results[0] = vec4f(result, 0.0);
+    }
+  `;
+  const result = await testCompute(
+    src,
+    "vec4f",
+    { CENTER_3D: true },
+    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
+  );
+  // Offset from center: (1.0, 0.0, 0.5)
+  // Rotate Z by 90°: z stays same, (x,y) = (1.0, 0.0) -> (0.0, -1.0)
+  // (1.0, 0.0, 0.5) -> (0.0, -1.0, 0.5) + center = (0.5, -0.5, 1.0)
+  expectCloseTo([0.5, -0.5, 1.0, 0.0], result, 0.01);
+});
+
 test("sprite", async () => {
   const src = `
     import lygia::space::sprite::sprite;

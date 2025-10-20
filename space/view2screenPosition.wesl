@@ -1,9 +1,12 @@
+@if(CAMERA_PROJECTION_MATRIX)
+import constants::CAMERA_PROJECTION_MATRIX;
+
 /*
 contributors: Patricio Gonzalez Vivo
 description: get screen coordinates from view position
 use: <vec2f> view2screenPosition(<vec3f> viewPosition )
 options:
-    - CAMERA_PROJECTION_MATRIX: mat4x4f matrix with camera projection
+    - CAMERA_PROJECTION_MATRIX: boolean condition for using projection matrix (requires constants::CAMERA_PROJECTION_MATRIX mat4x4f from linker)
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
@@ -11,7 +14,7 @@ license:
 
 @if(CAMERA_PROJECTION_MATRIX)
 fn view2screenPosition(viewPosition: vec3f) -> vec2f {
-    let clip = CAMERA_PROJECTION_MATRIX * vec4f(viewPosition, 1.0);
+    let clip = constants::CAMERA_PROJECTION_MATRIX * vec4f(viewPosition, 1.0);
     return (clip.xy / clip.w + 1.0) * 0.5;
 }
 

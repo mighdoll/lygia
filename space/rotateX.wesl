@@ -1,10 +1,10 @@
-import lygia::math::rotate4dX::rotate4dX;
-
 @if(CENTER_3D)
 import constants::CENTER_3D;
 
 @if(CENTER_4D)
 import constants::CENTER_4D;
+
+import lygia::math::rotate4dX::rotate4dX;
 
 /*
 contributors: Patricio Gonzalez Vivo
@@ -37,7 +37,7 @@ fn rotateX3_c(v: vec3f, r: f32, c: vec3f) -> vec3f {
 
 @if(CENTER_3D)
 fn rotateX3(v: vec3f, r: f32) -> vec3f {
-    return (rotate4dX(r) * vec4f(v - CENTER_3D, 1.0)).xyz + CENTER_3D;
+    return (rotate4dX(r) * vec4f(v - constants::CENTER_3D, 1.0)).xyz + constants::CENTER_3D;
 }
 @if(!CENTER_3D)
 fn rotateX3(v: vec3f, r: f32) -> vec3f {

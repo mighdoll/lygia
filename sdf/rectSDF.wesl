@@ -1,8 +1,11 @@
+@if(CENTER_2D)
+import constants::CENTER_2D;
+
 /*
 contributors: Patricio Gonzalez Vivo
 description: Returns a rectangular SDF
 options:
-    - CENTER_2D: vec2, defaults to vec2(.5)
+    - CENTER_2D: boolean condition to enable custom 2D center point (requires constants::CENTER_2D vec2f value from linker)
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/draw_shapes.frag
 license:
@@ -21,7 +24,7 @@ fn rectSDF2Round(p: vec2f, b: f32, r: f32) -> f32 {
 
 @if(CENTER_2D)
 fn rectSDF(st: vec2f, s: vec2f) -> f32 {
-    var uv = st - CENTER_2D;
+    var uv = st - constants::CENTER_2D;
     uv *= 2.0;
     return max( abs(uv.x / s.x),
                 abs(uv.y / s.y) );

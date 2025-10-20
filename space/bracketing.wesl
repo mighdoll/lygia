@@ -1,12 +1,15 @@
 import lygia::math::consts::PI;
 import lygia::math::consts::TWO_PI;
 
+@if(BRACKETING_ANGLE_DELTA)
+import constants::BRACKETING_ANGLE_DELTA;
+
 /*
 contributors: Huw Bowles ( @hdb1 )
 description: Bracketing technique maps a texture to a plane using any arbitrary 2D vector field to give orientation. From https://www.shadertoy.com/view/NddcDr
 use: sampleBracketing(<SAMPLER_TYPE> texture, <vec2> st, <vec2> direction [, <float> scale] )
 options:
-    - BRACKETING_ANGLE_DELTA
+    - BRACKETING_ANGLE_DELTA: boolean condition for custom angle delta (requires constants::BRACKETING_ANGLE_DELTA f32 from linker)
 license: MIT license (MIT) Copyright Huw Bowles May 2022
 */
 
@@ -30,7 +33,7 @@ struct BracketingResult {
 fn bracketing(dir: vec2f) -> BracketingResult {
     // Heading angle of the original vector field direction
     let angle = atan2(dir.y, dir.x) + TWO_PI;
-    let AngleDelta = BRACKETING_ANGLE_DELTA;
+    let AngleDelta = constants::BRACKETING_ANGLE_DELTA;
 
     // Snap to a first canonical direction by subtracting fractional angle
     let fractional = angle % AngleDelta;

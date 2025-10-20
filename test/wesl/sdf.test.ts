@@ -277,6 +277,32 @@ test("rectSDF2Round", async () => {
   expectCloseTo([-0.8, 0.0, 0.0], result);
 });
 
+test("rectSDF - with custom CENTER_2D via constants", async () => {
+  const src = `
+    import lygia::sdf::rectSDF::rectSDF;
+
+    @compute @workgroup_size(1)
+    fn foo() {
+      // Test with custom center at (0.3, 0.3)
+      let st = vec2f(0.8, 0.3);
+      let s = vec2f(1.0, 1.0);
+      let distance = rectSDF(st, s);
+      test::results[0] = vec3f(distance, 0.0, 0.0);
+    }
+  `;
+  const result = await testCompute(
+    src,
+    "vec3f",
+    { CENTER_2D: true },
+    { CENTER_2D: "vec2f(0.3, 0.3)" },
+  );
+  // With custom center (0.3, 0.3):
+  // uv = (0.8, 0.3) - (0.3, 0.3) = (0.5, 0.0)
+  // uv *= 2 = (1.0, 0.0)
+  // max(abs(1.0/1.0), abs(0.0/1.0)) = max(1.0, 0.0) = 1.0
+  expectCloseTo([1.0, 0.0, 0.0], result);
+});
+
 test("opUnion", async () => {
   const src = `
     import lygia::sdf::opUnion::opUnion;
