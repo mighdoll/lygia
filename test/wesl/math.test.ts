@@ -1,7 +1,5 @@
 import { expect, test } from "vitest";
-import { expectCloseTo, testCompute, testFragment } from "./testUtil.ts";
-
-const INV_SQRT2 = Math.SQRT2 / 2;
+import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 test("saturate", async () => {
   const src = `
