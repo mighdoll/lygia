@@ -29,36 +29,13 @@ struct BracketingResult {
     blendAlpha: f32,
 };
 
-@if(BRACKETING_ANGLE_DELTA)
 fn bracketing(dir: vec2f) -> BracketingResult {
     // Heading angle of the original vector field direction
     let angle = atan2(dir.y, dir.x) + TWO_PI;
+
+    @if(BRACKETING_ANGLE_DELTA)
     let AngleDelta = constants::BRACKETING_ANGLE_DELTA;
-
-    // Snap to a first canonical direction by subtracting fractional angle
-    let fractional = angle % AngleDelta;
-    let angle0 = angle - fractional;
-
-    // Compute one V axis of UV frame
-    let vAxis0 = vec2f(cos(angle0), sin(angle0));
-
-    // Compute the next V axis by rotating by the snap angle size
-    let RotateByAngleDelta = mat2x2f(
-        cos(AngleDelta), sin(AngleDelta),
-        -sin(AngleDelta), cos(AngleDelta)
-    );
-
-    let vAxis1 = RotateByAngleDelta * vAxis0;
-
-    // Blend to get final result, based on how close the vector was to the first snapped angle
-    let blendAlpha = fractional / AngleDelta;
-
-    return BracketingResult(vAxis0, vAxis1, blendAlpha);
-}
-@if(!BRACKETING_ANGLE_DELTA)
-fn bracketing(dir: vec2f) -> BracketingResult {
-    // Heading angle of the original vector field direction
-    let angle = atan2(dir.y, dir.x) + TWO_PI;
+    @if(!BRACKETING_ANGLE_DELTA)
     let AngleDelta = BRACKETING_ANGLE_DELTA_DEFAULT;
 
     // Snap to a first canonical direction by subtracting fractional angle
