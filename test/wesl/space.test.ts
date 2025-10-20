@@ -854,6 +854,57 @@ test("scale3", async () => {
   expectCloseTo([1.0, 0.375, 0.5, 0.0], result);
 });
 
+// TODO: Enable these tests once wesl-debug supports constants parameter
+// See notes/test-constants.md for proposal
+/*
+test("scale2 - with custom CENTER_2D via constants", async () => {
+  const src = `
+    import lygia::space::scale::scale2;
+    @compute @workgroup_size(1)
+    fn foo() {
+      // Scale around custom center point (0.3, 0.7)
+      let result = scale2(vec2f(0.8, 0.9), vec2f(2.0, 2.0));
+      test::results[0] = result;
+    }
+  `;
+  // Test with custom CENTER_2D set via constants
+  const result = await testCompute(
+    src,
+    "vec2f",
+    { CENTER_2D: true },
+    { CENTER_2D: "vec2f(0.3, 0.7)" },
+  );
+  // Scale (0.8, 0.9) by (2.0, 2.0) around center (0.3, 0.7)
+  // (0.8 - 0.3) * 2.0 + 0.3 = 0.5 * 2.0 + 0.3 = 1.3
+  // (0.9 - 0.7) * 2.0 + 0.7 = 0.2 * 2.0 + 0.7 = 1.1
+  expectCloseTo([1.3, 1.1], result);
+});
+
+test("scale3 - with custom CENTER_3D via constants", async () => {
+  const src = `
+    import lygia::space::scale::scale3;
+    @compute @workgroup_size(1)
+    fn foo() {
+      // Scale around custom center point (0.2, 0.3, 0.4)
+      let result = scale3(vec3f(0.7, 0.8, 0.9), vec3f(2.0, 3.0, 0.5));
+      test::results[0] = vec4f(result, 0.0);
+    }
+  `;
+  // Test with custom CENTER_3D set via constants
+  const result = await testCompute(
+    src,
+    "vec4f",
+    { CENTER_3D: true },
+    { CENTER_3D: "vec3f(0.2, 0.3, 0.4)" },
+  );
+  // Scale (0.7, 0.8, 0.9) by (2.0, 3.0, 0.5) around center (0.2, 0.3, 0.4)
+  // (0.7 - 0.2) * 2.0 + 0.2 = 0.5 * 2.0 + 0.2 = 1.2
+  // (0.8 - 0.3) * 3.0 + 0.3 = 0.5 * 3.0 + 0.3 = 1.8
+  // (0.9 - 0.4) * 0.5 + 0.4 = 0.5 * 0.5 + 0.4 = 0.65
+  expectCloseTo([1.2, 1.8, 0.65, 0.0], result);
+});
+*/
+
 test("sprite", async () => {
   const src = `
     import lygia::space::sprite::sprite;

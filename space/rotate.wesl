@@ -1,14 +1,23 @@
 import lygia::math::rotate2d::rotate2d;
 import lygia::math::rotate4d::rotate4d;
 
+@if(CENTER_2D)
+import constants::CENTER_2D;
+
+@if(CENTER_3D)
+import constants::CENTER_3D;
+
+@if(CENTER_4D)
+import constants::CENTER_4D;
+
 /*
 contributors: Patricio Gonzalez Vivo
 description: rotate a 2D space by a radian r
 use: rotate(<vec3|vec2> v, float r [, vec2 c])
 options:
-    - CENTER_2D
-    - CENTER_3D
-    - CENTER_4D
+    - CENTER_2D: boolean condition to enable custom 2D center point (requires constants::CENTER_2D vec2f value from linker)
+    - CENTER_3D: boolean condition to enable custom 3D center point (requires constants::CENTER_3D vec3f value from linker)
+    - CENTER_4D: boolean condition to enable custom 4D center point (requires constants::CENTER_4D vec4f value from linker)
 examples:
     - https://raw.githubusercontent.com/patriciogonzalezvivo/lygia_examples/main/draw_shapes.frag
 license:
@@ -22,7 +31,7 @@ fn rotate_c(v: vec2f, r: f32, c: vec2f) -> vec2f {
 
 @if(CENTER_2D)
 fn rotate(v: vec2f, r: f32) -> vec2f {
-    return rotate_c(v, r, CENTER_2D);
+    return rotate_c(v, r, constants::CENTER_2D);
 }
 
 @if(!CENTER_2D)
@@ -32,14 +41,14 @@ fn rotate(v: vec2f, r: f32) -> vec2f {
 
 fn rotate_axis(v: vec2f, x_axis: vec2f) -> vec2f {
     @if(CENTER_2D)
-    let centered = v - CENTER_2D;
+    let centered = v - constants::CENTER_2D;
     @if(!CENTER_2D)
     let centered = v;
 
     let rta = vec2f(dot(centered, vec2f(-x_axis.y, x_axis.x)), dot(centered, x_axis));
 
     @if(CENTER_2D)
-    return rta + CENTER_2D;
+    return rta + constants::CENTER_2D;
     @if(!CENTER_2D)
     return rta;
 }
@@ -50,7 +59,7 @@ fn rotate3_c(v: vec3f, r: f32, axis: vec3f, c: vec3f) -> vec3f {
 
 @if(CENTER_3D)
 fn rotate3(v: vec3f, r: f32, axis: vec3f) -> vec3f {
-    return rotate3_c(v, r, axis, CENTER_3D);
+    return rotate3_c(v, r, axis, constants::CENTER_3D);
 }
 
 @if(!CENTER_3D)
@@ -64,7 +73,7 @@ fn rotate4_c(v: vec4f, r: f32, axis: vec3f, c: vec4f) -> vec4f {
 
 @if(CENTER_4D)
 fn rotate4(v: vec4f, r: f32, axis: vec3f) -> vec4f {
-    return rotate4_c(v, r, axis, CENTER_4D);
+    return rotate4_c(v, r, axis, constants::CENTER_4D);
 }
 
 @if(!CENTER_4D)
