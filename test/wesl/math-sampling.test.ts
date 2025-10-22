@@ -24,7 +24,7 @@ test("hammersley", async () => {
       test::results[0] = vec4f(h0.x, h0.y, h1.x, h1.y);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify linear x component: h0.x = 0.0, h1.x = 0.125
   expectCloseTo([0.0, 0.125], [result[0], result[2]], 0.01);
@@ -45,7 +45,7 @@ test("hammersley - bit reversal verification", async () => {
       test::results[0] = vec4f(h2.x, h2.y, h3.x, h3.y);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify linear x component: h2.x = 0.25, h3.x = 0.375
   expectCloseTo([0.25, 0.375], [result[0], result[2]], 0.01);
@@ -79,7 +79,7 @@ test("nyquist", async () => {
       test::results[0] = vec4f(v1, v2, v3, v4);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // No filtering: should pass through (0.8)
   expectCloseTo([0.8], [result[0]], 0.05);
@@ -119,7 +119,7 @@ test("permute", async () => {
        test::results[0] = vec4f(p1, p2, p3, p1_repeat);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify exact formula outputs
   expectCloseTo([35.0], [result[0]], 0.1);
@@ -152,7 +152,7 @@ test("grad4 - noise gradient helper", async () => {
       test::results[0] = vec4f(g1a.x, g1b.x, g2.x, g3.x);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Reproducibility: g1a.x == g1b.x
   expectCloseTo([result[0]], [result[1]], 0.0001);
@@ -179,7 +179,7 @@ test("grad4 - gradient range validation", async () => {
       test::results[0] = vec4f(g1.y, g1.z, g2.y, g2.z);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // All gradient components should be in reasonable range
   for (let i = 0; i < 4; i++) {
@@ -205,7 +205,7 @@ test("hemisphereCosSample - unit vector property", async () => {
       test::results[0] = vec4f(len1, len2, len3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // All outputs should be unit vectors (length H 1.0)
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
 });
@@ -224,7 +224,7 @@ test("hemisphereCosSample - positive hemisphere", async () => {
       test::results[0] = vec4f(v1.z, v2.z, v3.z, v4.z);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // All z components should be >= 0 (positive hemisphere)
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
@@ -243,17 +243,17 @@ test("hemisphereCosSample - known values", async () => {
     @compute @workgroup_size(1)
     fn foo() {
       // Test specific known values
-      // u=(0,0): phi=0, cosTheta2=1, cosTheta=1, sinTheta=0 ’ (0, 0, 1)
+      // u=(0,0): phi=0, cosTheta2=1, cosTheta=1, sinTheta=0  (0, 0, 1)
       let v1 = hemisphereCosSample(vec2f(0.0, 0.0));
 
-      // u=(0,1): phi=0, cosTheta2=0, cosTheta=0, sinTheta=1 ’ (1, 0, 0)
+      // u=(0,1): phi=0, cosTheta2=0, cosTheta=0, sinTheta=1  (1, 0, 0)
       let v2 = hemisphereCosSample(vec2f(0.0, 1.0));
 
       // Store z component from v1 and full v2
       test::results[0] = vec4f(v1.z, v2.x, v2.y, v2.z);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // u=(0,0) should give (0, 0, 1) - pointing straight up (testing z component)
   expectCloseTo([1.0], [result[0]], 0.01);
   // u=(0,1) should give (cos(0)*1, sin(0)*1, 0) = (1, 0, 0)
@@ -267,14 +267,14 @@ test("hemisphereCosSample - cosine distribution", async () => {
     fn foo() {
       // Test that the distribution is cosine-weighted
       // Higher u.y values should produce samples closer to the horizon (smaller z)
-      let v_low = hemisphereCosSample(vec2f(0.5, 0.1));   // Low u.y ’ higher z
-      let v_mid = hemisphereCosSample(vec2f(0.5, 0.5));   // Mid u.y ’ mid z
-      let v_high = hemisphereCosSample(vec2f(0.5, 0.9));  // High u.y ’ lower z
+      let v_low = hemisphereCosSample(vec2f(0.5, 0.1));   // Low u.y  higher z
+      let v_mid = hemisphereCosSample(vec2f(0.5, 0.5));   // Mid u.y  mid z
+      let v_high = hemisphereCosSample(vec2f(0.5, 0.9));  // High u.y  lower z
 
       test::results[0] = vec4f(v_low.z, v_mid.z, v_high.z, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Verify ordering: z decreases as u.y increases (cosine distribution property)
   expect(result[0]).toBeGreaterThan(result[1]); // low u.y has higher z than mid u.y
   expect(result[1]).toBeGreaterThan(result[2]); // mid u.y has higher z than high u.y

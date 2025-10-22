@@ -15,7 +15,7 @@ test("centroid", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Centroid should be at (0, 0, 0)
   expectCloseTo([0.0, 0.0, 0.0], result);
 });
@@ -37,7 +37,7 @@ test("contain", async () => {
       test::results[0] = vec3f(select(0.0, 1.0, inside), select(0.0, 1.0, outside), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Inside should be true (1.0), outside should be false (0.0)
   expectCloseTo([1.0, 0.0, 0.0], result);
 });
@@ -56,7 +56,7 @@ test("diagonal", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Diagonal should be (2, 4, 6)
   expectCloseTo([2.0, 4.0, 6.0], result);
 });
@@ -75,7 +75,7 @@ test("expand with scalar", async () => {
       test::results[0] = vec3f(box.min.x, box.max.x, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Min expands to -1.5, max expands to 1.5
   expectCloseTo([-1.5, 1.5, 0.0], result);
 });
@@ -94,7 +94,7 @@ test("expand2 with point", async () => {
       test::results[0] = vec3f(box.min.y, box.max.x, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Min.y expands to -2.0, max.x expands to 2.0
   expectCloseTo([-2.0, 2.0, 0.0], result);
 });
@@ -118,7 +118,7 @@ test("expand3 with AABB", async () => {
       test::results[0] = vec3f(box1.min.y, box1.max.x, box1.max.z);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Min.y expands to -2.0, max.x expands to 2.0, max.z expands to 2.0
   expectCloseTo([-2.0, 2.0, 2.0], result);
 });
@@ -138,7 +138,7 @@ test("square", async () => {
       test::results[0] = diag;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // All dimensions should be equal to the largest dimension (4.0)
   expectCloseTo([4.0, 4.0, 4.0], result);
 });

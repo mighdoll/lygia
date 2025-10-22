@@ -302,7 +302,7 @@ test("sharpendAdaptiveControl4", async () => {
        test::results[0] = vec3f(result1, result2, result3);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
 
   // Gray: (0.5^2) * (0.212655 + 0.715158 + 0.072187) = 0.25 * 1.0 = 0.25
   expect(result[0]).toBeCloseTo(0.25, 2);

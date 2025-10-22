@@ -18,7 +18,7 @@ test("ditherBayer - base function returns values in [0,1]", async () => {
       test::results[0] = vec4f(v1, v2, v3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // All values should be in [0, 1] range
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -54,7 +54,7 @@ test("ditherBayer - 8x8 pattern verification", async () => {
       test::results[0] = vec4f(v1, v2, v3, v4);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Pattern should repeat: v1 == v2 == v3
   expectCloseTo([result[0], result[0]], result.slice(1, 3), 0.0001);
@@ -89,7 +89,7 @@ test("ditherBayerPrecision - f32 with precision control", async () => {
       test::results[0] = vec4f(result4, result8, result4_v2, bayer);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // With precision=4, should be quantized to 0.25 increments
   expect(result[0] % 0.25).toBeCloseTo(0.0, 2);
@@ -126,7 +126,7 @@ test("ditherBayer3 - vec3 dithering", async () => {
       test::results[1] = vec4f(result_gray, 1.0);
     }
   `;
-  const result = await testCompute(src, "vec4f", 2);
+  const result = await testCompute(src, { elem: "vec4f", size: 2 });
 
   // Orange should maintain R > G > B relationship after quantization
   expect(result[0]).toBeGreaterThan(result[1]);
@@ -154,7 +154,7 @@ test("ditherBayer4 - vec4 dithering preserves alpha", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // RGB should be dithered
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -193,7 +193,7 @@ test("ditherBayer - gradient banding reduction", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f", 2);
+  const result = await testCompute(src, { elem: "vec4f", size: 2 });
 
   // With precision=16, values should be quantized to 1/16 = 0.0625 increments
   // All values should snap to valid quantization levels
@@ -235,7 +235,7 @@ test("ditherBayer - quantization levels", async () => {
       test::results[0] = vec4f(result2.r, result4.r, dark2.r, dark256.r);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Precision=2: should be either 0.0 or 1.0
   expect(result[0] === 0.0 || result[0] === 1.0).toBe(true);

@@ -12,7 +12,7 @@ test("desaturate", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Orange (1, 0.5, 0) with 50% desaturation should move toward gray (0.64, 0.64, 0.64)
   // Gray value is luminance: 1*0.3 + 0.5*0.59 + 0*0.11 = 0.3 + 0.295 = 0.595
   // 50% blend: (1+0.595)/2 = 0.7975, (0.5+0.595)/2 = 0.5475, (0+0.595)/2 = 0.2975
@@ -30,7 +30,7 @@ test("desaturate4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // RGB should be same as desaturate test, alpha should remain 0.8
   expectCloseTo([0.7975, 0.5475, 0.2975, 0.8], result);
 });
@@ -47,7 +47,7 @@ test("brightnessMatrix", async () => {
        test::results[0] = vec4f(matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // The translation part should be (0.2, 0.2, 0.2, 1.0)
   expectCloseTo([0.2, 0.2, 0.2, 1.0], result);
 });
@@ -79,7 +79,7 @@ test("contrast3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Each component: (v - 0.5) * 2.0 + 0.5
   // r: (0.8 - 0.5) * 2 + 0.5 = 1.1
   // g: (0.6 - 0.5) * 2 + 0.5 = 0.7
@@ -98,7 +98,7 @@ test("contrastMatrix", async () => {
        test::results[0] = vec4f(matrix[0][0], matrix[1][1], matrix[2][2], matrix[3][0]);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Diagonal should be 1.5, translation should be (1-1.5)*0.5 = -0.25
   expectCloseTo([1.5, 1.5, 1.5, -0.25], result);
 });
@@ -114,7 +114,7 @@ test("levelsInputRange3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // (v - iMin) / (iMax - iMin) clamped to [0, 1]
   // (0.3 - 0.2) / (0.8 - 0.2) = 0.1 / 0.6 = 0.1667
   // (0.5 - 0.2) / 0.6 = 0.5
@@ -133,7 +133,7 @@ test("levelsGamma3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // pow(v, 1/gamma) = pow(v, 0.5) = sqrt(v)
   expectCloseTo([0.5, Math.SQRT1_2, 0.866], result);
 });
@@ -150,7 +150,7 @@ test("levels3Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Step 1: inputRange: (v - 0.2) / (0.8 - 0.2) = (v - 0.2) / 0.6
   //   r: (0.3 - 0.2) / 0.6 = 0.1667
   //   g: (0.5 - 0.2) / 0.6 = 0.5
@@ -195,7 +195,7 @@ test("contrast4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Each RGB component: (v - 0.5) * 1.5 + 0.5
   // r: (0.8 - 0.5) * 1.5 + 0.5 = 0.95
   // g: (0.6 - 0.5) * 1.5 + 0.5 = 0.65
@@ -233,7 +233,7 @@ test("levels3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Step 1: inputRange: (v - 0.2) / (0.9 - 0.2)
   //   r: (0.4 - 0.2) / 0.7 = 0.2857
   //   g: (0.6 - 0.2) / 0.7 = 0.5714
@@ -261,7 +261,7 @@ test("levels4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // RGB should match levels3 test, alpha preserved
   expectCloseTo([0.4742, 0.6292, 0.7481, 0.75], result);
 });
@@ -278,7 +278,7 @@ test("levels4Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Step 1: inputRange: (v - 0.3) / (0.8 - 0.3) = (v - 0.3) / 0.5
   //   r: (0.5 - 0.3) / 0.5 = 0.4
   //   g: (0.7 - 0.3) / 0.5 = 0.8
@@ -307,7 +307,7 @@ test("levelsGamma3Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // pow(v, 1/2.0) = sqrt(v)
   // sqrt(0.16) = 0.4, sqrt(0.36) = 0.6, sqrt(0.64) = 0.8
   expectCloseTo([0.4, 0.6, 0.8], result);
@@ -324,7 +324,7 @@ test("levelsGamma4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // pow(v, 1/gamma)
   // r: pow(0.25, 0.5) = 0.5
   // g: pow(0.5, 1/1.5) = pow(0.5, 0.6667) = 0.6300
@@ -344,7 +344,7 @@ test("levelsGamma4Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // pow(v, 1/2.0) = sqrt(v)
   // sqrt(0.09) = 0.3, sqrt(0.25) = 0.5, sqrt(0.49) = 0.7
   // a: preserved at 0.85
@@ -363,7 +363,7 @@ test("levelsInputRange3Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // (v - iMin) / (iMax - iMin) clamped to [0, 1]
   // (0.2 - 0.1) / (0.9 - 0.1) = 0.1 / 0.8 = 0.125
   // (0.5 - 0.1) / 0.8 = 0.5
@@ -382,7 +382,7 @@ test("levelsInputRange4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Per-channel input range mapping:
   // r: (0.3 - 0.2) / (0.8 - 0.2) = 0.1 / 0.6 = 0.1667
   // g: (0.6 - 0.4) / (0.9 - 0.4) = 0.2 / 0.5 = 0.4
@@ -402,7 +402,7 @@ test("levelsInputRange4Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // (v - 0.1) / (0.8 - 0.1) = (v - 0.1) / 0.7
   // r: (0.15 - 0.1) / 0.7 = 0.0714
   // g: (0.45 - 0.1) / 0.7 = 0.5
@@ -423,7 +423,7 @@ test("levelsOutputRange3Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // mix(0.2, 0.9, v) = 0.2 + v * (0.9 - 0.2) = 0.2 + v * 0.7
   // r: 0.2 + 0.0 * 0.7 = 0.2
   // g: 0.2 + 0.5 * 0.7 = 0.55
@@ -442,7 +442,7 @@ test("levelsOutputRange4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Per-channel output range mapping: mix(oMin, oMax, v)
   // r: mix(0.1, 0.8, 0.25) = 0.1 + 0.25 * 0.7 = 0.275
   // g: mix(0.2, 0.9, 0.5) = 0.2 + 0.5 * 0.7 = 0.55
@@ -462,7 +462,7 @@ test("levelsOutputRange4Float", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // mix(0.3, 0.95, v) = 0.3 + v * (0.95 - 0.3) = 0.3 + v * 0.65
   // r: 0.3 + 0.2 * 0.65 = 0.43
   // g: 0.3 + 0.6 * 0.65 = 0.69
@@ -482,7 +482,7 @@ test("tonemapReinhard3", async () => {
        test::results[0] = tonemapReinhard3(hdr);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // v / (1 + luminance(v))
   // luminance ≈ 2.0*0.2125 + 1.5*0.7154 + 1.0*0.0721 = 1.5706
   // result = hdr / (1 + 1.5706) = hdr / 2.5706
@@ -500,7 +500,7 @@ test("tonemapUnreal3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // x / (x + 0.155) * 1.019
   // Each component separately: 1.0/(1.155)*1.019=0.882, 0.5/(0.655)*1.019=0.778, 0.25/(0.405)*1.019=0.629
   expectCloseTo([0.882, 0.778, 0.629], result.slice(0, 3), 0.001);
@@ -527,7 +527,7 @@ test("tonemapLinear3 - identity baseline", async () => {
        test::results[0] = vec4f(result1.r, result2.r, result2.g, result3.r);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Verify passthrough behavior:
   // result1.r = 1.5 (unchanged)
   // result2.r = 5.0 (not clamped to 1.0)
@@ -549,7 +549,7 @@ test("hueShift", async () => {
        test::results[0] = shifted;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Red shifted by 120° should become green
   expectCloseTo([0.0, 1.0, 0.0], result, 0.05);
 });
@@ -567,7 +567,7 @@ test("vibrance", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Vibrance formula: mix(vec3(luma), color, 1.0 + (v * 1.0 - sign(v) * sat))
   // max_color = 0.6, min_color = 0.4, sat = 0.2
   // luma ≈ 0.6*0.2126 + 0.5*0.7152 + 0.4*0.0722 = 0.5141
@@ -604,7 +604,7 @@ test("vibrance - selective saturation boost", async () => {
        test::results[0] = vec4f(muted_sat_change, saturated_sat_change, desaturated.r, desaturated.g);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Vibrance should increase muted saturation more than saturated colors
   // muted_sat_change should be > saturated_sat_change
@@ -640,7 +640,7 @@ test("ditherBayer", async () => {
        test::results[0] = vec4f(dithered, bayerValue);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // xy=(2,3): x % 8 = 2, y % 8 = 3, index = 2 + 3*8 = 26
   // Bayer matrix[26] = 52.0/64.0 = 0.8125
@@ -685,7 +685,7 @@ test("ditherBlueNoise - spatial distribution", async () => {
        test::results[0] = vec4f(variance, repeat1, repeat2, noise_0_0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Variance should be reasonably high (> 0.01) for well-distributed noise
   expect(result[0]).toBeGreaterThan(0.01);
@@ -714,7 +714,7 @@ test("ditherBlueNoise3", async () => {
        test::results[0] = vec4f(dithered, color.r);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Blue noise dithering should quantize to one of two adjacent levels
   // Either 128/256=0.5 or 129/256≈0.50391
@@ -748,7 +748,7 @@ test("ditherBlueNoise3Precision", async () => {
        test::results[0] = vec4f(dithered, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Should quantize to 16 levels: either 8/16 or 9/16
   const quantLevel8 = 8.0 / 16.0; // 0.5
@@ -783,7 +783,7 @@ test("ditherVlachos3", async () => {
        test::results[0] = vec4f(dithered.r, dithered.g, dithered.b, undithered);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Vlachos adds noise in range [-1/255, 1/255] then quantizes to 256 levels
   // For input 0.5, result should be close to 0.5 (within one quantization step)
@@ -823,7 +823,7 @@ test("ditherVlachos4", async () => {
        test::results[0] = dithered;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // RGB channels should be dithered and quantized
   const tolerance = 0.0001;

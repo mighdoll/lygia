@@ -18,7 +18,7 @@ test("Triangle struct", async () => {
       test::results[0] = vec3f(ab, bc, ca);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // 3-4-5 right triangle: edges are 3, 5, 4
   expectCloseTo([3.0, 5.0, 4.0], result);
 });
@@ -58,7 +58,7 @@ test("barycentric - computes normalized coordinates", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
 
   // The function should return specific coordinates for this configuration
   // Based on the Ericson algorithm, this returns (1, 0, 0)
@@ -83,7 +83,7 @@ test("barycentric2 - Triangle struct wrapper", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
 
   // Should produce same result as barycentric(a, b, c)
   expectCloseTo([1.0, 0.0, 0.0], result, 0.01);
@@ -109,7 +109,7 @@ test("barycentric3 - point at vertex", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
 
   // Point at vertex a should have dominant weight at a
   // Note: This function returns unnormalized coords (sum ≠ 1)
@@ -137,7 +137,7 @@ test("barycentric3 - edge midpoint", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
 
   // Midpoint of a-b should have equal weights for a and b, zero for c
   expect(Math.abs(result[0] - result[1])).toBeLessThan(0.01);
@@ -159,7 +159,7 @@ test("centroid", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Centroid should be at (1, 1, 0)
   expectCloseTo([1.0, 1.0, 0.0], result);
 });
@@ -179,7 +179,7 @@ test("normal", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Normal of XY plane triangle should point in +Z direction
   expectCloseTo([0.0, 0.0, 1.0], result);
 });

@@ -63,7 +63,7 @@ test("cnoise2", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -93,7 +93,7 @@ test("cnoise3", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -122,7 +122,7 @@ test("cnoise4", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -151,7 +151,7 @@ test("snoise2", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -181,7 +181,7 @@ test("snoise3", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -210,7 +210,7 @@ test("pnoise2", async () => {
        test::results[0] = vec4f(n1, n2, n3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
   // Periodic noise should return values in range [-1, 1]
@@ -237,7 +237,7 @@ test("pnoise3", async () => {
        test::results[0] = vec4f(n1, n2, n3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
   // Periodic noise should return values in range [-1, 1]
@@ -264,7 +264,7 @@ test("pnoise4", async () => {
        test::results[0] = vec4f(n1, n2, n3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
   // Periodic noise should return values in range [-1, 1]
@@ -291,7 +291,7 @@ test("srandom2", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -317,7 +317,7 @@ test("worley2", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different positions have different distances
@@ -352,7 +352,7 @@ test("noised2", async () => {
        test::results[0] = vec4f(dx_analytical, dx_numerical, dy_analytical, dy_numerical);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test that analytical derivatives match numerical derivatives (with small tolerance for numerical error)
   expectCloseTo([result[0], result[2]], [result[1], result[3]], 2);
   // Derivatives should be in reasonable range
@@ -386,7 +386,7 @@ test("noised3", async () => {
        test::results[0] = vec4f(dx_analytical, dx_numerical, dy_analytical, dy_numerical);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test that analytical derivatives match numerical derivatives (with small tolerance for numerical error)
   expectCloseTo([result[0], result[2]], [result[1], result[3]], 2);
   // Derivatives should be in reasonable range
@@ -413,7 +413,7 @@ test("wavelet2", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -443,7 +443,7 @@ test("wavelet3", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same position and phase produce same output
   expectCloseTo([result[0]], [result[2]]);
   // Test that different phases produce different outputs
@@ -472,7 +472,7 @@ test("waveletScaled2", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that scaling position changes output
@@ -504,7 +504,7 @@ test("waveletScaled3 - with custom scale parameter", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different scales produce different outputs
@@ -529,7 +529,7 @@ test("random", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -553,7 +553,7 @@ test("random2", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -576,7 +576,7 @@ test("random3", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -599,7 +599,7 @@ test("random4", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -625,7 +625,7 @@ test("random21 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r2.x, r2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Random should return values in [0, 1]
@@ -651,7 +651,7 @@ test("random22 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r2.x, r2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
@@ -672,7 +672,7 @@ test("random23 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r2.x, r2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Random should return values in [0, 1]
@@ -697,7 +697,7 @@ test("random31 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r1.z, r2.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
   // Random should return values in [0, 1]
@@ -725,7 +725,7 @@ test("random32 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r1.z, r2.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
   // Random should return values in [0, 1]
@@ -753,7 +753,7 @@ test("random33 - basic output", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r1.z, r2.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
   // Regression: exact output value
@@ -769,8 +769,8 @@ test("random41 - determinism and range", async () => {
        test::results[0] = random41(1.0);
      }
    `;
-  const result1 = await testCompute(src, "vec4f");
-  const result2 = await testCompute(src, "vec4f");
+  const result1 = await testCompute(src, { elem: "vec4f" });
+  const result2 = await testCompute(src, { elem: "vec4f" });
 
   // Test determinism: same input produces same output across runs
   expectCloseTo(result1, result2);
@@ -802,7 +802,7 @@ test("random42 - hash properties", async () => {
        test::results[0] = random42(p1) - random42(p2);
      }
    `;
-  const determinism = await testCompute(src1, "vec4f");
+  const determinism = await testCompute(src1, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5); // Same input → same output
 
   // Test range and independence
@@ -813,7 +813,7 @@ test("random42 - hash properties", async () => {
        test::results[0] = random42(vec2f(1.0, 2.0));
      }
    `;
-  const result = await testCompute(src2, "vec4f");
+  const result = await testCompute(src2, { elem: "vec4f" });
 
   // All components in [0, 1]
   result.forEach((v) => {
@@ -835,7 +835,7 @@ test("random42 - hash properties", async () => {
        test::results[0] = abs(r1 - r3);  // Difference magnitude
      }
    `;
-  const avalanche = await testCompute(src3, "vec4f");
+  const avalanche = await testCompute(src3, { elem: "vec4f" });
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.03); // Hash property: small input → significant output change
 
@@ -857,7 +857,7 @@ test("random43 - hash properties", async () => {
        test::results[0] = random43(p1) - random43(p2);
      }
    `;
-  const determinism = await testCompute(src1, "vec4f");
+  const determinism = await testCompute(src1, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
 
   // Test range and independence
@@ -868,7 +868,7 @@ test("random43 - hash properties", async () => {
        test::results[0] = random43(vec3f(1.0, 2.0, 3.0));
      }
    `;
-  const result = await testCompute(src2, "vec4f");
+  const result = await testCompute(src2, { elem: "vec4f" });
 
   // All components in [0, 1]
   result.forEach((v) => {
@@ -890,7 +890,7 @@ test("random43 - hash properties", async () => {
        test::results[0] = abs(r1 - r3);
      }
    `;
-  const avalanche = await testCompute(src3, "vec4f");
+  const avalanche = await testCompute(src3, { elem: "vec4f" });
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.1);
 
@@ -912,7 +912,7 @@ test("random44 - hash properties", async () => {
        test::results[0] = random44(p1) - random44(p2);
      }
    `;
-  const determinism = await testCompute(src1, "vec4f");
+  const determinism = await testCompute(src1, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
 
   // Test range and independence
@@ -923,7 +923,7 @@ test("random44 - hash properties", async () => {
        test::results[0] = random44(vec4f(1.0, 2.0, 3.0, 4.0));
      }
    `;
-  const result = await testCompute(src2, "vec4f");
+  const result = await testCompute(src2, { elem: "vec4f" });
 
   // All components in [0, 1]
   result.forEach((v) => {
@@ -945,7 +945,7 @@ test("random44 - hash properties", async () => {
        test::results[0] = abs(r1 - r3);
      }
    `;
-  const avalanche = await testCompute(src3, "vec4f");
+  const avalanche = await testCompute(src3, { elem: "vec4f" });
   const avgDiff = avalanche.reduce((a, b) => a + b) / avalanche.length;
   expect(avgDiff).toBeGreaterThan(0.1);
 
@@ -974,7 +974,7 @@ test("snoise22", async () => {
        test::results[0] = vec4f(n1.x, n1.y, n2.x, n2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Simplex noise should return values in range [-1, 1]
@@ -1002,7 +1002,7 @@ test("snoise33", async () => {
        test::results[0] = vec4f(n1.x, n1.y, n1.z, length(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test continuity: nearby points should have similar values
   expect(result[3]).toBeLessThan(0.2);
   // Simplex noise should return values in range [-1, 1]
@@ -1034,7 +1034,7 @@ test("snoise34", async () => {
        test::results[0] = vec4f(n1.x, n1.y, n1.z, length(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test continuity: nearby points should have similar values
   expect(result[3]).toBeLessThan(0.2);
   // Simplex noise should return values in range [-1, 1]
@@ -1065,7 +1065,7 @@ test("snoise4", async () => {
        test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
@@ -1091,7 +1091,7 @@ test("srandom", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -1117,7 +1117,7 @@ test("srandom22", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r2.x, r2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
@@ -1141,7 +1141,7 @@ test("srandom3", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -1168,7 +1168,7 @@ test("srandom33", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r1.z, r2.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (check first component)
   expectCloseTo([result[0]], [result[3]]);
   // Signed random returns values in [-1, 1]
@@ -1199,7 +1199,7 @@ test("srandom4", async () => {
        test::results[0] = vec4f(r1, r2, r3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -1228,7 +1228,7 @@ test("srandom_tile22", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r2.x, r2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test tiling: points separated by tileLength should produce same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Signed random returns values in [-1, 1]
@@ -1257,7 +1257,7 @@ test("srandom_tile33", async () => {
        test::results[0] = vec4f(r1.x, r1.y, r1.z, r2.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test tiling: points separated by tileLength should produce same output (check first component)
   expectCloseTo([result[0]], [result[3]]);
   // Signed random returns values in [-1, 1]
@@ -1289,7 +1289,7 @@ test("worley22", async () => {
        test::results[0] = vec4f(w1.x, w1.y, w2.x, w2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Worley noise returns distances (F1, F2) in reasonable range
@@ -1320,7 +1320,7 @@ test("worley3", async () => {
        test::results[0] = vec4f(w1, w2, w3, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
@@ -1347,7 +1347,7 @@ test("worley32", async () => {
        test::results[0] = vec4f(w1.x, w1.y, w2.x, w2.y);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Worley noise returns distances (F1, F2) in reasonable range
@@ -1384,7 +1384,7 @@ test("wavelet - base function with custom phase and scale", async () => {
        test::results[0] = vec4f(w1, w2, w3, w4);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0]], [result[1]]);
   // Test that different phase produces different output

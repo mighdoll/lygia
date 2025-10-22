@@ -22,7 +22,7 @@ test("GGX", async () => {
        test::results[0] = vec3f(result1, result2, result3);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // GGX distribution peaks at NoH=1.0
   expect(result[0]).toBeGreaterThan(0.3); // Peak value with roughness=0.5
   // GGX decreases as NoH decreases
@@ -54,7 +54,7 @@ test("GGXPrecise", async () => {
        test::results[0] = vec2f(preciseFn, standardFn);
      }
    `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // GGXPrecise should produce similar results to standard GGX (identical on desktop)
   expectCloseTo([result[0]], [result[1]], 0.01);
   // Both should be positive and reasonable
@@ -82,7 +82,7 @@ test("importanceSamplingGGX", async () => {
        test::results[0] = vec3f(sample1.z, length(sample2), sample3.z);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // u=(0,0) produces direction close to Z axis
   expectCloseTo([1.0], [result[0]], 0.1);
   // Samples should be normalized (unit length)
@@ -115,7 +115,7 @@ test("schlick vec3f", async () => {
        test::results[0] = vec3f(normalFn.x, grazingFn.x, midFn.x);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // At normal incidence, Fresnel equals f0
   expectCloseTo([0.04], [result[0]], 0.01);
   // At grazing angle, Fresnel approaches f90
@@ -146,7 +146,7 @@ test("schlickVec3", async () => {
        test::results[0] = vec4f(normalFn, grazingFn.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // At normal incidence, equals f0
   expectCloseTo([1.0, 0.71, 0.29], [result[0], result[1], result[2]], 0.01);
   // At grazing angle, approaches f90
@@ -173,7 +173,7 @@ test("schlickF32", async () => {
        test::results[0] = vec3f(normalFn, grazingFn, midFn);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // At normal incidence, equals f0
   expectCloseTo([0.04], [result[0]], 0.001);
   // At grazing, approaches f90
@@ -205,7 +205,7 @@ test("smithGGXCorrelated", async () => {
        test::results[0] = vec3f(smoothFn, roughFn, perfectFn);
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Smooth surfaces have higher visibility
   expect(result[0]).toBeGreaterThan(result[1]);
   // Rough surfaces still have positive visibility
@@ -237,7 +237,7 @@ test("smithGGXCorrelated_Fast", async () => {
        test::results[0] = vec4f(standardFn, fastFn, fastSmoothFn, fastRoughFn);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Fast approximation should be reasonably close to standard
   expect(Math.abs(result[0] - result[1])).toBeLessThan(0.1);
   // Fast version should also show smooth > rough

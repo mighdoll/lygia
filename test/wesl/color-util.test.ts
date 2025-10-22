@@ -80,7 +80,7 @@ test("mixOklab", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Mix red and blue in Oklab space - purple-ish result
   expectCloseTo([0.264, 0.087, 0.363], result, 0.01);
 });
@@ -98,7 +98,7 @@ test("brightnessContrast3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // (0.6 - 0.5) * 1.2 + 0.5 + 0.1 = 0.12 + 0.6 = 0.72
   // (0.5 - 0.5) * 1.2 + 0.5 + 0.1 = 0 + 0.6 = 0.6
   // (0.4 - 0.5) * 1.2 + 0.5 + 0.1 = -0.12 + 0.6 = 0.48
@@ -118,7 +118,7 @@ test("brightnessContrast4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // RGB adjusted, alpha preserved
   expectCloseTo([0.72, 0.6, 0.48, 0.8], result, 0.01);
 });
@@ -135,7 +135,7 @@ test("exposure3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // 0.5 * 2^1 = 1.0
   expectCloseTo([1.0, 1.0, 1.0], result, 0.01);
 });
@@ -152,7 +152,7 @@ test("exposure4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // RGB doubled, alpha preserved
   expectCloseTo([1.0, 1.0, 1.0, 0.7], result, 0.01);
 });
@@ -169,7 +169,7 @@ test("hueShiftRYB", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // RYB hue shift: Red shifted by 120° in RYB space
   // After RGB->RYB->hue shift->RGB conversion
   // Red shifted 120° in RYB color wheel goes toward yellow
@@ -187,7 +187,7 @@ test("heatmap", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Heatmap formula: 1.0 - (v*2.1 - vec3(1.8,1.14,0.3))^2
   // For v=0.5: 1.0 - (1.05 - vec3(1.8,1.14,0.3))^2 = vec3(0.4375, 0.9919, 0.4375)
   expectCloseTo([0.4375, 0.992, 0.4375], result, 0.01);
@@ -205,7 +205,7 @@ test("paletteHue", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Physical hue palette at x=0.5 with ratio=1/3
   // Formula: v = abs(fmod(x + [0,1,2]*ratio, 1) * 2 - 1)
   // Then smoothstep: v*v*(3-2*v)
@@ -226,7 +226,7 @@ test("hueDefault", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // hueDefault(0.5) should match paletteHue test: hue(0.5, 0.333)
   // Result should be [0.0, 0.740, 0.743] from paletteHue test
   expectCloseTo([0.0, 0.74, 0.743], result, 0.05);
@@ -252,7 +252,7 @@ test("mixSpectral", async () => {
        test::results[0] = vec4f(mixed.r, mixed.g, mixed.b, linearMix.r);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Spectral mixing of red and blue produces a dark purple color
   // This is VERY different from linear RGB mixing which would give bright (0.5, 0, 0.5)
@@ -370,7 +370,7 @@ test("saturationMatrix", async () => {
        test::results[0] = result.xyz;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Saturation matrix at 1.5 should increase color saturation
   // Original: (0.8, 0.5, 0.3) -> more saturated orange
   // Luma ~0.57, with 1.5 saturation should push values further from luma
@@ -393,7 +393,7 @@ test("levelsOutputRange3", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Middle value (0.5) should map to middle of output range (0.5)
   expectCloseTo([0.5, 0.5, 0.5], result, 0.01);
 });
@@ -469,7 +469,7 @@ test("colorDistanceOKLAB", async () => {
        test::results[0] = vec4f(redToOrange, redToBlue, 0.0, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   const redToOrange = result[0];
   const redToBlue = result[1];
@@ -505,7 +505,7 @@ test("colorDistanceYCbCr", async () => {
        test::results[0] = vec4f(chromaDist, lumaDist, 0.0, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   const chromaDist = result[0];
   const lumaDist = result[1];
@@ -541,7 +541,7 @@ test("colorDistanceYPbPr", async () => {
        test::results[0] = vec4f(complementaryDist, similarDist, dist1, dist2);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   const complementaryDist = result[0];
   const similarDist = result[1];
@@ -589,7 +589,7 @@ test("hueShift4", async () => {
        test::results[0] = shifted;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Red shifted by 120° should become green, alpha preserved
   expectCloseTo([0.0, 1.0, 0.0, 0.85], result, 0.05);
 });
@@ -606,7 +606,7 @@ test("hueShiftRYB4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // RYB hue shift: Red shifted by 120° toward yellow
   // Alpha should be preserved
   expectCloseTo([1.0, 1.0, 0.0, 0.7], result.slice(0, 4), 0.15);
@@ -630,7 +630,7 @@ test("luma - grayscale consistency", async () => {
        test::results[0] = vec4f(scalarLuma, vectorLuma, 0.0, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Grayscale color should have luma equal to its value
   expectCloseTo([0.75, 0.75], [result[0], result[1]], 0.01);
 });
@@ -663,7 +663,7 @@ test("vibrance4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Vibrance should increase saturation of muted colors
   // RGB values calculated same as vibrance3 test, alpha preserved
   expectCloseTo([0.6258, 0.4958, 0.3658, 0.8], result, 0.01);
@@ -682,7 +682,7 @@ test("mixOklab4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Mix red and blue in Oklab space - purple-ish result
   // RGB should match mixOklab test, alpha should be 0.6 (mix of 0.8 and 0.4)
   expectCloseTo([0.264, 0.087, 0.363, 0.6], result, 0.01);
@@ -700,7 +700,7 @@ test("mixSpectral4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Spectral mixing of yellow and cyan produces green
   // Alpha should be 0.7 (mix of 0.9 and 0.5)
   expect(result[1]).toBeGreaterThan(result[0]); // Green dominant
@@ -728,7 +728,7 @@ test("mixSpectral_linear_to_reflectance", async () => {
        );
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // For pure red input:
   // - Short wavelengths (blue) should have low reflectance
@@ -754,7 +754,7 @@ test("mixSpectral_reflectance_to_xyz", async () => {
        test::results[0] = vec4f(xyz, 1.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // For neutral gray input:
   // - X, Y, Z should be similar (neutral color)

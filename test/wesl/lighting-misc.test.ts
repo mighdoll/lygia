@@ -86,7 +86,7 @@ test("fresnelRoughness", async () => {
        test::results[0] = vec4f(normalSmooth.x, grazingSmooth.x, grazingRough.x, midSmooth.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Test 1: At normal incidence, should equal f0 (0.04)
   expectCloseTo([0.04], [result[0]], 0.01);
@@ -121,7 +121,7 @@ test.skip("fresnelReflection", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Fresnel reflection should return RGB values in [0, 1]
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
@@ -195,7 +195,7 @@ test("specularCookTorrance", async () => {
        test::results[0] = vec4f(perfectSmooth.x, perfectRough.x, offSpecSmooth.x, offSpecRough.x);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Test 1: Perfect alignment produces strongest specular
   // Smooth surfaces have sharper, taller peaks
@@ -238,7 +238,7 @@ test("toShininess", async () => {
        test::results[0] = vec4f(verySmooth, veryRough, midRough, metallic);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Test 1: Very smooth has highest shininess
   expect(result[0]).toBeGreaterThan(150.0); // Should be ~194

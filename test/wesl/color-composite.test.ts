@@ -13,7 +13,7 @@ test("compositeSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // src + dst * (1 - src.a)
   // alpha: 0.5 + 0.5 * 0.5 = 0.75
   // rgb: src.rgb * src.a + dst.rgb * dst.a * (1 - src.a)
@@ -32,7 +32,7 @@ test("compositeSourceIn4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // src * dst.a
   // alpha: 0.8 * 0.5 = 0.4
   // rgb: src.rgb * dst.a = (1, 0, 0) * 0.5
@@ -51,7 +51,7 @@ test("compositeXor4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // src * (1 - dst.a) + dst * (1 - src.a)
   // rgb: (1,0,0)*(1-0.4) + (0,0,1)*(1-0.6) = (0.6,0,0) + (0,0,0.4) = (0.6,0,0.4)
   // alpha: 0.6 * 0.6 + 0.4 * 0.4 = 0.36 + 0.16 = 0.52
@@ -70,7 +70,7 @@ test("compositeDestinationAtop4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * src.a + src.rgb * (1 - dst.a)
   // rgb: (0,0,1)*0.7 + (1,0,0)*(1-0.5) = (0,0,0.7) + (0.5,0,0) = (0.5,0,0.7)
   // alpha: dst.a * src.a + src.a * (1 - dst.a) = 0.5*0.7 + 0.7*0.5 = 0.35 + 0.35 = 0.7
@@ -89,7 +89,7 @@ test("compositeDestinationIn4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * src.a
   // rgb: (0,1,0) * 0.6 = (0,0.6,0)
   // alpha: dst.a * src.a = 0.8 * 0.6 = 0.48
@@ -108,7 +108,7 @@ test("compositeDestinationOut4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * (1 - src.a)
   // rgb: (0,1,0) * (1 - 0.3) = (0,1,0) * 0.7 = (0,0.7,0)
   // alpha: dst.a * (1 - src.a) = 0.7 * 0.7 = 0.49
@@ -127,7 +127,7 @@ test("compositeDestinationOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Destination over: dst + src * (1 - dst.a)
   // rgb: dst.rgb + src.rgb * (1 - dst.a) = (0,0,1) + (1,0,0)*0.4 = (0.4,0,1)
   // alpha: dst.a + src.a * (1 - dst.a) = 0.6 + 0.5*0.4 = 0.8
@@ -146,7 +146,7 @@ test("compositeSourceAtop4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Source atop: src * dst.a + dst * (1 - src.a)
   // rgb: src.rgb * dst.a + dst.rgb * (1 - src.a) = (1,0,0)*0.5 + (0,0,1)*0.4 = (0.5,0,0.4)
   // alpha: src.a * dst.a + dst.a * (1 - src.a) = 0.6*0.5 + 0.5*0.4 = 0.3 + 0.2 = 0.5
@@ -165,7 +165,7 @@ test("compositeSourceOut4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Source out: src * (1 - dst.a)
   // rgb: src.rgb * (1 - dst.a) = (1,0,0) * (1-0.4) = (1,0,0) * 0.6 = (0.6,0,0)
   // alpha: src.a * (1 - dst.a) = 0.8 * 0.6 = 0.48
@@ -185,7 +185,7 @@ test("layerMultiplySourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Multiply blend with source-over compositing
   expectCloseTo([0.3625, 0.4025, 0.3825, 0.875], result, 0.01);
 });
@@ -202,7 +202,7 @@ test("layerScreenSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Screen blend with source-over compositing
   expectCloseTo([0.45, 0.5, 0.59, 0.8], result, 0.01);
 });
@@ -219,7 +219,7 @@ test("layerAddSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Add blend with source-over compositing
   expectCloseTo([0.34, 0.48, 0.62, 0.8], result, 0.01);
 });
@@ -236,7 +236,7 @@ test("layerOverlaySourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Overlay blend with source-over compositing
   expectCloseTo([0.544, 0.336, 0.44, 0.88], result, 0.01);
 });
@@ -253,7 +253,7 @@ test("layerDarkenSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Darken blend with source-over compositing
   expectCloseTo([0.3, 0.3, 0.375, 0.75], result, 0.01);
 });
@@ -270,7 +270,7 @@ test("layerLightenSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Lighten blend with source-over compositing
   expectCloseTo([0.45, 0.45, 0.375, 0.75], result, 0.01);
 });
@@ -287,7 +287,7 @@ test("layerDifferenceSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Difference blend with source-over compositing
   expectCloseTo([0.3, 0.406, 0.212, 0.88], result, 0.01);
 });
@@ -304,7 +304,7 @@ test("layerExclusionSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Exclusion blend with source-over compositing
   expectCloseTo([0.345, 0.445, 0.39, 0.75], result, 0.01);
 });
@@ -321,7 +321,7 @@ test("layerPhoenixSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Phoenix blend with source-over compositing
   expectCloseTo([0.484, 0.636, 0.428, 0.76], result, 0.02);
 });
@@ -338,7 +338,7 @@ test("layerSubtractSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Subtract blend with source-over compositing
   expectCloseTo([0.2, 0.2, 0.175, 0.75], result, 0.01);
 });
@@ -359,7 +359,7 @@ test("compositeSourceOver3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: src.rgb * src.a + dst.rgb * dst.a * (1 - src.a)
   // rgb: (1,0,0)*0.5 + (0,0,1)*0.5*0.5 = (0.5,0,0) + (0,0,0.25) = (0.5,0,0.25)
   expectCloseTo([0.5, 0.0, 0.25, 0.0], result);
@@ -379,7 +379,7 @@ test("compositeSourceIn3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: src.rgb * dst.a = (1,0,0) * 0.6 = (0.6,0,0)
   expectCloseTo([0.6, 0.0, 0.0, 0.0], result);
 });
@@ -398,7 +398,7 @@ test("compositeSourceOut3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: src.rgb * (1 - dst.a) = (1,0,0) * (1 - 0.3) = (1,0,0) * 0.7 = (0.7,0,0)
   expectCloseTo([0.7, 0.0, 0.0, 0.0], result);
 });
@@ -417,7 +417,7 @@ test("compositeSourceAtop3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: src.rgb * dst.a + dst.rgb * (1 - src.a)
   // rgb: (1,0,0)*0.5 + (0,0,1)*(1-0.6) = (0.5,0,0) + (0,0,0.4) = (0.5,0,0.4)
   expectCloseTo([0.5, 0.0, 0.4, 0.0], result);
@@ -437,7 +437,7 @@ test("compositeDestinationOver3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb + src.rgb * (1 - dst.a) = (0,0,1) + (1,0,0)*(1-0.6) = (0,0,1) + (0.4,0,0) = (0.4,0,1)
   expectCloseTo([0.4, 0.0, 1.0, 0.0], result);
 });
@@ -456,7 +456,7 @@ test("compositeDestinationIn3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * src.a = (0,1,0) * 0.7 = (0,0.7,0)
   expectCloseTo([0.0, 0.7, 0.0, 0.0], result);
 });
@@ -475,7 +475,7 @@ test("compositeDestinationOut3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * (1 - src.a) = (0,1,0) * (1 - 0.4) = (0,1,0) * 0.6 = (0,0.6,0)
   expectCloseTo([0.0, 0.6, 0.0, 0.0], result);
 });
@@ -494,7 +494,7 @@ test("compositeDestinationAtop3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: dst.rgb * src.a + src.rgb * (1 - dst.a)
   // rgb: (0,0,1)*0.7 + (1,0,0)*(1-0.5) = (0,0,0.7) + (0.5,0,0) = (0.5,0,0.7)
   expectCloseTo([0.5, 0.0, 0.7, 0.0], result);
@@ -514,7 +514,7 @@ test("compositeXor3", async () => {
        test::results[0] = vec4f(result, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // rgb: src.rgb * (1 - dst.a) + dst.rgb * (1 - src.a)
   // rgb: (1,0,0)*(1-0.4) + (0,0,1)*(1-0.6) = (0.6,0,0) + (0,0,0.4) = (0.6,0,0.4)
   expectCloseTo([0.6, 0.0, 0.4, 0.0], result);

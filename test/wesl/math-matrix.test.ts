@@ -18,7 +18,7 @@ test("toMat3", async () => {
       test::results[0] = vec4f(m3[0][0], m3[1][1], m3[2][2], 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 6.0, 11.0, 0.0], result);
 });
 
@@ -36,7 +36,7 @@ test("toMat4", async () => {
       test::results[0] = vec4f(m4[0][0], m4[1][1], m4[2][2], m4[3][3]);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Diagonal elements should be 1, 5, 9, 1
   expectCloseTo([1.0, 5.0, 9.0, 1.0], result, 0.01);
 });
@@ -55,7 +55,7 @@ test("inverse - mat3", async () => {
       test::results[0] = vec4f(mInv[0][0], mInv[1][1], mInv[2][2], 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Inverse of diagonal matrix is 1/diagonal
   expectCloseTo([1.0, 0.5, 0.333], result.slice(0, 3), 0.01);
 });
@@ -71,7 +71,7 @@ test("scale2d - uniform scale", async () => {
       test::results[0] = vec4f(result.x, result.y, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([6.0, 8.0, 0.0, 0.0], result, 0.01);
 });
 
@@ -86,7 +86,7 @@ test("scale2dVec - non-uniform scale", async () => {
       test::results[0] = vec4f(result.x, result.y, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([8.0, 15.0, 0.0, 0.0], result, 0.01);
 });
 
@@ -101,7 +101,7 @@ test("scale3d", async () => {
       test::results[0] = vec4f(result.x, result.y, result.z, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([2.0, 6.0, 12.0, 0.0], result, 0.01);
 });
 
@@ -116,7 +116,7 @@ test("scale4d", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([2.0, 6.0, 12.0, 1.0], result, 0.01);
 });
 
@@ -131,6 +131,6 @@ test("translate4d", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([11.0, 22.0, 33.0, 1.0], result, 0.01);
 });

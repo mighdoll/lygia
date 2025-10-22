@@ -35,7 +35,7 @@ test("backInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, -0.1875, 1.1875, 1.0], result);
 });
 
@@ -73,7 +73,7 @@ test("bounceInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.140625, 0.859375, 1.0], result);
 });
 
@@ -111,7 +111,7 @@ test("circularInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.067, 0.933, 1.0], result);
 });
 
@@ -149,7 +149,7 @@ test("cubicInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0625, 0.9375, 1.0], result);
 });
 
@@ -187,7 +187,7 @@ test("elasticInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, -0.011049, 1.011049, 1.0], result);
 });
 
@@ -225,7 +225,7 @@ test("exponentialInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.015625, 0.984375, 1.0], result);
 });
 
@@ -293,7 +293,7 @@ test("quadraticInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.125, 0.875, 1.0], result);
 });
 
@@ -331,7 +331,7 @@ test("quarticInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.03125, 0.96875, 1.0], result);
 });
 
@@ -399,6 +399,6 @@ test("sineInOut", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.1464, 0.8536, 1.0], result);
 });

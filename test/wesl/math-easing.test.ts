@@ -11,7 +11,7 @@ test("cubic", async () => {
       test::results[0] = vec4f(cubic(0.0), cubic(0.5), cubic(1.0), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // cubic(0) = 0, cubic(0.5) = 0.5, cubic(1) = 1
   expectCloseTo([0.0, 0.5, 1.0, 0.0], result, 0.01);
 });
@@ -24,7 +24,7 @@ test("quartic", async () => {
       test::results[0] = vec4f(quartic(0.0), quartic(0.5), quartic(1.0), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // quartic(v) = v*v*(2-v*v), quartic(0.5) = 0.25 * 1.9375 H 0.4375
   expectCloseTo([0.0, 0.4375, 1.0, 0.0], result, 0.01);
 });
@@ -37,7 +37,7 @@ test("quintic", async () => {
       test::results[0] = vec4f(quintic(0.0), quintic(0.5), quintic(1.0), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // quintic(0) = 0, quintic(0.5) = 0.5, quintic(1) = 1
   expectCloseTo([0.0, 0.5, 1.0, 0.0], result, 0.01);
 });
@@ -55,7 +55,7 @@ test("invCubic", async () => {
       test::results[0] = vec4f(x, xRecovered, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Original x and recovered x should match
   expectCloseTo([0.3, 0.3], result.slice(0, 2), 0.01);
 });
@@ -73,7 +73,7 @@ test("invQuartic", async () => {
       test::results[0] = vec4f(x, xRecovered, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Original x and recovered x should match
   expectCloseTo([0.7, 0.7], result.slice(0, 2), 0.01);
 });
@@ -87,7 +87,7 @@ test("gain", async () => {
       test::results[0] = vec4f(gain(0.5, 2.0), gain(0.25, 2.0), gain(0.75, 2.0), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // gain(0.5) = 0.5 always
   expect(result[0]).toBeCloseTo(0.5, 2);
   expect(result[1]).toBeGreaterThan(0.0);
@@ -102,7 +102,7 @@ test("parabola", async () => {
       test::results[0] = vec4f(parabola(0.0, 1.0), parabola(0.5, 1.0), parabola(1.0, 1.0), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // parabola(0) = 0, parabola(0.5) = 1, parabola(1) = 0
   expectCloseTo([0.0, 1.0, 0.0, 0.0], result, 0.01);
 });
@@ -117,6 +117,6 @@ test("gaussian", async () => {
       test::results[0] = vec4f(gaussian(0.0, 1.0), gaussian(1.0, 1.0), 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.606], result.slice(0, 2), 0.01);
 });

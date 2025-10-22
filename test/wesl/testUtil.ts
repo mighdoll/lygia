@@ -24,17 +24,30 @@ export function expectCloseTo(
   expect.fail(`arrays don't match:\n  ${a}\n  ${b}`);
 }
 
+/** Options for testCompute function */
+export interface TestComputeOptions {
+  elem?: WgslElementType;
+  size?: number;
+  conditions?: Record<string, boolean>;
+  constants?: Record<string, string | number>;
+}
+
 /** test WGSL compute shader with typical defaults */
 export async function testCompute(
   src: string,
-  elem: WgslElementType = "f32",
-  sizeOrConditions?: number | Record<string, boolean>,
-  constants?: Record<string, string | number>,
+  options?: TestComputeOptions,
 ) {
+  const {
+    elem = "f32",
+    size: sizeInElements,
+    conditions,
+    constants,
+  } = options ?? {};
+
   const device = await getGPUDevice();
-  const isSize = typeof sizeOrConditions === "number";
-  const size = isSize ? sizeOrConditions * elementStride(elem) : undefined;
-  const conditions = isSize ? undefined : sizeOrConditions;
+  const size = sizeInElements
+    ? sizeInElements * elementStride(elem)
+    : undefined;
 
   return testComputeShader({
     projectDir,

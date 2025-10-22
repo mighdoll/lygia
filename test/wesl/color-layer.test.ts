@@ -13,7 +13,7 @@ test("layerAverageSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing (source-over)
   expect(result[3]).toBeCloseTo(0.92); // 0.8 + 0.6 * (1 - 0.8)
@@ -40,7 +40,7 @@ test("layerAverageSourceOver4 - fully opaque", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Alpha should be 1.0 (fully opaque)
   // RGB should be the pure average blend: (src + dst) * 0.5
@@ -59,7 +59,7 @@ test("layerColorBurnSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify color burn darkens the image
   // Color burn formula: max((1 - (1 - base) / blend), 0)
@@ -84,7 +84,7 @@ test("layerColorBurnSourceOver4 - with black blend", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // When blend is black (0.0), color burn returns 0.0
   // Then source-over: 0.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
@@ -103,7 +103,7 @@ test("layerColorDodgeSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify color dodge brightens the image
   // Color dodge formula: min(base / (1 - blend), 1.0) where base=src, blend=dst
@@ -127,7 +127,7 @@ test("layerColorDodgeSourceOver4 - with white blend", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // When blend is white (1.0), color dodge returns 1.0
   // Then source-over: 1.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
@@ -147,7 +147,7 @@ test("layerColorSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Color mode: takes H+S from blend (src), V from base (dst)
   // src is orange, dst is cyan. Result takes src's hue with dst's brightness
@@ -187,7 +187,7 @@ test("layerColorSourceOver4 - grayscale dst", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Color mode: takes H+S from blend (src=red), V from base (dst=gray)
   // src is pure red, dst is mid-gray. Result applies src's hue+saturation with dst's brightness
@@ -222,7 +222,7 @@ test("layerGlowSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
@@ -247,7 +247,7 @@ test("layerHardLightSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
@@ -273,7 +273,7 @@ test("layerHardLightSourceOver4 - dark blend", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hard light: blendHardLight(src, dst) = blendOverlay(dst, src)
   // With src=0.2, dst=0.8: overlay checks if base (dst=0.8) < 0.5? No
@@ -295,7 +295,7 @@ test("layerHardLightSourceOver4 - light blend", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hard light: blendHardLight(src, dst) = blendOverlay(dst, src)
   // With src=0.8, dst=0.2: overlay checks if base (dst=0.2) < 0.5? Yes
@@ -316,7 +316,7 @@ test("layerHardMixSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hard mix: if vividLight(base, blend) < 0.5 then 0.0 else 1.0
   // base=dst, blend=src in the layer function
@@ -340,7 +340,7 @@ test("layerHardMixSourceOver4 - fully opaque posterization", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hard mix with full opacity produces pure posterization (0.0 or 1.0)
   // R: vividLight(0.3, 0.4) = 0.125 < 0.5 → 0.0
@@ -362,7 +362,7 @@ test("layerHueSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hue mode: takes H from blend (src), S+V from base (dst)
   // src is orange (warm hue), dst is cyan (high saturation, high V)
@@ -402,7 +402,7 @@ test("layerHueSourceOver4 - red to gray", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Hue mode: takes H from blend (src=red), S+V from base (dst=gray)
   // src is pure red, dst is gray (S=0, V=0.5)
@@ -435,7 +435,7 @@ test("layerLinearBurnSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
@@ -461,7 +461,7 @@ test("layerLinearBurnSourceOver4 - complete darkening", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // 0.5 + 0.5 - 1.0 = 0.0 for all channels
   expectCloseTo([0.0, 0.0, 0.0], result.slice(0, 3), 0.01);
@@ -479,7 +479,7 @@ test("layerLinearDodgeSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
@@ -505,7 +505,7 @@ test("layerLinearDodgeSourceOver4 - clamping at white", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // All channels should clamp to 1.0
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
@@ -523,7 +523,7 @@ test("layerLinearLightSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
@@ -549,7 +549,7 @@ test("layerLinearLightSourceOver4 - extreme contrast", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Channel 0: blend < 0.5, should darken (linear burn)
   expect(result[0]).toBeLessThan(0.5);
@@ -576,7 +576,7 @@ test("layerLuminositySourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Luminosity mode: takes H+S from base (dst), V from blend (src)
   // src is bright orange (V ≈ 0.8), dst is cyan
@@ -611,7 +611,7 @@ test("layerLuminositySourceOver4 - gray to color", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Luminosity mode: takes H+S from base (dst=red), V from blend (src=gray)
   // src is dark gray (V=0.3), dst is bright red (V=1.0)
@@ -643,7 +643,7 @@ test("layerNegationSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.8);
@@ -669,7 +669,7 @@ test("layerNegationSourceOver4 - complementary colors", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // 1 - abs(1 - 0.7 - 0.3) = 1 - 0 = 1.0
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
@@ -687,7 +687,7 @@ test("layerPinLightSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Pin light: if blend < 0.5 then min(base, blend*2) else max(base, (blend-0.5)*2)
   // base=src, blend=dst (in blendPinLight call)
@@ -710,7 +710,7 @@ test("layerPinLightSourceOver4 - extreme values", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Pin light with full opacity: if blend < 0.5 then min(base, blend*2) else max(base, (blend-0.5)*2)
   // base=src, blend=dst
@@ -732,7 +732,7 @@ test("layerReflectSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.92);
@@ -758,7 +758,7 @@ test("layerReflectSourceOver4 - extreme reflection", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Reflect formula: min(base*base / (1 - blend), 1.0)
   // With src=0.2 (blend), dst=0.8 (base): min(0.2*0.2 / (1 - 0.8), 1.0) = min(0.04 / 0.2, 1.0) = 0.2
@@ -779,7 +779,7 @@ test("layerSaturationSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Saturation mode: takes S from blend (src), H+V from base (dst)
   // src is saturated orange (high S), dst is cyan
@@ -815,7 +815,7 @@ test("layerSaturationSourceOver4 - desaturate with gray", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Saturation mode: takes S from blend (src=gray), H+V from base (dst=red)
   // src is gray (S=0), dst is pure red (red hue, V=1.0, S=1.0)
@@ -849,7 +849,7 @@ test("layerSoftLightSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
@@ -876,7 +876,7 @@ test("layerSoftLightSourceOver4 - subtle contrast", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Dark blend (< 0.5) should darken slightly
   expect(result[0]).toBeLessThan(0.5);
@@ -905,7 +905,7 @@ test("layerVividLightSourceOver4", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify alpha compositing
   expect(result[3]).toBeCloseTo(0.85);
@@ -932,7 +932,7 @@ test("layerVividLightSourceOver4 - extreme contrast", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Channel 0: blend < 0.5, should apply color burn (darkening)
   expect(result[0]).toBeLessThan(0.5);

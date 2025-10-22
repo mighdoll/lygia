@@ -9,7 +9,7 @@ test("quatAdd", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = quatAdd(vec4f(1.0, 2.0, 3.0, 4.0), vec4f(0.5, 0.5, 0.5, 0.5)); }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.5, 2.5, 3.5, 4.5], result);
 });
 
@@ -19,7 +19,7 @@ test("quatSub", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = quatSub(vec4f(1.0, 2.0, 3.0, 4.0), vec4f(0.5, 0.5, 0.5, 0.5)); }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.5, 1.5, 2.5, 3.5], result);
 });
 
@@ -33,7 +33,7 @@ test("quatMul", async () => {
       test::results[0] = quatMul(q1, q2);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.5, 0.5, 0.5, 0.5], result);
 });
 
@@ -43,7 +43,7 @@ test("quatConj", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = quatConj(vec4f(1.0, 2.0, 3.0, 4.0)); }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([-1.0, -2.0, -3.0, 4.0], result);
 });
 
@@ -53,7 +53,7 @@ test("quatNorm", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = quatNorm(vec4f(1.0, 2.0, 3.0, 4.0)); }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.1826, 0.3651, 0.5477, 0.7303], result);
 });
 
@@ -83,7 +83,7 @@ test("quatIdentity", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = QUAT_IDENTITY; }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 0.0, 1.0], result);
 });
 
@@ -97,7 +97,7 @@ test("quatLerp", async () => {
       test::results[0] = quatLerp(q1, q2, 0.5);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.4082, 0.4082, 0.0, 0.8165], result);
 });
 
@@ -112,7 +112,7 @@ test("quat2mat3", async () => {
       test::results[0] = vec4f(m[0][0], m[1][1], m[2][2], 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 1.0, 0.0], result);
 });
 
@@ -127,7 +127,7 @@ test("quat2mat4", async () => {
       test::results[0] = vec4f(m[0][0], m[1][1], m[2][2], m[3][3]);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, 1.0, 1.0], result);
 });
 
@@ -143,7 +143,7 @@ test("quat - create from axis and angle", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, INV_SQRT2, 0, INV_SQRT2)
   expectCloseTo([0.0, INV_SQRT2, 0.0, INV_SQRT2], result, 0.01);
 });
@@ -158,7 +158,7 @@ test("quatDiv - divide quaternion by scalar", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 2.0, 3.0, 4.0], result, 0.01);
 });
 
@@ -172,7 +172,7 @@ test("quatNeg - negate quaternion", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([-1.0, -2.0, -3.0, -4.0], result, 0.01);
 });
 
@@ -190,7 +190,7 @@ test("quatInverse", async () => {
       test::results[0] = identity;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Identity quaternion is (0, 0, 0, 1)
   expectCloseTo([0.0, 0.0, 0.0, 1.0], result, 0.01);
 });
@@ -217,7 +217,7 @@ test("quatForward - create quat from forward vector", async () => {
       test::results[0] = vec4f(rotated.x, rotated.y, rotated.z, length);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Rotated vector should point in +X direction (our specified forward)
   expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.1);
   // Quaternion should be normalized
@@ -250,7 +250,7 @@ test("quatForwardUp - create quat from forward and up vectors", async () => {
       test::results[0] = vec4f(rotatedForward.x, rotatedUp.y, length, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Rotated forward should point in +X direction
   expectCloseTo([1.0], [result[0]], 0.1);
   // Rotated up should still point in +Y direction

@@ -12,7 +12,7 @@ test("sphereSDF with vec3f", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // length(3, 0, 4) = 5.0
   expectCloseTo([5.0, 0.0, 0.0], result);
 });
@@ -28,7 +28,7 @@ test("sphereSDF1 with radius", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // length(3, 0, 4) - 2.0 = 5.0 - 2.0 = 3.0
   expectCloseTo([3.0, 0.0, 0.0], result);
 });
@@ -44,7 +44,7 @@ test("boxSDF with vec3f", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (2,0,0): default box has size 1, point outside on X axis
   // abs(p) = (2,0,0), d = abs(p) = (2,0,0)
   // min(max(2,0,0), 0) + length(max((2,0,0), 0)) = 0 + length(2,0,0) = 2.0
@@ -63,7 +63,7 @@ test("boxSDF1 with bounds", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at origin with bounds (1,1,1)
   // d = abs(p) - b = abs(0,0,0) - (1,1,1) = (-1,-1,-1)
   // min(max(-1,-1,-1), 0) + length(max((-1,-1,-1), 0)) = -1 + 0 = -1.0
@@ -82,7 +82,7 @@ test("cylinderSDF vertical", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at origin with h = (radius=1.0, height=1.0)
   // d = abs(vec2(length(p.xz), p.y)) - h = abs(vec2(0, 0)) - vec2(1,1) = vec2(-1,-1)
   // min(max(-1,-1), 0) + length(max((-1,-1), 0)) = -1 + 0 = -1.0
@@ -100,7 +100,7 @@ test("cylinderSDF1 with single param", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (2,0,0), calls cylinderSDF(p, vec2(1.0))
   // d = abs(vec2(length(p.xz), p.y)) - vec2(1.0) = abs(vec2(2, 0)) - vec2(1,1) = vec2(1,-1)
   // min(max(1,-1), 0) + length(max((1,-1), 0)) = 0 + length(1,0) = 1.0
@@ -118,7 +118,7 @@ test("cylinderSDF2 with height and radius", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at origin with h=1.0 (radius), r=1.0 (height)
   // d = abs(vec2(length(p.xz), p.y)) - vec2(h,r) = abs(vec2(0,0)) - vec2(1,1) = vec2(-1,-1)
   // min(max(-1,-1), 0) + length(max((-1,-1), 0)) = -1 + 0 = -1.0
@@ -138,7 +138,7 @@ test("cylinderSDF4 arbitrary orientation", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Cylinder from (0,0,0) to (0,1,0) with radius 0.5
   // Point at (0.5,0.5,0) is on the surface at radius 0.5 from axis
   // pa = p - a = (0.5,0.5,0), ba = b - a = (0,1,0)
@@ -161,7 +161,7 @@ test("torusSDF", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (1,0,0): length(xz) = 1, so vec2(1-1, 0) = vec2(0, 0), length = 0, minus 0.25 = -0.25
   expectCloseTo([-0.25, 0.0, 0.0], result, 0.01);
 });
@@ -179,7 +179,7 @@ test("torusSDF4 with sin/cos", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (1,0,0) with sc=(sin45,cos45)=(INV_SQRT2,INV_SQRT2), ra=1.0, rb=0.25
   // This is a partial torus (45 degree sector)
   // pos.x=abs(1)=1, k=dot((1,0), (INV_SQRT2,INV_SQRT2))=INV_SQRT2
@@ -200,7 +200,7 @@ test("rectSDF with vec2f size", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (0.5, 0.5) is center with size (1.0, 1.0)
   // uv = st * 2.0 - 1.0 = (0.5,0.5) * 2 - 1 = (0,0)
   // max(abs(0/1), abs(0/1)) = max(0, 0) = 0.0
@@ -218,7 +218,7 @@ test("rectSDF1 with scalar size", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (0.5, 0.5) with scalar size 1.0
   // Calls rectSDF(st, vec2(1.0)) which gives 0.0 (center point)
   expectCloseTo([0.0, 0.0, 0.0], result);
@@ -235,7 +235,7 @@ test("rectSDFDefault", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (0.5, 0.5) with default size (1.0, 1.0)
   // Calls rectSDF(st, vec2(1.0)) which gives 0.0 (center point)
   expectCloseTo([0.0, 0.0, 0.0], result);
@@ -253,7 +253,7 @@ test("rectSDF3 with rounded corners", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (0.5, 0.5) with bounds (0.8, 0.8) and radius 0.1
   // d = abs(p - 0.5) * 4.2 - b + vec2(r) = abs(0,0) * 4.2 - (0.8,0.8) + (0.1,0.1) = (0,0) - (0.8,0.8) + (0.1,0.1) = (-0.7,-0.7)
   // min(max(-0.7,-0.7), 0) + length(max((-0.7,-0.7), 0)) - 0.1 = -0.7 + 0 - 0.1 = -0.8
@@ -271,7 +271,7 @@ test("rectSDF2Round", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Point at (0.5, 0.5) with b=0.8 and r=0.1
   // Calls rectSDF3(p, vec2(b), r) = rectSDF3(p, vec2(0.8), 0.1)
   // Same calculation as rectSDF3 test above: -0.8
@@ -291,12 +291,11 @@ test("rectSDF - with custom CENTER_2D via constants", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(
-    src,
-    "vec3f",
-    { CENTER_2D: true },
-    { CENTER_2D: "vec2f(0.3, 0.3)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec3f",
+    conditions: { CENTER_2D: true },
+    constants: { CENTER_2D: "vec2f(0.3, 0.3)" }
+  });
   // With custom center (0.3, 0.3):
   // uv = (0.8, 0.3) - (0.3, 0.3) = (0.5, 0.0)
   // uv *= 2 = (1.0, 0.0)
@@ -316,7 +315,7 @@ test("opUnion", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Union should return minimum
   expectCloseTo([2.0, 0.0, 0.0], result);
 });
@@ -333,7 +332,7 @@ test("opUnionSmooth", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // d1=1.0, d2=1.0, k=0.5
   // h = saturate(0.5 + 0.5*(d2-d1)/k) = saturate(0.5 + 0.5*0/0.5) = 0.5
   // mix(d2, d1, h) - k*h*(1-h) = mix(1, 1, 0.5) - 0.5*0.5*0.5 = 1.0 - 0.125 = 0.875
@@ -352,7 +351,7 @@ test("opUnionSmooth4 with vec4f", async () => {
       test::results[0] = vec3f(result.x, result.y, result.a);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // d1.a=2.0, d2.a=3.0, k=0.5
   // h = saturate(0.5 + 0.5*(d2.a-d1.a)/k) = saturate(0.5 + 0.5*1.0/0.5) = saturate(1.5) = 1.0
   // result = mix(d2, d1, h) = mix(d2, d1, 1.0) = d1 = (1.0, 0.5, 0.5, 2.0)
@@ -372,7 +371,7 @@ test("opSubtraction", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Subtraction: max(-d1, d2) = max(-2, 3) = 3
   expectCloseTo([3.0, 0.0, 0.0], result);
 });
@@ -389,7 +388,7 @@ test("opSubtraction4 with vec4f", async () => {
       test::results[0] = vec3f(result.x, result.y, result.a);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // select(d2, -d1, -d1.a > d2.a) = select(d2, -d1, -2.0 > 3.0) = select(d2, -d1, false) = d2
   // Returns d2 = (0.5, 1.0, 0.5, 3.0)
   expectCloseTo([0.5, 1.0, 3.0], result);
@@ -407,7 +406,7 @@ test("opSubtractionSmooth", async () => {
       test::results[0] = vec3f(distance, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // d1=1.0, d2=1.0, k=0.5
   // h = saturate(0.5 - 0.5*(d2+d1)/k) = saturate(0.5 - 0.5*2.0/0.5) = saturate(0.5 - 2.0) = 0.0
   // mix(d2, -d1, h) + k*h*(1-h) = mix(1, -1, 0) + 0.5*0*1 = 1.0 + 0 = 1.0
@@ -426,7 +425,7 @@ test("opSubtractionSmooth4 with vec4f", async () => {
       test::results[0] = vec3f(result.x, result.y, result.a);
     }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // d1.a=2.0, d2.a=3.0, k=0.5
   // h = saturate(0.5 - 0.5*(d2.a+d1.a)/k) = saturate(0.5 - 0.5*5.0/0.5) = saturate(0.5 - 5.0) = 0.0
   // result = mix(d2, -d1, h) = mix(d2, -d1, 0) = d2 = (0.5, 1.0, 0.5, 3.0)

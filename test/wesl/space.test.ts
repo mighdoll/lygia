@@ -12,7 +12,7 @@ test("cart2polar2", async () => {
       test::results[0] = result; // vec2f: angle, radius
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([QTR_PI, Math.SQRT2], result); // atan2(1,1) = π/4, length = sqrt(2)
 });
 
@@ -26,7 +26,7 @@ test("polar2cart", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([1.0, 1.0], result);
 });
 
@@ -46,7 +46,7 @@ test("center2", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = center2(vec2f(0.5, 1.0)); }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([0.0, 1.0], result);
 });
 
@@ -60,7 +60,7 @@ test("rotateX3", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Rotating (1,1,0) around X by 90° -> x stays 1, y->0, z->-1
   expectCloseTo([1.0, 0.0, -1.0, 0.0], result);
 });
@@ -75,7 +75,7 @@ test("rotateY3", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 1.0, -1.0, 0.0], result);
 });
 
@@ -89,7 +89,7 @@ test("rotateZ3", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Rotating (1,0,1) around Z by 90° -> x->0, y->-1, z stays 1
   expectCloseTo([0.0, -1.0, 1.0, 0.0], result);
 });
@@ -110,7 +110,7 @@ test("uncenter2", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = uncenter2(vec2f(-1.0, 1.0)); }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([0.0, 1.0], result);
 });
 
@@ -120,7 +120,7 @@ test("flipY2", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = flipY2(vec2f(0.5, 0.25)); }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([0.5, 0.75], result);
 });
 
@@ -130,7 +130,7 @@ test("aspect", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = aspect(vec2f(0.5, 0.5), vec2f(1920.0, 1080.0)); }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([0.5 * (1920.0 / 1080.0), 0.5], result);
 });
 
@@ -143,7 +143,7 @@ test("equirect2xyz", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // At center (0.5, 0.5): Theta=PI, Phi=PI/2 -> direction pointing left (-X axis)
   expectCloseTo([-1.0, 0.0, 0.0, 0.0], result);
 });
@@ -157,7 +157,7 @@ test("xyz2equirect", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // atan(0, 1) = 0, + PI = PI, / (2*PI) = 0.5
   // acos(0) = PI/2, / PI = 0.5
   expectCloseTo([0.5, 0.5], result);
@@ -169,7 +169,7 @@ test("sqTile", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = sqTile(vec2f(2.5, 3.7)); }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // xy = fract(st), zw = floor(st)
   expectCloseTo([0.5, 0.7, 2.0, 3.0], result);
 });
@@ -185,7 +185,7 @@ test("checkerTile2", async () => {
       test::results[0] = vec4f(c1, c2, c3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 1.0, 1.0, 0.0], result);
 });
 
@@ -198,7 +198,7 @@ test("brickTile2", async () => {
       test::results[0] = tile;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Brick pattern offsets alternate rows by 0.5
   // Row 3 (odd) gets offset, so x += 0.5 -> 3.0, then floor(2.5 + 3.0) = floor(5.5) = 5
   // But fract(3.0) = 0.0, and z = floor(2.5 + 0.5) = floor(3.0) = 3
@@ -477,7 +477,7 @@ test("tbn", async () => {
       test::results[0] = vec4f(v, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 1.0, 1.0, 0.0], result);
 });
 
@@ -581,7 +581,7 @@ test("eulerView", async () => {
       test::results[0] = testPoint;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // eulerView creates view matrix from Euler angles (Y rotation by 90°)
   // Point at (1,0,0) rotated by 90° around Y should go to (0,0,-1)
   expectCloseTo([0.0, 0.0, -1.0, 1.0], result, 0.01);
@@ -599,7 +599,7 @@ test("lookAt", async () => {
        test::results[0] = vec4f(testVec, 0.0);
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // lookAt creates orientation matrix from forward and up vectors
   // Looking down -Z (forward = (0,0,-1)), up = (0,1,0)
   // z-axis should be (0,0,-1), transforming (0,0,1) gives (0,0,-1)
@@ -620,7 +620,7 @@ test.skip("view2screenPosition", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([0.5, 0.5], result);
 });
 
@@ -638,7 +638,7 @@ test.skip("screen2viewPosition", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.0, 0.0, -1.0, 1.0019999742507935], result);
 });
 
@@ -654,7 +654,7 @@ test("lookAtView", async () => {
        test::results[0] = transformed;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // lookAtView creates 4x4 view matrix with position
   // Camera at (5,0,0) looking at origin should embed position in last column
   expectCloseTo([5.0, 0.0, 0.0, 1.0], result, 0.01);
@@ -673,7 +673,7 @@ test("lookAtViewRoll", async () => {
        test::results[0] = position;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // lookAtViewRoll creates view matrix with roll parameter
   // Camera position should be (0,5,0) in the matrix
   expectCloseTo([0.0, 5.0, 0.0, 1.0], result, 0.01);
@@ -691,7 +691,7 @@ test("lookAtViewFromDirection", async () => {
        test::results[0] = position;
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // lookAtViewFromDirection creates view matrix from position and direction
   // Camera position (3,0,0) should be embedded in the matrix
   expectCloseTo([3.0, 0.0, 0.0, 1.0], result, 0.01);
@@ -708,7 +708,7 @@ test("fisheye2xyz", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   // Fisheye projection should return a normalized direction vector
   const length = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2);
   expectCloseTo([length], [1.0], 0.01);
@@ -725,7 +725,7 @@ test("fisheye2xyz - division by zero at center", async () => {
        test::results[0] = result;
      }
    `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   expectCloseTo([0.0, 1.0, 0.0], result.slice(0, 3));
 });
 
@@ -741,7 +741,7 @@ test("nearest", async () => {
       test::results[1] = result2;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // nearest snaps to pixel centers: floor(v*res)/res + offset
   // For 1920x1080: offset = 0.5/(1919, 1079) ≈ (0.00026, 0.00046)
   // (0.7533*1920, 0.2567*1080) = (1446.336, 277.236)
@@ -763,7 +763,7 @@ test("ratio", async () => {
       test::results[0] = result1;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // ratio scales coordinates to keep 0-1 range visible while correcting aspect
   // For 1920x1080 (16:9): keeps entire 0-1 range visible
   const r = result as number[];
@@ -781,7 +781,7 @@ test("rotate", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Rotating (1.0, 0.5) by 90° around (0.5, 0.5)
   // offset = (0.5, 0.0), rotated -> (0.0, 0.5), + center -> (0.5, 1.0)
   expectCloseTo([0.5, 1.0], result);
@@ -798,7 +798,7 @@ test("rotate_c", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Rotating (1.0, 0.0) by 90° around (0, 0) -> (0, 1)
   expectCloseTo([0.0, 1.0], result);
 });
@@ -814,7 +814,7 @@ test("rotate3", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Rotating (1, 0, 0) around Z by 90° (from origin center by default)
   // Note: rotate3 may have a different convention, checking actual result
   const r = result as number[];
@@ -833,7 +833,7 @@ test("scale2", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Scale (0.75, 0.25) by (2.0, 0.5) around center (0.5, 0.5)
   // (0.75 - 0.5) * 2.0 + 0.5 = 0.25 * 2.0 + 0.5 = 1.0
   // (0.25 - 0.5) * 0.5 + 0.5 = -0.25 * 0.5 + 0.5 = 0.375
@@ -849,7 +849,7 @@ test("scale2_f", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Scale (0.75, 0.25) by 2.0 around center (0.5, 0.5)
   // (0.75 - 0.5) * 2.0 + 0.5 = 1.0
   // (0.25 - 0.5) * 2.0 + 0.5 = 0.0
@@ -868,7 +868,7 @@ test("scale2dXY - matrix construction", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Matrix should scale: (4*2, 5*3) = (8, 15)
   expectCloseTo([8.0, 15.0], result);
 });
@@ -882,7 +882,7 @@ test("scale3", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Scale around (0.5, 0.5, 0.5)
   expectCloseTo([1.0, 0.375, 0.5, 0.0], result);
 });
@@ -898,12 +898,11 @@ test("scale2 - with custom CENTER_2D via constants", async () => {
     }
   `;
   // Test with custom CENTER_2D set via constants
-  const result = await testCompute(
-    src,
-    "vec2f",
-    { CENTER_2D: true },
-    { CENTER_2D: "vec2f(0.3, 0.7)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec2f",
+    conditions: { CENTER_2D: true },
+    constants: { CENTER_2D: "vec2f(0.3, 0.7)" }
+  });
   // Scale (0.8, 0.9) by (2.0, 2.0) around center (0.3, 0.7)
   // (0.8 - 0.3) * 2.0 + 0.3 = 0.5 * 2.0 + 0.3 = 1.3
   // (0.9 - 0.7) * 2.0 + 0.7 = 0.2 * 2.0 + 0.7 = 1.1
@@ -921,12 +920,11 @@ test("scale3 - with custom CENTER_3D via constants", async () => {
     }
   `;
   // Test with custom CENTER_3D set via constants
-  const result = await testCompute(
-    src,
-    "vec4f",
-    { CENTER_3D: true },
-    { CENTER_3D: "vec3f(0.2, 0.3, 0.4)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec4f",
+    conditions: { CENTER_3D: true },
+    constants: { CENTER_3D: "vec3f(0.2, 0.3, 0.4)" }
+  });
   // Scale (0.7, 0.8, 0.9) by (2.0, 3.0, 0.5) around center (0.2, 0.3, 0.4)
   // (0.7 - 0.2) * 2.0 + 0.2 = 0.5 * 2.0 + 0.2 = 1.2
   // (0.8 - 0.3) * 3.0 + 0.3 = 0.5 * 3.0 + 0.3 = 1.8
@@ -945,12 +943,11 @@ test("rotate - with custom CENTER_2D via constants", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(
-    src,
-    "vec2f",
-    { CENTER_2D: true },
-    { CENTER_2D: "vec2f(0.3, 0.3)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec2f",
+    conditions: { CENTER_2D: true },
+    constants: { CENTER_2D: "vec2f(0.3, 0.3)" }
+  });
   // Rotating (0.8, 0.3) around (0.3, 0.3) by 90°
   // Offset: (0.5, 0.0), rotated 90° -> (0.0, 0.5), result: (0.3, 0.8)
   expectCloseTo([0.3, 0.8], result, 0.01);
@@ -966,12 +963,11 @@ test("rotateX3 - with custom CENTER_3D via constants", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(
-    src,
-    "vec4f",
-    { CENTER_3D: true },
-    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec4f",
+    conditions: { CENTER_3D: true },
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+  });
   // Offset from center: (0.5, 1.0, 0.0)
   // Rotate X by 90°: x stays same, (y,z) -> (0.0, -1.0) from (1.0, 0.0)
   // (0.5, 1.0, 0.0) -> (0.5, 0.0, -1.0) + center = (1.0, 0.5, -0.5)
@@ -988,12 +984,11 @@ test("rotateY3 - with custom CENTER_3D via constants", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(
-    src,
-    "vec4f",
-    { CENTER_3D: true },
-    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec4f",
+    conditions: { CENTER_3D: true },
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+  });
   // Offset from center: (1.0, 0.5, 0.0)
   // Rotate Y by 90°: (x,z) -> (z, -x), y stays same
   // (1.0, 0.5, 0.0) -> (0.0, 0.5, -1.0) + center = (0.5, 1.0, -0.5)
@@ -1010,12 +1005,11 @@ test("rotateZ3 - with custom CENTER_3D via constants", async () => {
       test::results[0] = vec4f(result, 0.0);
     }
   `;
-  const result = await testCompute(
-    src,
-    "vec4f",
-    { CENTER_3D: true },
-    { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
-  );
+  const result = await testCompute(src, {
+    elem: "vec4f",
+    conditions: { CENTER_3D: true },
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+  });
   // Offset from center: (1.0, 0.0, 0.5)
   // Rotate Z by 90°: z stays same, (x,y) = (1.0, 0.0) -> (0.0, -1.0)
   // (1.0, 0.0, 0.5) -> (0.0, -1.0, 0.5) + center = (0.5, -0.5, 1.0)
@@ -1032,7 +1026,7 @@ test("sprite", async () => {
       test::results[0] = vec4f(result, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Sprite maps UV to a specific cell in a grid
   const r = result as number[];
   if (r.length < 2) {
@@ -1060,7 +1054,7 @@ test("translate", async () => {
       test::results[0] = result[3];
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Translation should be in the last column
   expectCloseTo([10.0, 20.0, 30.0, 1.0], result);
 });
@@ -1077,7 +1071,7 @@ test("translate4dXYZ - matrix construction", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Translation matrix should add (5, 10, 15) to the position
   expectCloseTo([6.0, 12.0, 18.0, 1.0], result);
 });
@@ -1091,7 +1085,7 @@ test("unratio", async () => {
       test::results[0] = result;
     }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   // Unratio reverses the ratio adjustment
   // s.x/s.y = 1920/1080 = 1.777...
   // y' = 0.5 * 1.777... + (1080*0.5 - 1920*0.5) / 1080

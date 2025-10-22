@@ -52,7 +52,7 @@ test("diffuseOrenNayar", async () => {
       test::results[0] = vec4f(smoothResult, roughResult, retroResult, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Expected values calculated manually from the Oren-Nayar formula:
   const NoL = 1.0 / Math.sqrt(3); // ≈ 0.5773502691896258

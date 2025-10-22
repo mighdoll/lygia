@@ -73,7 +73,7 @@ test("strokeEdge", async () => {
       test::results[0] = vec4f(inside, outside, on_edge, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Inside the stroke should be close to 1.0
   expect(result[0]).toBeGreaterThan(0.9);

@@ -27,7 +27,7 @@ test("saturate3", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = saturate3(vec3f(-0.5, 0.5, 1.5)); }
   `;
-  const result = await testCompute(src, "vec3f");
+  const result = await testCompute(src, { elem: "vec3f" });
   expectCloseTo([0.0, 0.5, 1.0], result);
 });
 
@@ -47,7 +47,7 @@ test("pow22", async () => {
     @compute @workgroup_size(1)
     fn foo() { test::results[0] = pow22(vec2f(2.0, 3.0)); }
   `;
-  const result = await testCompute(src, "vec2f");
+  const result = await testCompute(src, { elem: "vec2f" });
   expectCloseTo([4.0, 9.0], result);
 });
 
@@ -95,7 +95,7 @@ test("absi", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([5.0, 5.0, 0.0, 12.0], result);
 });
 
@@ -126,7 +126,7 @@ test("cubicMix", async () => {
        );
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Cubic hermite: 3t² - 2t³
   // t=0.25: 3(0.0625) - 2(0.015625) = 0.1875 - 0.03125 = 0.15625
   // t=0.75: 3(0.5625) - 2(0.421875) = 1.6875 - 0.84375 = 0.84375
@@ -148,7 +148,7 @@ test("smootherstep", async () => {
        );
      }
    `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Smootherstep: 6t⁵ - 15t⁴ + 10t³
   // t=0.25: 6(0.00098) - 15(0.00391) + 10(0.01563) = 0.00586 - 0.05859 + 0.15625 = 0.10352
   // t=0.75: 6(0.23730) - 15(0.31641) + 10(0.42188) = 1.42383 - 4.74609 + 4.21875 = 0.89648
@@ -227,7 +227,7 @@ test("map - remap value between ranges", async () => {
       test::results[0] = vec4f(result1, result2, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([50.0, 150.0, 0.0, 0.0], result, 0.01);
 });
 
@@ -240,7 +240,7 @@ test("mirror - triangle wave", async () => {
       test::results[0] = vec4f(mirror(0.5), mirror(1.5), mirror(2.5), mirror(3.5));
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.5, 0.5, 0.5, 0.5], result, 0.01);
 });
 
@@ -276,7 +276,7 @@ test("taylorInvSqrt", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // Exact values from the linear approximation formula
   expectCloseTo([0.93910813331604, -1.622096061706543, 1.579409122467041, 0.0853734016418457], result);
 });
@@ -293,7 +293,7 @@ test("adaptiveThreshold", async () => {
       test::results[0] = vec4f(result1, result2, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0, 0.0, 0.0], result);
 });
 
@@ -317,7 +317,7 @@ test("atan2Custom", async () => {
       test::results[0] = vec4f(angle1, angle2, angle3, angle4);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   const PI = Math.PI;
   const TAU = 2 * PI;
@@ -347,7 +347,7 @@ test("atan2Custom - additional angles", async () => {
       test::results[0] = vec4f(angle5, 0.0, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   const PI = Math.PI;
 
@@ -366,7 +366,7 @@ test("bump", async () => {
       test::results[0] = vec4f(result1, result2, result3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0, 0.75], result.slice(0, 3), 0.01);
 });
 
@@ -379,7 +379,7 @@ test("bump2", async () => {
       test::results[0] = vec4f(result.x, result.y, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.75], result.slice(0, 2), 0.01);
 });
 
@@ -393,7 +393,7 @@ test("highPass", async () => {
       test::results[0] = vec4f(result1, result2, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([0.6, 0.0], result.slice(0, 2), 0.01);
 });
 
@@ -408,7 +408,7 @@ test("inside - scalar", async () => {
       test::results[0] = vec4f(f32(result1), f32(result2), f32(result3), 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.01);
 });
 
@@ -422,7 +422,7 @@ test("inside2", async () => {
       test::results[0] = vec4f(f32(result1), f32(result2), 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
 });
 
@@ -436,7 +436,7 @@ test("mod2 - mutates pointer", async () => {
       test::results[0] = vec4f(p.x, p.y, c.x, c.y);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   // p should be modified to centered remainder, c is the cell index
   expect(result[0]).toBeCloseTo(1.0, 1);
   expect(result[1]).toBeCloseTo(1.0, 1);
@@ -453,7 +453,7 @@ test("mod289", async () => {
       test::results[0] = vec4f(result1, result2, result3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([11.0, 0.0, 100.0], result.slice(0, 3), 0.01);
 });
 
@@ -495,7 +495,7 @@ test("powFast", async () => {
       test::results[0] = vec4f(fast1, fast2, fast3, edge1);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify approximation values (not exact pow, but close)
   expectCloseTo([0.6667], [result[0]], 0.01);
@@ -518,7 +518,7 @@ test("round", async () => {
       test::results[0] = vec4f(result1, result2, result3, result4);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([2.0, 3.0, -2.0, -3.0], result, 0.01);
 });
 
@@ -539,7 +539,7 @@ test("saturateMediump", async () => {
       test::results[0] = vec4f(v1, v2, v3, v4);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
 
   // Test specific behavior
   expectCloseTo([-0.5], [result[0]], 0.01);
@@ -568,7 +568,7 @@ test("sum2", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([10.0, 3.0, -5.0, 0.75], result);
 });
 
@@ -586,7 +586,7 @@ test("sum3", async () => {
       );
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([15.0, 3.0, -6.0, 1.5], result);
 });
 
@@ -601,7 +601,7 @@ test("within - scalar", async () => {
       test::results[0] = vec4f(result1, result2, result3, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.01);
 });
 
@@ -615,6 +615,6 @@ test("within2", async () => {
       test::results[0] = vec4f(result1, result2, 0.0, 0.0);
     }
   `;
-  const result = await testCompute(src, "vec4f");
+  const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
 });
