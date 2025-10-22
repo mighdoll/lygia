@@ -266,18 +266,19 @@ test("taylorInvSqrt", async () => {
     import lygia::math::taylorInvSqrt::taylorInvSqrt;
     @compute @workgroup_size(1)
     fn foo() {
-      // Test Taylor series approximation of 1/sqrt(x) at multiple points
+      // Test Taylor series approximation: 1.79284291400159 - 0.85373472095314 * r
+      // This is a first-order approximation, accurate near r=1
       test::results[0] = vec4f(
-        taylorInvSqrt(1.0),   // 1/sqrt(1) = 1
-        taylorInvSqrt(4.0),   // 1/sqrt(4) = 0.5
-        taylorInvSqrt(0.25),  // 1/sqrt(0.25) = 2
-        taylorInvSqrt(2.0)    // 1/sqrt(2) ≈ 0.707
+        taylorInvSqrt(1.0),   // 1.793 - 0.854 * 1.0 = 0.939
+        taylorInvSqrt(4.0),   // 1.793 - 0.854 * 4.0 = -1.622
+        taylorInvSqrt(0.25),  // 1.793 - 0.854 * 0.25 = 1.579
+        taylorInvSqrt(2.0)    // 1.793 - 0.854 * 2.0 = 0.085
       );
     }
   `;
   const result = await testCompute(src, "vec4f");
-  // Fast approximation should be reasonably close
-  expectCloseTo([1.0, 0.5, 2.0, 0.707], result, 0.1);
+  // Exact values from the linear approximation formula
+  expectCloseTo([0.93910813331604, -1.622096061706543, 1.579409122467041, 0.0853734016418457], result);
 });
 
 // Anti-aliased functions (require derivatives, use fragment shaders)

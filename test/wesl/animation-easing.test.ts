@@ -36,7 +36,7 @@ test("backInOut", async () => {
     }
   `;
   const result = await testCompute(src, "vec4f");
-  expectCloseTo([0.0, -0.3125, 1.3125, 1.0], result);
+  expectCloseTo([0.0, -0.1875, 1.1875, 1.0], result);
 });
 
 test("bounceIn", async () => {

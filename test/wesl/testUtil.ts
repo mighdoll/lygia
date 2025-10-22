@@ -28,15 +28,20 @@ export function expectCloseTo(
 export async function testCompute(
   src: string,
   elem: WgslElementType = "f32",
-  conditions?: Record<string, boolean>,
+  sizeOrConditions?: number | Record<string, boolean>,
   constants?: Record<string, string | number>,
 ) {
   const device = await getGPUDevice();
+  const isSize = typeof sizeOrConditions === "number";
+  const size = isSize ? sizeOrConditions * elementStride(elem) : undefined;
+  const conditions = isSize ? undefined : sizeOrConditions;
+
   return testComputeShader({
     projectDir,
     device,
     src,
     resultFormat: elem,
+    size,
     conditions,
     constants,
   });
