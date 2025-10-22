@@ -54,8 +54,8 @@ test("tonemapDebug3", async () => {
   // clamped to [0, 15]: 2.57 + 5.0 = 7.57
   // index 7 (green) mixed with index 8 (yellow)
   // green = [0.0, 0.7843, 0.0], yellow = [1.0, 1.0, 0.0]
-  // mix with t = 0.57: [0.57, 0.9071, 0.0]
-  expectCloseTo([0.57, 0.9071, 0.0], result, 0.01);
+  // mix with t = 0.57: [0.5718, 0.9076, 0.0]
+  expectCloseTo([0.5718, 0.9076, 0.0], result);
 });
 
 test("tonemapFilmic3", async () => {
@@ -147,7 +147,7 @@ test("tonemapUncharted3", async () => {
   // The curve formula: ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F
   // Applied with exposure bias then divided by whiteScale
   // For [2.0, 1.5, 1.0]: approximately [0.7132, 0.6208, 0.4929]
-  expectCloseTo([0.7132, 0.6208, 0.4929], result, 0.01);
+  expectCloseTo([0.7132, 0.6208, 0.4929], result);
 });
 
 test("tonemapUncharted23", async () => {
@@ -165,7 +165,7 @@ test("tonemapUncharted23", async () => {
   // Uncharted2 applies John Hable's curve to vec4(v, W) then divides xyz by w
   // This normalizes by white point W=11.2 in the same curve calculation
   // For [2.0, 1.5, 1.0]: approximately [0.4929, 0.4086, 0.3043]
-  expectCloseTo([0.4929, 0.4086, 0.3043], result, 0.01);
+  expectCloseTo([0.4929, 0.4086, 0.3043], result);
 });
 
 test("tonemapUnreal3", async () => {
@@ -200,8 +200,8 @@ test("tonemapDebug4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Debug tonemap on RGB, alpha preserved
-  // Same as tonemapDebug3: [0.57, 0.9071, 0.0], alpha = 0.7
-  expectCloseTo([0.57, 0.9071, 0.0, 0.7], result, 0.01);
+  // Same as tonemapDebug3: [0.5718, 0.9076, 0.0], alpha = 0.7
+  expectCloseTo([0.5718, 0.9076, 0.0, 0.7], result);
 });
 
 test("tonemapFilmic4", async () => {
@@ -285,7 +285,7 @@ test("tonemapUncharted4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Uncharted tonemap on RGB + alpha preserved
   // Same as tonemapUncharted3: [0.7132, 0.6208, 0.4929], alpha = 0.9
-  expectCloseTo([0.7132, 0.6208, 0.4929, 0.9], result, 0.01);
+  expectCloseTo([0.7132, 0.6208, 0.4929, 0.9], result);
 });
 
 test("uncharted2Tonemap", async () => {
@@ -321,7 +321,7 @@ test("tonemapUncharted24", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Uncharted2 tonemap on RGB + alpha preserved
   // Same as tonemapUncharted23: [0.4929, 0.4086, 0.3043], alpha = 0.85
-  expectCloseTo([0.4929, 0.4086, 0.3043, 0.85], result, 0.01);
+  expectCloseTo([0.4929, 0.4086, 0.3043, 0.85], result);
 });
 
 test("tonemapUnreal4", async () => {

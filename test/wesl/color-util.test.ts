@@ -65,7 +65,7 @@ test("luma", async () => {
    `;
   const result = await testCompute(src);
   // Luma using Rec709 coefficients: 1.0*0.2126 + 0.5*0.7152 + 0.0*0.0722 = 0.5702
-  expectCloseTo([0.5702], result, 0.01);
+  expectCloseTo([0.5702], result);
 });
 
 test("mixOklab", async () => {
@@ -82,7 +82,7 @@ test("mixOklab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Mix red and blue in Oklab space - purple-ish result
-  expectCloseTo([0.264, 0.087, 0.363], result, 0.01);
+  expectCloseTo([0.264, 0.087, 0.363], result, 0.001);
 });
 
 test("brightnessContrast3", async () => {
@@ -102,7 +102,7 @@ test("brightnessContrast3", async () => {
   // (0.6 - 0.5) * 1.2 + 0.5 + 0.1 = 0.12 + 0.6 = 0.72
   // (0.5 - 0.5) * 1.2 + 0.5 + 0.1 = 0 + 0.6 = 0.6
   // (0.4 - 0.5) * 1.2 + 0.5 + 0.1 = -0.12 + 0.6 = 0.48
-  expectCloseTo([0.72, 0.6, 0.48], result, 0.01);
+  expectCloseTo([0.72, 0.6, 0.48], result);
 });
 
 test("brightnessContrast4", async () => {
@@ -120,7 +120,7 @@ test("brightnessContrast4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // RGB adjusted, alpha preserved
-  expectCloseTo([0.72, 0.6, 0.48, 0.8], result, 0.01);
+  expectCloseTo([0.72, 0.6, 0.48, 0.8], result);
 });
 
 test("exposure3", async () => {
@@ -137,7 +137,7 @@ test("exposure3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // 0.5 * 2^1 = 1.0
-  expectCloseTo([1.0, 1.0, 1.0], result, 0.01);
+  expectCloseTo([1.0, 1.0, 1.0], result);
 });
 
 test("exposure4", async () => {
@@ -154,7 +154,7 @@ test("exposure4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // RGB doubled, alpha preserved
-  expectCloseTo([1.0, 1.0, 1.0, 0.7], result, 0.01);
+  expectCloseTo([1.0, 1.0, 1.0, 0.7], result);
 });
 
 test("hueShiftRYB", async () => {
@@ -190,7 +190,7 @@ test("heatmap", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Heatmap formula: 1.0 - (v*2.1 - vec3(1.8,1.14,0.3))^2
   // For v=0.5: 1.0 - (1.05 - vec3(1.8,1.14,0.3))^2 = vec3(0.4375, 0.9919, 0.4375)
-  expectCloseTo([0.4375, 0.992, 0.4375], result, 0.01);
+  expectCloseTo([0.4375, 0.992, 0.4375], result, 0.001);
 });
 
 test("paletteHue", async () => {
@@ -276,7 +276,7 @@ test("mixSpectral", async () => {
   expect(maxComponent).toBeLessThan(0.2); // Dark purple, not bright
 
   // Verify linear mix comparison value is 0.5 (as expected for linear interpolation)
-  expectCloseTo([0.5], [result[3]], 0.01);
+  expectCloseTo([0.5], [result[3]]);
 
   // Spectral mix should differ DRAMATICALLY from linear mix
   // (physical paint mixing produces darker colors than digital RGB mixing)
@@ -395,7 +395,7 @@ test("levelsOutputRange3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Middle value (0.5) should map to middle of output range (0.5)
-  expectCloseTo([0.5, 0.5, 0.5], result, 0.01);
+  expectCloseTo([0.5, 0.5, 0.5], result);
 });
 
 // Color distance function tests
@@ -552,7 +552,7 @@ test("colorDistanceYPbPr", async () => {
   expect(complementaryDist).toBeGreaterThan(similarDist);
 
   // Distance should be symmetric
-  expectCloseTo([dist1], [dist2], 0.01);
+  expectCloseTo([dist1], [dist2]);
 
   // Complementary colors should have significant distance
   expect(complementaryDist).toBeGreaterThan(0.5);
@@ -610,7 +610,7 @@ test("hueShiftRYB4", async () => {
   // RYB hue shift: Red shifted by 120° toward yellow
   // Alpha should be preserved
   expectCloseTo([1.0, 1.0, 0.0, 0.7], result.slice(0, 4), 0.15);
-  expectCloseTo([0.7], [result[3]], 0.01); // Alpha exact
+  expectCloseTo([0.7], [result[3]]); // Alpha exact
 });
 
 test("luma - grayscale consistency", async () => {
@@ -632,7 +632,7 @@ test("luma - grayscale consistency", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Grayscale color should have luma equal to its value
-  expectCloseTo([0.75, 0.75], [result[0], result[1]], 0.01);
+  expectCloseTo([0.75, 0.75], [result[0], result[1]]);
 });
 
 test("luma4", async () => {
@@ -649,7 +649,7 @@ test("luma4", async () => {
   const result = await testCompute(src);
   // Luma using Rec709: 0.8*0.2126 + 0.3*0.7152 + 0.1*0.0722
   // = 0.17008 + 0.21456 + 0.00722 = 0.39186
-  expectCloseTo([0.39186], result, 0.01);
+  expectCloseTo([0.39186], result);
 });
 
 test("vibrance4", async () => {
@@ -666,7 +666,7 @@ test("vibrance4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Vibrance should increase saturation of muted colors
   // RGB values calculated same as vibrance3 test, alpha preserved
-  expectCloseTo([0.6258, 0.4958, 0.3658, 0.8], result, 0.01);
+  expectCloseTo([0.6258, 0.4958, 0.3658, 0.8], result);
 });
 
 // Color mixing function tests
@@ -685,7 +685,7 @@ test("mixOklab4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Mix red and blue in Oklab space - purple-ish result
   // RGB should match mixOklab test, alpha should be 0.6 (mix of 0.8 and 0.4)
-  expectCloseTo([0.264, 0.087, 0.363, 0.6], result, 0.01);
+  expectCloseTo([0.264, 0.087, 0.363, 0.6], result, 0.001);
 });
 
 test("mixSpectral4", async () => {
@@ -705,7 +705,7 @@ test("mixSpectral4", async () => {
   // Alpha should be 0.7 (mix of 0.9 and 0.5)
   expect(result[1]).toBeGreaterThan(result[0]); // Green dominant
   expect(result[1]).toBeGreaterThan(result[2]); // Green > Blue
-  expectCloseTo([0.7], [result[3]], 0.01); // Alpha
+  expectCloseTo([0.7], [result[3]]); // Alpha
 });
 
 test("mixSpectral_linear_to_reflectance", async () => {

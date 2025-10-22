@@ -130,7 +130,7 @@ test("cubicMix", async () => {
   // Cubic hermite: 3t² - 2t³
   // t=0.25: 3(0.0625) - 2(0.015625) = 0.1875 - 0.03125 = 0.15625
   // t=0.75: 3(0.5625) - 2(0.421875) = 1.6875 - 0.84375 = 0.84375
-  expectCloseTo([0.0, 0.15625, 0.84375, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.15625, 0.84375, 1.0], result);
 });
 
 test("smootherstep", async () => {
@@ -152,7 +152,7 @@ test("smootherstep", async () => {
   // Smootherstep: 6t⁵ - 15t⁴ + 10t³
   // t=0.25: 6(0.00098) - 15(0.00391) + 10(0.01563) = 0.00586 - 0.05859 + 0.15625 = 0.10352
   // t=0.75: 6(0.23730) - 15(0.31641) + 10(0.42188) = 1.42383 - 4.74609 + 4.21875 = 0.89648
-  expectCloseTo([0.0, 0.10352, 0.89648, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.10352, 0.89648, 1.0], result);
 });
 
 test("fmod2", async () => {
@@ -174,9 +174,9 @@ test("fmod2", async () => {
    `;
   const result = await testCompute(src);
   // fmod(5.0, 3.0) = 2.0, fmod(7.0, 4.0) = 3.0
-  expectCloseTo([2.0, 3.0], result.slice(0, 2), 0.01);
+  expectCloseTo([2.0, 3.0], result.slice(0, 2));
   // fmod(-5.0, 3.0) = 1.0, fmod(-7.0, 4.0) = 1.0 (floored, not truncated)
-  expectCloseTo([1.0, 1.0], result.slice(2, 4), 0.01);
+  expectCloseTo([1.0, 1.0], result.slice(2, 4));
 });
 
 test("fmod3", async () => {
@@ -194,7 +194,7 @@ test("fmod3", async () => {
    `;
   const result = await testCompute(src);
   // fmod(-5.5, 3.0) ≈ 0.5, fmod(7.3, 4.0) ≈ 3.3, fmod(-2.1, 2.0) ≈ 1.9
-  expectCloseTo([0.5, 3.3, 1.9], result, 0.01);
+  expectCloseTo([0.5, 3.3, 1.9], result);
 });
 
 test("fmod4", async () => {
@@ -212,7 +212,7 @@ test("fmod4", async () => {
    `;
   const result = await testCompute(src);
   // fmod(10.0, 3.0) = 1.0, fmod(-10.0, 3.0) = 2.0, fmod(7.5, 2.5) = 0.0, fmod(-7.5, 2.5) = 0.0
-  expectCloseTo([1.0, 2.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([1.0, 2.0, 0.0, 0.0], result);
 });
 
 test("map - remap value between ranges", async () => {
@@ -228,7 +228,7 @@ test("map - remap value between ranges", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 150.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([50.0, 150.0, 0.0, 0.0], result);
 });
 
 test("mirror - triangle wave", async () => {
@@ -241,7 +241,7 @@ test("mirror - triangle wave", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.5, 0.5, 0.5, 0.5], result, 0.01);
+  expectCloseTo([0.5, 0.5, 0.5, 0.5], result);
 });
 
 test("decimate - quantize value", async () => {
@@ -256,7 +256,7 @@ test("decimate - quantize value", async () => {
   `;
   const result = await testCompute(src);
   // 0.567 * 10 = 5.67, floor = 5, 5/10 = 0.5
-  expectCloseTo([0.5], result, 0.01);
+  expectCloseTo([0.5], result);
 });
 
 // Utility functions
@@ -323,10 +323,10 @@ test("atan2Custom", async () => {
   const TAU = 2 * PI;
 
   // Verify normalized angles [0, 2π]
-  expectCloseTo([(3 * PI) / 2], [result[0]], 0.01); // 3π/2 ≈ 4.7124
-  expectCloseTo([PI], [result[1]], 0.01); // π ≈ 3.1416
-  expectCloseTo([PI / 2], [result[2]], 0.01); // π/2 ≈ 1.5708
-  expectCloseTo([0.0], [result[3]], 0.01); // 0
+  expectCloseTo([(3 * PI) / 2], [result[0]]); // 3π/2 ≈ 4.7124
+  expectCloseTo([PI], [result[1]]); // π ≈ 3.1416
+  expectCloseTo([PI / 2], [result[2]]); // π/2 ≈ 1.5708
+  expectCloseTo([0.0], [result[3]]); // 0
 
   // All angles should be in [0, 2π) range
   for (let i = 0; i < 4; i++) {
@@ -352,7 +352,7 @@ test("atan2Custom - additional angles", async () => {
   const PI = Math.PI;
 
   // Verify diagonal angle
-  expectCloseTo([(5 * PI) / 4], [result[0]], 0.01); // 5π/4 ≈ 3.927
+  expectCloseTo([(5 * PI) / 4], [result[0]]); // 5π/4 ≈ 3.927
 });
 
 test("bump", async () => {
@@ -367,7 +367,7 @@ test("bump", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.75], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 0.0, 0.75], result.slice(0, 3));
 });
 
 test("bump2", async () => {
@@ -380,7 +380,7 @@ test("bump2", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.75], result.slice(0, 2), 0.01);
+  expectCloseTo([1.0, 0.75], result.slice(0, 2));
 });
 
 test("highPass", async () => {
@@ -394,7 +394,7 @@ test("highPass", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6, 0.0], result.slice(0, 2), 0.01);
+  expectCloseTo([0.6, 0.0], result.slice(0, 2));
 });
 
 test("inside - scalar", async () => {
@@ -409,7 +409,7 @@ test("inside - scalar", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3));
 });
 
 test("inside2", async () => {
@@ -423,7 +423,7 @@ test("inside2", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
+  expectCloseTo([1.0, 0.0], result.slice(0, 2));
 });
 
 test("mod2 - mutates pointer", async () => {
@@ -454,7 +454,7 @@ test("mod289", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([11.0, 0.0, 100.0], result.slice(0, 3), 0.01);
+  expectCloseTo([11.0, 0.0, 100.0], result.slice(0, 3));
 });
 
 test("powFast", async () => {
@@ -519,7 +519,7 @@ test("round", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([2.0, 3.0, -2.0, -3.0], result, 0.01);
+  expectCloseTo([2.0, 3.0, -2.0, -3.0], result);
 });
 
 test("saturateMediump", async () => {
@@ -542,9 +542,9 @@ test("saturateMediump", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Test specific behavior
-  expectCloseTo([-0.5], [result[0]], 0.01);
-  expectCloseTo([0.5], [result[1]], 0.01);
-  expectCloseTo([1000.0], [result[2]], 0.01);
+  expectCloseTo([-0.5], [result[0]]);
+  expectCloseTo([0.5], [result[1]]);
+  expectCloseTo([1000.0], [result[2]]);
 
   // v4: On desktop should be 100000, on mobile should be clamped to 65504
   // Test that it's either original or clamped (platform-dependent)
@@ -602,7 +602,7 @@ test("within - scalar", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3));
 });
 
 test("within2", async () => {
@@ -616,5 +616,5 @@ test("within2", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0], result.slice(0, 2), 0.01);
+  expectCloseTo([1.0, 0.0], result.slice(0, 2));
 });

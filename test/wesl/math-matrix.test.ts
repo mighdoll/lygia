@@ -38,7 +38,7 @@ test("toMat4", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Diagonal elements should be 1, 5, 9, 1
-  expectCloseTo([1.0, 5.0, 9.0, 1.0], result, 0.01);
+  expectCloseTo([1.0, 5.0, 9.0, 1.0], result);
 });
 
 test("inverse - mat3", async () => {
@@ -72,7 +72,7 @@ test("scale2d - uniform scale", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([6.0, 8.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([6.0, 8.0, 0.0, 0.0], result);
 });
 
 test("scale2dVec - non-uniform scale", async () => {
@@ -87,7 +87,7 @@ test("scale2dVec - non-uniform scale", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([8.0, 15.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([8.0, 15.0, 0.0, 0.0], result);
 });
 
 test("scale3d", async () => {
@@ -102,7 +102,7 @@ test("scale3d", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([2.0, 6.0, 12.0, 0.0], result, 0.01);
+  expectCloseTo([2.0, 6.0, 12.0, 0.0], result);
 });
 
 test("scale4d", async () => {
@@ -117,7 +117,7 @@ test("scale4d", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([2.0, 6.0, 12.0, 1.0], result, 0.01);
+  expectCloseTo([2.0, 6.0, 12.0, 1.0], result);
 });
 
 test("translate4d", async () => {
@@ -132,5 +132,5 @@ test("translate4d", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([11.0, 22.0, 33.0, 1.0], result, 0.01);
+  expectCloseTo([11.0, 22.0, 33.0, 1.0], result);
 });

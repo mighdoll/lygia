@@ -15,7 +15,7 @@ test("rotate2d - 90 degree rotation", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation of (1,0) should give approximately (0,1)
-  expectCloseTo([0.0, 1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 1.0, 0.0, 0.0], result);
 });
 
 test("rotate3d - rotation around axis", async () => {
@@ -33,7 +33,7 @@ test("rotate3d - rotation around axis", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Z-axis of (1,0,0) - result is (0, -1, 0) due to matrix convention
-  expectCloseTo([0.0, -1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, -1.0, 0.0, 0.0], result);
 });
 
 test("rotate3dX", async () => {
@@ -50,7 +50,7 @@ test("rotate3dX", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around X-axis of (0,1,0) should give (0,0,1)
-  expectCloseTo([0.0, 0.0, 1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([0.0, 0.0, 1.0], result.slice(0, 3));
 });
 
 test("rotate3dY", async () => {
@@ -67,7 +67,7 @@ test("rotate3dY", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Y-axis of (1,0,0) should give (0,0,-1)
-  expectCloseTo([0.0, 0.0, -1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([0.0, 0.0, -1.0], result.slice(0, 3));
 });
 
 test("rotate3dZ", async () => {
@@ -84,7 +84,7 @@ test("rotate3dZ", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Z-axis of (1,0,0) - result depends on matrix convention
-  expectCloseTo([0.0, -1.0, 0.0], result.slice(0, 3), 0.01);
+  expectCloseTo([0.0, -1.0, 0.0], result.slice(0, 3));
 });
 
 test("rotate4d - axis-angle rotation", async () => {
@@ -102,7 +102,7 @@ test("rotate4d - axis-angle rotation", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Z-axis of (1,0,0,1) - result depends on matrix convention
-  expectCloseTo([0.0, -1.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, -1.0, 0.0, 1.0], result);
 });
 
 test("rotate4dX", async () => {
@@ -119,7 +119,7 @@ test("rotate4dX", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around X-axis of (0,1,0,1) - result depends on matrix convention
-  expectCloseTo([0.0, 0.0, -1.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, -1.0, 1.0], result);
 });
 
 test("rotate4dY", async () => {
@@ -136,7 +136,7 @@ test("rotate4dY", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Y-axis of (1,0,0,1) should give (0,0,-1,1)
-  expectCloseTo([0.0, 0.0, -1.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, -1.0, 1.0], result);
 });
 
 test("rotate4dZ", async () => {
@@ -153,5 +153,5 @@ test("rotate4dZ", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // 90 rotation around Z-axis of (1,0,0,1) - result depends on matrix convention
-  expectCloseTo([0.0, -1.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, -1.0, 0.0, 1.0], result);
 });

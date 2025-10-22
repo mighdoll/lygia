@@ -187,7 +187,7 @@ test("layerMultiplySourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Multiply blend with source-over compositing
-  expectCloseTo([0.3625, 0.4025, 0.3825, 0.875], result, 0.01);
+  expectCloseTo([0.3625, 0.4025, 0.3825, 0.875], result);
 });
 
 test("layerScreenSourceOver4", async () => {
@@ -204,7 +204,7 @@ test("layerScreenSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Screen blend with source-over compositing
-  expectCloseTo([0.45, 0.5, 0.59, 0.8], result, 0.01);
+  expectCloseTo([0.45, 0.5, 0.59, 0.8], result);
 });
 
 test("layerAddSourceOver4", async () => {
@@ -221,7 +221,7 @@ test("layerAddSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Add blend with source-over compositing
-  expectCloseTo([0.34, 0.48, 0.62, 0.8], result, 0.01);
+  expectCloseTo([0.34, 0.48, 0.62, 0.8], result);
 });
 
 test("layerOverlaySourceOver4", async () => {
@@ -238,7 +238,7 @@ test("layerOverlaySourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Overlay blend with source-over compositing
-  expectCloseTo([0.544, 0.336, 0.44, 0.88], result, 0.01);
+  expectCloseTo([0.544, 0.336, 0.44, 0.88], result);
 });
 
 test("layerDarkenSourceOver4", async () => {
@@ -255,7 +255,7 @@ test("layerDarkenSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Darken blend with source-over compositing
-  expectCloseTo([0.3, 0.3, 0.375, 0.75], result, 0.01);
+  expectCloseTo([0.3, 0.3, 0.375, 0.75], result);
 });
 
 test("layerLightenSourceOver4", async () => {
@@ -272,7 +272,7 @@ test("layerLightenSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Lighten blend with source-over compositing
-  expectCloseTo([0.45, 0.45, 0.375, 0.75], result, 0.01);
+  expectCloseTo([0.45, 0.45, 0.375, 0.75], result);
 });
 
 test("layerDifferenceSourceOver4", async () => {
@@ -289,7 +289,7 @@ test("layerDifferenceSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Difference blend with source-over compositing
-  expectCloseTo([0.3, 0.406, 0.212, 0.88], result, 0.01);
+  expectCloseTo([0.3, 0.406, 0.212, 0.88], result);
 });
 
 test("layerExclusionSourceOver4", async () => {
@@ -306,7 +306,7 @@ test("layerExclusionSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Exclusion blend with source-over compositing
-  expectCloseTo([0.345, 0.445, 0.39, 0.75], result, 0.01);
+  expectCloseTo([0.345, 0.445, 0.39, 0.75], result);
 });
 
 test("layerPhoenixSourceOver4", async () => {
@@ -323,7 +323,7 @@ test("layerPhoenixSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Phoenix blend with source-over compositing
-  expectCloseTo([0.484, 0.636, 0.428, 0.76], result, 0.02);
+  expectCloseTo([0.484, 0.636, 0.428, 0.76], result);
 });
 
 test("layerSubtractSourceOver4", async () => {
@@ -340,7 +340,7 @@ test("layerSubtractSourceOver4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Subtract blend with source-over compositing
-  expectCloseTo([0.2, 0.2, 0.175, 0.75], result, 0.01);
+  expectCloseTo([0.2, 0.2, 0.175, 0.75], result);
 });
 
 // Vec3 variant tests (with separate alpha parameters)

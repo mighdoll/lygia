@@ -24,7 +24,7 @@ test("layerAverageSourceOver4", async () => {
   // R: 0.6*0.8 + 0.4*0.6*0.2 = 0.48 + 0.048 = 0.528
   // G: 0.4*0.8 + 0.2*0.6*0.2 = 0.32 + 0.024 = 0.344
   // B: 0.5*0.8 + 0.6*0.6*0.2 = 0.4 + 0.072 = 0.472
-  expectCloseTo([0.528, 0.344, 0.472, 0.92], result, 0.01);
+  expectCloseTo([0.528, 0.344, 0.472, 0.92], result);
 });
 
 test("layerAverageSourceOver4 - fully opaque", async () => {
@@ -44,7 +44,7 @@ test("layerAverageSourceOver4 - fully opaque", async () => {
 
   // Alpha should be 1.0 (fully opaque)
   // RGB should be the pure average blend: (src + dst) * 0.5
-  expectCloseTo([0.5, 0.5, 0.5, 1.0], result, 0.01);
+  expectCloseTo([0.5, 0.5, 0.5, 1.0], result);
 });
 
 test("layerColorBurnSourceOver4", async () => {
@@ -131,7 +131,7 @@ test("layerColorDodgeSourceOver4 - with white blend", async () => {
 
   // When blend is white (1.0), color dodge returns 1.0
   // Then source-over: 1.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.83, 0.84, 0.85], result.slice(0, 3), 0.01);
+  expectCloseTo([0.83, 0.84, 0.85], result.slice(0, 3));
 });
 
 test("layerColorSourceOver4", async () => {
@@ -232,7 +232,7 @@ test("layerGlowSourceOver4", async () => {
   // G: reflect(0.3, 0.6) = min(0.09 / 0.4, 1) = 0.225
   // B: reflect(0.8, 0.2) = min(0.64 / 0.8, 1) = 0.8
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.393, 0.216, 0.736, 0.92], result, 0.01);
+  expectCloseTo([0.393, 0.216, 0.736, 0.92], result, 0.001);
 });
 
 test("layerHardLightSourceOver4", async () => {
@@ -257,7 +257,7 @@ test("layerHardLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → 1 - 2*(1-0.5)*(1-0.6) = 1 - 2*0.5*0.4 = 0.6
   // B: dst=0.7 ≥ 0.5 → 1 - 2*(1-0.7)*(1-0.8) = 1 - 2*0.3*0.2 = 0.88
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.213, 0.495, 0.721, 0.85], result, 0.01);
+  expectCloseTo([0.213, 0.495, 0.721, 0.85], result);
 });
 
 test("layerHardLightSourceOver4 - dark blend", async () => {
@@ -279,7 +279,7 @@ test("layerHardLightSourceOver4 - dark blend", async () => {
   // With src=0.2, dst=0.8: overlay checks if base (dst=0.8) < 0.5? No
   // Since dst >= 0.5: 1 - 2*(1-dst)*(1-src) = 1 - 2*0.2*0.8 = 0.68
   // With full opacity, source-over just returns the blend result
-  expectCloseTo([0.68, 0.68, 0.68], result.slice(0, 3), 0.01);
+  expectCloseTo([0.68, 0.68, 0.68], result.slice(0, 3));
 });
 
 test("layerHardLightSourceOver4 - light blend", async () => {
@@ -301,7 +301,7 @@ test("layerHardLightSourceOver4 - light blend", async () => {
   // With src=0.8, dst=0.2: overlay checks if base (dst=0.2) < 0.5? Yes
   // Since dst < 0.5: 2*dst*src = 2*0.2*0.8 = 0.32
   // With full opacity, source-over just returns the blend result
-  expectCloseTo([0.32, 0.32, 0.32], result.slice(0, 3), 0.01);
+  expectCloseTo([0.32, 0.32, 0.32], result.slice(0, 3));
 });
 
 test("layerHardMixSourceOver4", async () => {
@@ -324,7 +324,7 @@ test("layerHardMixSourceOver4", async () => {
   // G: vividLight(0.5, 0.6) = colorDodge(0.5, 0.2) = min(0.5/0.8, 1) = 0.625 ≥ 0.5 → 1.0
   // B: vividLight(0.2, 0.8) = colorDodge(0.2, 0.6) = min(0.2/0.4, 1) = 0.5 ≥ 0.5 → 1.0
   // Then source-over with α=(0.6, 0.5): blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.06, 0.7, 0.64, 0.8], result, 0.01); // [0.0*0.6+0.3*0.5*0.4, 1.0*0.6+0.5*0.5*0.4, 1.0*0.6+0.2*0.5*0.4, 0.8]
+  expectCloseTo([0.06, 0.7, 0.64, 0.8], result); // [0.0*0.6+0.3*0.5*0.4, 1.0*0.6+0.5*0.5*0.4, 1.0*0.6+0.2*0.5*0.4, 0.8]
 });
 
 test("layerHardMixSourceOver4 - fully opaque posterization", async () => {
@@ -346,7 +346,7 @@ test("layerHardMixSourceOver4 - fully opaque posterization", async () => {
   // R: vividLight(0.3, 0.4) = 0.125 < 0.5 → 0.0
   // G: vividLight(0.5, 0.6) = 0.625 ≥ 0.5 → 1.0
   // B: vividLight(0.2, 0.8) = 0.5 ≥ 0.5 → 1.0
-  expectCloseTo([0.0, 1.0, 1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([0.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("layerHueSourceOver4", async () => {
@@ -464,7 +464,7 @@ test("layerLinearBurnSourceOver4 - complete darkening", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // 0.5 + 0.5 - 1.0 = 0.0 for all channels
-  expectCloseTo([0.0, 0.0, 0.0], result.slice(0, 3), 0.01);
+  expectCloseTo([0.0, 0.0, 0.0], result.slice(0, 3));
 });
 
 test("layerLinearDodgeSourceOver4", async () => {
@@ -508,7 +508,7 @@ test("layerLinearDodgeSourceOver4 - clamping at white", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // All channels should clamp to 1.0
-  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("layerLinearLightSourceOver4", async () => {
@@ -653,7 +653,7 @@ test("layerNegationSourceOver4", async () => {
   // G: 1 - abs(1 - 0.6 - 0.5) = 1 - abs(-0.1) = 0.9
   // B: 1 - abs(1 - 0.8 - 0.3) = 1 - abs(-0.1) = 0.9
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.62, 0.66, 0.7, 0.8], result, 0.01);
+  expectCloseTo([0.62, 0.66, 0.7, 0.8], result);
 });
 
 test("layerNegationSourceOver4 - complementary colors", async () => {
@@ -672,7 +672,7 @@ test("layerNegationSourceOver4 - complementary colors", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // 1 - abs(1 - 0.7 - 0.3) = 1 - 0 = 1.0
-  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("layerPinLightSourceOver4", async () => {
@@ -694,7 +694,7 @@ test("layerPinLightSourceOver4", async () => {
   // R: dst=0.3 < 0.5 → min(0.5, 0.6) = 0.5 → sourceOver: 0.5*0.7 + 0.3*0.5*0.3 = 0.395
   // G: dst=0.5 ≥ 0.5 → max(0.6, 0.0) = 0.6 → sourceOver: 0.6*0.7 + 0.5*0.5*0.3 = 0.495
   // B: dst=0.7 ≥ 0.5 → max(0.4, 0.4) = 0.4 → sourceOver: 0.4*0.7 + 0.7*0.5*0.3 = 0.385
-  expectCloseTo([0.395, 0.495, 0.385, 0.85], result, 0.01);
+  expectCloseTo([0.395, 0.495, 0.385, 0.85], result);
 });
 
 test("layerPinLightSourceOver4 - extreme values", async () => {
@@ -717,7 +717,7 @@ test("layerPinLightSourceOver4 - extreme values", async () => {
   // R: base=0.2, blend=0.5 ≥ 0.5 → max(0.2, 0.0) = 0.2
   // G: base=0.8, blend=0.5 ≥ 0.5 → max(0.8, 0.0) = 0.8
   // B: base=0.5, blend=0.5 ≥ 0.5 → max(0.5, 0.0) = 0.5
-  expectCloseTo([0.2, 0.8, 0.5], result.slice(0, 3), 0.01);
+  expectCloseTo([0.2, 0.8, 0.5], result.slice(0, 3));
 });
 
 test("layerReflectSourceOver4", async () => {
@@ -742,7 +742,7 @@ test("layerReflectSourceOver4", async () => {
   // G: min(0.6² / (1-0.3), 1) = min(0.36 / 0.7, 1) ≈ 0.514
   // B: min(0.2² / (1-0.8), 1) = min(0.04 / 0.2, 1) = 0.2
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.316, 0.447, 0.256, 0.92], result, 0.01);
+  expectCloseTo([0.316, 0.447, 0.256, 0.92], result, 0.001);
 });
 
 test("layerReflectSourceOver4 - extreme reflection", async () => {
@@ -763,7 +763,7 @@ test("layerReflectSourceOver4 - extreme reflection", async () => {
   // Reflect formula: min(base*base / (1 - blend), 1.0)
   // With src=0.2 (blend), dst=0.8 (base): min(0.2*0.2 / (1 - 0.8), 1.0) = min(0.04 / 0.2, 1.0) = 0.2
   // With full opacity, source-over just returns the blend result
-  expectCloseTo([0.2, 0.2, 0.2], result.slice(0, 3), 0.01);
+  expectCloseTo([0.2, 0.2, 0.2], result.slice(0, 3));
 });
 
 test("layerSaturationSourceOver4", async () => {
@@ -860,7 +860,7 @@ test("layerSoftLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → sqrt(0.6)*0 + 2*0.6*0.5 = 0.6
   // B: dst=0.7 ≥ 0.5 → sqrt(0.4)*0.4 + 2*0.4*0.3 ≈ 0.253 + 0.24 = 0.493
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.325, 0.495, 0.45, 0.85], result, 0.01);
+  expectCloseTo([0.325, 0.495, 0.45, 0.85], result);
 });
 
 test("layerSoftLightSourceOver4 - subtle contrast", async () => {
@@ -916,7 +916,7 @@ test("layerVividLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → colorDodge(0.6, 0.0) = min(0.6/(1-0), 1) = 0.6
   // B: dst=0.7 ≥ 0.5 → colorDodge(0.4, 0.4) = min(0.4/(1-0.4), 1) ≈ 0.667
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.162, 0.495, 0.572, 0.85], result, 0.01);
+  expectCloseTo([0.162, 0.495, 0.572, 0.85], result, 0.001);
 });
 
 test("layerVividLightSourceOver4 - extreme contrast", async () => {

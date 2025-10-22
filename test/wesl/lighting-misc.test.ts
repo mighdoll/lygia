@@ -38,7 +38,7 @@ test("fresnelF32", async () => {
    `;
   const result = await testCompute(src);
   // Fresnel at normal incidence should be close to f0
-  expectCloseTo([0.04], result, 0.01);
+  expectCloseTo([0.04], result);
 });
 
 test("fresnelFromVectors", async () => {
@@ -89,7 +89,7 @@ test("fresnelRoughness", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Test 1: At normal incidence, should equal f0 (0.04)
-  expectCloseTo([0.04], [result[0]], 0.01);
+  expectCloseTo([0.04], [result[0]]);
 
   // Test 2: At grazing angle, smooth surface should have much higher Fresnel than rough
   expect(result[1]).toBeGreaterThan(0.4); // Smooth should be significantly elevated

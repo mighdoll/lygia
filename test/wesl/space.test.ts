@@ -225,7 +225,7 @@ test("triTile", async () => {
   const r = result as number[];
 
   // Verify tile 00 has expected within-tile coords
-  expectCloseTo([0.21132487, 0.57735026], [r[0], r[1]], 0.01);
+  expectCloseTo([0.21132487, 0.57735026], [r[0], r[1]]);
 
   // Verify tiles have different indices (difference should be non-zero)
   if (r[2] < 0.1) {
@@ -255,7 +255,7 @@ test("hexTile", async () => {
   const r = result as number[];
 
   // Center tile: Known expected within-tile coords
-  expectCloseTo([0.134, 0.5], [r[0], r[1]], 0.01);
+  expectCloseTo([0.134, 0.5], [r[0], r[1]]);
 
   // Verify shifted point has different tile index
   if (r[2] < 0.1) {
@@ -286,7 +286,7 @@ test("mirrorTile2", async () => {
   const r = result as number[];
 
   // Verify first tile coords
-  expectCloseTo([0.3, 0.3], r.slice(0, 2), 0.01);
+  expectCloseTo([0.3, 0.3], r.slice(0, 2));
 
   // Verify tile2 is in correct tile (1,1)
   if (r[2] > 0.1) {
@@ -327,7 +327,7 @@ test("windmillTile2", async () => {
   const r = result as number[];
 
   // Tile (0,0): No rotation, point stays at (0.2, 0.5)
-  expectCloseTo([0.2, 0.5], r.slice(0, 2), 0.01);
+  expectCloseTo([0.2, 0.5], r.slice(0, 2));
 
   // Adjacent tile (1,0) rotates 90°, so (0.2, 0.5) should move significantly
   if (r[2] < 0.1) {
@@ -337,7 +337,7 @@ test("windmillTile2", async () => {
   }
 
   // Verify tile index is correct (1,0) -> sum = 1.0
-  expectCloseTo([1.0], [r[3]], 0.01);
+  expectCloseTo([1.0], [r[3]]);
 });
 
 test("linearizeDepth", async () => {
@@ -446,7 +446,7 @@ test("bracketing", async () => {
   const r = result as number[];
 
   // Test 1: Canonical angle - known expected output
-  expectCloseTo([1.0, 0.0], r.slice(0, 2), 0.01);
+  expectCloseTo([1.0, 0.0], r.slice(0, 2));
 
   // Test 2: Between canonical angles
   if (r[2] < 0.2 || r[2] > 0.8) {
@@ -551,7 +551,7 @@ test("decimateNormal", async () => {
   expectCloseTo([0.73], [r[0]], 0.05);
 
   // Verify unit length
-  expectCloseTo([1.0], [r[1]], 0.01);
+  expectCloseTo([1.0], [r[1]]);
 
   // d1 and d2 should be close (nearby normals quantize similarly)
   if (r[2] > 0.2) {
@@ -584,7 +584,7 @@ test("eulerView", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // eulerView creates view matrix from Euler angles (Y rotation by 90°)
   // Point at (1,0,0) rotated by 90° around Y should go to (0,0,-1)
-  expectCloseTo([0.0, 0.0, -1.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, -1.0, 1.0], result);
 });
 
 test("lookAt", async () => {
@@ -603,7 +603,7 @@ test("lookAt", async () => {
   // lookAt creates orientation matrix from forward and up vectors
   // Looking down -Z (forward = (0,0,-1)), up = (0,1,0)
   // z-axis should be (0,0,-1), transforming (0,0,1) gives (0,0,-1)
-  expectCloseTo([0.0, 0.0, -1.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, -1.0, 0.0], result);
 });
 
 test.skip("view2screenPosition", async () => {
@@ -657,7 +657,7 @@ test("lookAtView", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // lookAtView creates 4x4 view matrix with position
   // Camera at (5,0,0) looking at origin should embed position in last column
-  expectCloseTo([5.0, 0.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([5.0, 0.0, 0.0, 1.0], result);
 });
 
 test("lookAtViewRoll", async () => {
@@ -676,7 +676,7 @@ test("lookAtViewRoll", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // lookAtViewRoll creates view matrix with roll parameter
   // Camera position should be (0,5,0) in the matrix
-  expectCloseTo([0.0, 5.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 5.0, 0.0, 1.0], result);
 });
 
 test("lookAtViewFromDirection", async () => {
@@ -694,7 +694,7 @@ test("lookAtViewFromDirection", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // lookAtViewFromDirection creates view matrix from position and direction
   // Camera position (3,0,0) should be embedded in the matrix
-  expectCloseTo([3.0, 0.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([3.0, 0.0, 0.0, 1.0], result);
 });
 
 test("fisheye2xyz", async () => {
@@ -711,7 +711,7 @@ test("fisheye2xyz", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Fisheye projection should return a normalized direction vector
   const length = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2);
-  expectCloseTo([length], [1.0], 0.01);
+  expectCloseTo([length], [1.0]);
 });
 
 test("fisheye2xyz - division by zero at center", async () => {
@@ -767,7 +767,7 @@ test("ratio", async () => {
   // ratio scales coordinates to keep 0-1 range visible while correcting aspect
   // For 1920x1080 (16:9): keeps entire 0-1 range visible
   const r = result as number[];
-  expectCloseTo([0.5, 0.5], r, 0.01);
+  expectCloseTo([0.5, 0.5], r);
 });
 
 test("rotate", async () => {
@@ -819,9 +819,9 @@ test("rotate3", async () => {
   // Note: rotate3 may have a different convention, checking actual result
   const r = result as number[];
   const length = Math.sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]);
-  expectCloseTo([length], [1.0], 0.01);
+  expectCloseTo([length], [1.0]);
   // The actual result appears to be rotated the other direction
-  expectCloseTo([0.0, -1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, -1.0, 0.0, 0.0], result);
 });
 
 test("scale2", async () => {
@@ -950,7 +950,7 @@ test("rotate - with custom CENTER_2D via constants", async () => {
   });
   // Rotating (0.8, 0.3) around (0.3, 0.3) by 90°
   // Offset: (0.5, 0.0), rotated 90° -> (0.0, 0.5), result: (0.3, 0.8)
-  expectCloseTo([0.3, 0.8], result, 0.01);
+  expectCloseTo([0.3, 0.8], result);
 });
 
 test("rotateX3 - with custom CENTER_3D via constants", async () => {
@@ -971,7 +971,7 @@ test("rotateX3 - with custom CENTER_3D via constants", async () => {
   // Offset from center: (0.5, 1.0, 0.0)
   // Rotate X by 90°: x stays same, (y,z) -> (0.0, -1.0) from (1.0, 0.0)
   // (0.5, 1.0, 0.0) -> (0.5, 0.0, -1.0) + center = (1.0, 0.5, -0.5)
-  expectCloseTo([1.0, 0.5, -0.5, 0.0], result, 0.01);
+  expectCloseTo([1.0, 0.5, -0.5, 0.0], result);
 });
 
 test("rotateY3 - with custom CENTER_3D via constants", async () => {
@@ -992,7 +992,7 @@ test("rotateY3 - with custom CENTER_3D via constants", async () => {
   // Offset from center: (1.0, 0.5, 0.0)
   // Rotate Y by 90°: (x,z) -> (z, -x), y stays same
   // (1.0, 0.5, 0.0) -> (0.0, 0.5, -1.0) + center = (0.5, 1.0, -0.5)
-  expectCloseTo([0.5, 1.0, -0.5, 0.0], result, 0.01);
+  expectCloseTo([0.5, 1.0, -0.5, 0.0], result);
 });
 
 test("rotateZ3 - with custom CENTER_3D via constants", async () => {
@@ -1013,7 +1013,7 @@ test("rotateZ3 - with custom CENTER_3D via constants", async () => {
   // Offset from center: (1.0, 0.0, 0.5)
   // Rotate Z by 90°: z stays same, (x,y) = (1.0, 0.0) -> (0.0, -1.0)
   // (1.0, 0.0, 0.5) -> (0.0, -1.0, 0.5) + center = (0.5, -0.5, 1.0)
-  expectCloseTo([0.5, -0.5, 1.0, 0.0], result, 0.01);
+  expectCloseTo([0.5, -0.5, 1.0, 0.0], result);
 });
 
 test("sprite", async () => {

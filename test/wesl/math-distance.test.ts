@@ -13,8 +13,8 @@ test("lengthSq2", async () => {
     }
   `;
   const result = await testCompute(src);
-  // 3² + 4² = 25
-  expectCloseTo([25.0], result, 0.01);
+  // 3ï¿½ + 4ï¿½ = 25
+  expectCloseTo([25.0], result);
 });
 
 test("lengthSq3", async () => {
@@ -27,8 +27,8 @@ test("lengthSq3", async () => {
     }
   `;
   const result = await testCompute(src);
-  // 1² + 2² + 2² = 9
-  expectCloseTo([9.0], result, 0.01);
+  // 1ï¿½ + 2ï¿½ + 2ï¿½ = 9
+  expectCloseTo([9.0], result);
 });
 
 test("distEuclidean2", async () => {
@@ -42,7 +42,7 @@ test("distEuclidean2", async () => {
   `;
   const result = await testCompute(src);
   // Distance is 5.0
-  expectCloseTo([5.0], result, 0.01);
+  expectCloseTo([5.0], result);
 });
 
 test("distManhattan2", async () => {
@@ -56,5 +56,5 @@ test("distManhattan2", async () => {
   `;
   const result = await testCompute(src);
   // Manhattan distance is 3 + 4 = 7
-  expectCloseTo([7.0], result, 0.01);
+  expectCloseTo([7.0], result);
 });

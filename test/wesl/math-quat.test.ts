@@ -145,7 +145,7 @@ test("quat - create from axis and angle", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, INV_SQRT2, 0, INV_SQRT2)
-  expectCloseTo([0.0, INV_SQRT2, 0.0, INV_SQRT2], result, 0.01);
+  expectCloseTo([0.0, INV_SQRT2, 0.0, INV_SQRT2], result);
 });
 
 test("quatDiv - divide quaternion by scalar", async () => {
@@ -159,7 +159,7 @@ test("quatDiv - divide quaternion by scalar", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 2.0, 3.0, 4.0], result, 0.01);
+  expectCloseTo([1.0, 2.0, 3.0, 4.0], result);
 });
 
 test("quatNeg - negate quaternion", async () => {
@@ -173,7 +173,7 @@ test("quatNeg - negate quaternion", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([-1.0, -2.0, -3.0, -4.0], result, 0.01);
+  expectCloseTo([-1.0, -2.0, -3.0, -4.0], result);
 });
 
 test("quatInverse", async () => {
@@ -192,7 +192,7 @@ test("quatInverse", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Identity quaternion is (0, 0, 0, 1)
-  expectCloseTo([0.0, 0.0, 0.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, 0.0, 1.0], result);
 });
 
 test("quatForward - create quat from forward vector", async () => {
@@ -221,7 +221,7 @@ test("quatForward - create quat from forward vector", async () => {
   // Rotated vector should point in +X direction (our specified forward)
   expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3), 0.1);
   // Quaternion should be normalized
-  expectCloseTo([1.0], [result[3]], 0.01);
+  expectCloseTo([1.0], [result[3]]);
 });
 
 test("quatForwardUp - create quat from forward and up vectors", async () => {
@@ -256,5 +256,5 @@ test("quatForwardUp - create quat from forward and up vectors", async () => {
   // Rotated up should still point in +Y direction
   expectCloseTo([1.0], [result[1]], 0.1);
   // Quaternion should be normalized
-  expectCloseTo([1.0], [result[2]], 0.01);
+  expectCloseTo([1.0], [result[2]]);
 });

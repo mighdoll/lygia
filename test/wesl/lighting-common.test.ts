@@ -86,7 +86,7 @@ test("importanceSamplingGGX", async () => {
   // u=(0,0) produces direction close to Z axis
   expectCloseTo([1.0], [result[0]], 0.1);
   // Samples should be normalized (unit length)
-  expectCloseTo([1.0], [result[1]], 0.01);
+  expectCloseTo([1.0], [result[1]]);
   // Lower roughness biases toward Z
   expect(result[2]).toBeGreaterThan(0.7);
   // Exact values to catch regressions
@@ -117,7 +117,7 @@ test("schlick vec3f", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // At normal incidence, Fresnel equals f0
-  expectCloseTo([0.04], [result[0]], 0.01);
+  expectCloseTo([0.04], [result[0]]);
   // At grazing angle, Fresnel approaches f90
   expectCloseTo([1.0], [result[1]], 0.05);
   // Mid-angle should be between f0 and f90
@@ -148,7 +148,7 @@ test("schlickVec3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // At normal incidence, equals f0
-  expectCloseTo([1.0, 0.71, 0.29], [result[0], result[1], result[2]], 0.01);
+  expectCloseTo([1.0, 0.71, 0.29], [result[0], result[1], result[2]]);
   // At grazing angle, approaches f90
   expect(result[3]).toBeGreaterThan(0.85);
   // Exact values to catch regressions
@@ -177,7 +177,7 @@ test("schlickF32", async () => {
   // At normal incidence, equals f0
   expectCloseTo([0.04], [result[0]], 0.001);
   // At grazing, approaches f90
-  expectCloseTo([1.0], [result[1]], 0.01);
+  expectCloseTo([1.0], [result[1]]);
   // Mid-angle between f0 and f90
   expect(result[2]).toBeGreaterThan(0.04);
   expect(result[2]).toBeLessThan(1.0);

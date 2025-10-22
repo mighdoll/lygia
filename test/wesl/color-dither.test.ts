@@ -30,11 +30,11 @@ test("ditherBayer - base function returns values in [0,1]", async () => {
 
   // Based on the 8x8 Bayer matrix:
   // (0,0) -> index 0 -> 0.0/64.0 = 0.0
-  expectCloseTo([0.0], [result[0]], 0.01);
+  expectCloseTo([0.0], [result[0]]);
   // (4,4) -> index 36 -> 1.0/64.0 ≈ 0.0156
-  expectCloseTo([0.0156], [result[1]], 0.01);
+  expectCloseTo([0.0156], [result[1]]);
   // (7,7) -> index 63 -> 21.0/64.0 ≈ 0.3281
-  expectCloseTo([0.3281], [result[2]], 0.01);
+  expectCloseTo([0.3281], [result[2]]);
 });
 
 test("ditherBayer - 8x8 pattern verification", async () => {

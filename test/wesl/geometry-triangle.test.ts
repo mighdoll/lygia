@@ -62,7 +62,7 @@ test("barycentric - computes normalized coordinates", async () => {
 
   // The function should return specific coordinates for this configuration
   // Based on the Ericson algorithm, this returns (1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 
   // Barycentric coordinates must always sum to 1.0
   expect(result[0] + result[1] + result[2]).toBeCloseTo(1.0, 2);
@@ -86,7 +86,7 @@ test("barycentric2 - Triangle struct wrapper", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
 
   // Should produce same result as barycentric(a, b, c)
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 
   // Verify sum-to-1 property
   expect(result[0] + result[1] + result[2]).toBeCloseTo(1.0, 2);

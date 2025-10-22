@@ -15,7 +15,7 @@ test("blendHardLight3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Hard light is overlay with base and blend swapped
-  expectCloseTo([0.24, 0.6, 0.88], result, 0.01);
+  expectCloseTo([0.24, 0.6, 0.88], result);
 });
 
 test("blendVividLight3", async () => {
@@ -54,7 +54,7 @@ test("blendPinLight3", async () => {
   // R: blend=0.1<0.5 -> darken(0.3, 2*0.1) = min(0.3, 0.2) = 0.2
   // G: blend=0.9>0.5 -> lighten(0.7, 2*0.9-1) = max(0.7, 0.8) = 0.8
   // B: blend=0.5 -> edge case, should be close to base
-  expectCloseTo([0.2, 0.8, 0.5], result, 0.01);
+  expectCloseTo([0.2, 0.8, 0.5], result);
 });
 
 test("blendLinearLight3", async () => {
@@ -71,7 +71,7 @@ test("blendLinearLight3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Linear light is linear dodge + linear burn
-  expectCloseTo([0.0, 0.5, 1.0], result, 0.01);
+  expectCloseTo([0.0, 0.5, 1.0], result);
 });
 
 test("blendHardMix3", async () => {
@@ -88,7 +88,7 @@ test("blendHardMix3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Hard mix produces posterized output
-  expectCloseTo([0.0, 1.0, 1.0], result, 0.01);
+  expectCloseTo([0.0, 1.0, 1.0], result);
 });
 
 test("blendGlow3", async () => {
@@ -256,7 +256,7 @@ test("blendOverlay3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Overlay mode: conditional multiply/screen
-  expectCloseTo([0.24, 0.6, 0.88], result, 0.01);
+  expectCloseTo([0.24, 0.6, 0.88], result);
 });
 
 test("blendDarken3", async () => {
@@ -324,7 +324,7 @@ test("blendExclusion3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Exclusion mode: base + blend - 2 * base * blend
-  expectCloseTo([0.54, 0.54, 0.68], result, 0.01);
+  expectCloseTo([0.54, 0.54, 0.68], result);
 });
 
 test("blendNegation3", async () => {
@@ -341,7 +341,7 @@ test("blendNegation3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Negation mode: 1 - abs(1 - base - blend)
-  expectCloseTo([0.9, 0.9, 0.9], result, 0.01);
+  expectCloseTo([0.9, 0.9, 0.9], result);
 });
 
 test("blendPhoenix3", async () => {
@@ -361,7 +361,7 @@ test("blendPhoenix3", async () => {
   // R: min(0.7,0.4) - max(0.7,0.4) + 1 = 0.4 - 0.7 + 1 = 0.7
   // G: min(0.5,0.6) - max(0.5,0.6) + 1 = 0.5 - 0.6 + 1 = 0.9
   // B: min(0.3,0.8) - max(0.3,0.8) + 1 = 0.3 - 0.8 + 1 = 0.5
-  expectCloseTo([0.7, 0.9, 0.5], result, 0.01);
+  expectCloseTo([0.7, 0.9, 0.5], result);
 });
 
 test("blendReflect3", async () => {
@@ -419,7 +419,7 @@ test("blendSoftLight3", async () => {
   // R: blend=0.3<0.5: 2*0.5*0.3 + 0.25*(1-0.6) = 0.3 + 0.1 = 0.4
   // G: blend=0.5: edge case, using first formula: 2*0.6*0.5 + 0.36*0 = 0.6
   // B: blend=0.7>0.5: sqrt(0.4)*(2*0.7-1) + 2*0.4*(1-0.7) = 0.632*0.4 + 0.8*0.3 = 0.253 + 0.24 = 0.493
-  expectCloseTo([0.4, 0.6, 0.493], result, 0.01);
+  expectCloseTo([0.4, 0.6, 0.493], result);
 });
 
 test("blendAverage3", async () => {
@@ -487,7 +487,7 @@ test("blendLinearBurn3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Linear burn mode: max(base + blend - 1, 0)
-  expectCloseTo([0.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, 0.0], result);
 });
 
 test("blendLinearDodge3", async () => {
@@ -569,7 +569,7 @@ test("blendOverlay - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Overlay: base<0.5: 2*base*blend = 2*0.4*0.3 = 0.24
-  expectCloseTo([0.24], [result[0]], 0.01);
+  expectCloseTo([0.24], [result[0]]);
 });
 
 test("blendDarken - f32", async () => {
@@ -626,7 +626,7 @@ test("blendExclusion - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Exclusion: 0.6 + 0.3 - 2*0.6*0.3 = 0.9 - 0.36 = 0.54
-  expectCloseTo([0.54], [result[0]], 0.01);
+  expectCloseTo([0.54], [result[0]]);
 });
 
 test("blendNegation - f32", async () => {
@@ -641,7 +641,7 @@ test("blendNegation - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Negation: 1 - abs(1 - 0.7 - 0.4) = 1 - abs(-0.1) = 1 - 0.1 = 0.9
-  expectCloseTo([0.9], [result[0]], 0.01);
+  expectCloseTo([0.9], [result[0]]);
 });
 
 test("blendPhoenix - f32", async () => {
@@ -656,7 +656,7 @@ test("blendPhoenix - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Phoenix: min(0.7,0.4) - max(0.7,0.4) + 1 = 0.4 - 0.7 + 1 = 0.7
-  expectCloseTo([0.7], [result[0]], 0.01);
+  expectCloseTo([0.7], [result[0]]);
 });
 
 test("blendReflect - f32", async () => {
@@ -671,7 +671,7 @@ test("blendReflect - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Reflect: 0.4^2 / (1-0.5) = 0.16/0.5 = 0.32
-  expectCloseTo([0.32], [result[0]], 0.01);
+  expectCloseTo([0.32], [result[0]]);
 });
 
 test("blendSubtract - f32", async () => {
@@ -701,7 +701,7 @@ test("blendSoftLight - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Soft light: blend<0.5: 2*0.5*0.3 + 0.25*(1-0.6) = 0.3 + 0.1 = 0.4
-  expectCloseTo([0.4], [result[0]], 0.01);
+  expectCloseTo([0.4], [result[0]]);
 });
 
 test("blendAverage - f32", async () => {
@@ -760,7 +760,7 @@ test("blendLinearBurn - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Linear burn: max(0.6+0.4-1, 0) = 0
-  expectCloseTo([0.0], [result[0]], 0.01);
+  expectCloseTo([0.0], [result[0]]);
 });
 
 test("blendLinearDodge - f32", async () => {
@@ -789,7 +789,7 @@ test("blendHardLight - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Hard light: blend<0.5: 2*base*blend = 2*0.4*0.3 = 0.24
-  expectCloseTo([0.24], [result[0]], 0.01);
+  expectCloseTo([0.24], [result[0]]);
 });
 
 test("blendVividLight - f32", async () => {
@@ -821,7 +821,7 @@ test("blendPinLight - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.2, 0.8], [result[0], result[1]], 0.01);
+  expectCloseTo([0.2, 0.8], [result[0], result[1]]);
 });
 
 test("blendLinearLight - f32", async () => {
@@ -836,7 +836,7 @@ test("blendLinearLight - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Linear light: base + 2*blend - 1 = 0.4 + 0.6 - 1 = 0
-  expectCloseTo([0.0], [result[0]], 0.01);
+  expectCloseTo([0.0], [result[0]]);
 });
 
 test("blendHardMix - f32", async () => {
@@ -851,7 +851,7 @@ test("blendHardMix - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Hard mix produces 0 or 1
-  expectCloseTo([0.0], [result[0]], 0.01);
+  expectCloseTo([0.0], [result[0]]);
 });
 
 test("blendGlow - f32", async () => {
@@ -886,7 +886,7 @@ test("blendAdd3Opacity - opacity 0.5", async () => {
   // At opacity 0.5, result is halfway between base and full blend
   // Full blend: min(0.3+0.8,1)=1.0, min(0.5+0.2,1)=0.7, min(0.7+0.4,1)=1.0
   // Result: blend*0.5 + base*0.5 = [1.0*0.5+0.3*0.5, 0.7*0.5+0.5*0.5, 1.0*0.5+0.7*0.5]
-  expectCloseTo([0.65, 0.6, 0.85], result, 0.01);
+  expectCloseTo([0.65, 0.6, 0.85], result);
 });
 
 test("blendAdd3Opacity - opacity 0", async () => {
@@ -920,7 +920,7 @@ test("blendAdd3Opacity - opacity 1", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // At opacity 1, should match non-opacity version
-  expectCloseTo([1.0, 0.7, 1.0], result, 0.01);
+  expectCloseTo([1.0, 0.7, 1.0], result);
 });
 
 test("blendMultiply3Opacity", async () => {
@@ -938,7 +938,7 @@ test("blendMultiply3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.4, 0.3, 0.2]
   // At 0.5: blend*0.5 + base*0.5 = [0.4*0.5+0.8*0.5, 0.3*0.5+0.6*0.5, 0.2*0.5+0.4*0.5]
-  expectCloseTo([0.6, 0.45, 0.3], result, 0.01);
+  expectCloseTo([0.6, 0.45, 0.3], result);
 });
 
 test("blendScreen3Opacity", async () => {
@@ -956,7 +956,7 @@ test("blendScreen3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.58, 0.7, 0.8]
   // At 0.5: [0.58*0.5+0.4*0.5, 0.7*0.5+0.5*0.5, 0.8*0.5+0.6*0.5]
-  expectCloseTo([0.49, 0.6, 0.7], result, 0.01);
+  expectCloseTo([0.49, 0.6, 0.7], result);
 });
 
 test("blendOverlay3Opacity", async () => {
@@ -974,7 +974,7 @@ test("blendOverlay3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.24, 0.6, 0.88]
   // At 0.5: [0.24*0.5+0.4*0.5, 0.6*0.5+0.6*0.5, 0.88*0.5+0.8*0.5]
-  expectCloseTo([0.32, 0.6, 0.84], result, 0.01);
+  expectCloseTo([0.32, 0.6, 0.84], result);
 });
 
 test("blendDarken3Opacity", async () => {
@@ -992,7 +992,7 @@ test("blendDarken3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.3, 0.4, 0.5]
   // At 0.5: [0.3*0.5+0.6*0.5, 0.4*0.5+0.4*0.5, 0.5*0.5+0.5*0.5]
-  expectCloseTo([0.45, 0.4, 0.5], result, 0.01);
+  expectCloseTo([0.45, 0.4, 0.5], result);
 });
 
 test("blendLighten3Opacity", async () => {
@@ -1010,7 +1010,7 @@ test("blendLighten3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.6, 0.7, 0.5]
   // At 0.5: [0.6*0.5+0.6*0.5, 0.7*0.5+0.4*0.5, 0.5*0.5+0.5*0.5]
-  expectCloseTo([0.6, 0.55, 0.5], result, 0.01);
+  expectCloseTo([0.6, 0.55, 0.5], result);
 });
 
 test("blendDifference3Opacity", async () => {
@@ -1028,7 +1028,7 @@ test("blendDifference3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.3, 0.4, 0.2]
   // At 0.5: [0.3*0.5+0.8*0.5, 0.4*0.5+0.3*0.5, 0.2*0.5+0.6*0.5]
-  expectCloseTo([0.55, 0.35, 0.4], result, 0.01);
+  expectCloseTo([0.55, 0.35, 0.4], result);
 });
 
 test("blendExclusion3Opacity", async () => {
@@ -1046,7 +1046,7 @@ test("blendExclusion3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.54, 0.54, 0.68]
   // At 0.5: [0.54*0.5+0.6*0.5, 0.54*0.5+0.4*0.5, 0.68*0.5+0.8*0.5]
-  expectCloseTo([0.57, 0.47, 0.74], result, 0.01);
+  expectCloseTo([0.57, 0.47, 0.74], result);
 });
 
 test("blendNegation3Opacity", async () => {
@@ -1064,7 +1064,7 @@ test("blendNegation3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.9, 0.9, 0.9]
   // At 0.5: [0.9*0.5+0.7*0.5, 0.9*0.5+0.5*0.5, 0.9*0.5+0.3*0.5]
-  expectCloseTo([0.8, 0.7, 0.6], result, 0.01);
+  expectCloseTo([0.8, 0.7, 0.6], result);
 });
 
 test("blendPhoenix3Opacity", async () => {
@@ -1082,7 +1082,7 @@ test("blendPhoenix3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.7, 0.9, 0.5]
   // At 0.5: [0.7*0.5+0.7*0.5, 0.9*0.5+0.5*0.5, 0.5*0.5+0.3*0.5]
-  expectCloseTo([0.7, 0.7, 0.4], result, 0.01);
+  expectCloseTo([0.7, 0.7, 0.4], result);
 });
 
 test("blendReflect3Opacity", async () => {
@@ -1118,7 +1118,7 @@ test("blendSubtract3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.1, 0.0, 0.0]
   // At 0.5: [0.1*0.5+0.8*0.5, 0.0*0.5+0.6*0.5, 0.0*0.5+0.5*0.5]
-  expectCloseTo([0.45, 0.3, 0.25], result, 0.01);
+  expectCloseTo([0.45, 0.3, 0.25], result);
 });
 
 test("blendSoftLight3Opacity", async () => {
@@ -1154,7 +1154,7 @@ test("blendAverage3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.5, 0.6, 0.5]
   // At 0.5: [0.5*0.5+0.6*0.5, 0.6*0.5+0.4*0.5, 0.5*0.5+0.8*0.5]
-  expectCloseTo([0.55, 0.5, 0.65], result, 0.01);
+  expectCloseTo([0.55, 0.5, 0.65], result);
 });
 
 test("blendColorBurn3Opacity", async () => {
@@ -1208,7 +1208,7 @@ test("blendLinearBurn3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.0, 0.0, 0.0]
   // At 0.5: [0.0*0.5+0.6*0.5, 0.0*0.5+0.5*0.5, 0.0*0.5+0.7*0.5]
-  expectCloseTo([0.3, 0.25, 0.35], result, 0.01);
+  expectCloseTo([0.3, 0.25, 0.35], result);
 });
 
 test("blendLinearDodge3Opacity", async () => {
@@ -1226,7 +1226,7 @@ test("blendLinearDodge3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.7, 0.7, 0.7]
   // At 0.5: [0.7*0.5+0.4*0.5, 0.7*0.5+0.5*0.5, 0.7*0.5+0.6*0.5]
-  expectCloseTo([0.55, 0.6, 0.65], result, 0.01);
+  expectCloseTo([0.55, 0.6, 0.65], result);
 });
 
 test("blendHardLight3Opacity", async () => {
@@ -1244,7 +1244,7 @@ test("blendHardLight3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.24, 0.6, 0.88]
   // At 0.5: [0.24*0.5+0.4*0.5, 0.6*0.5+0.6*0.5, 0.88*0.5+0.8*0.5]
-  expectCloseTo([0.32, 0.6, 0.84], result, 0.01);
+  expectCloseTo([0.32, 0.6, 0.84], result);
 });
 
 test("blendVividLight3Opacity", async () => {
@@ -1281,7 +1281,7 @@ test("blendPinLight3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.2, 0.8, 0.5] (from blendPinLight3 test above)
   // At 0.5: [0.2*0.5+0.3*0.5, 0.8*0.5+0.7*0.5, 0.5*0.5+0.5*0.5]
-  expectCloseTo([0.25, 0.75, 0.5], result, 0.01);
+  expectCloseTo([0.25, 0.75, 0.5], result);
 });
 
 test("blendLinearLight3Opacity", async () => {
@@ -1299,7 +1299,7 @@ test("blendLinearLight3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.0, 0.5, 1.0]
   // At 0.5: [0.0*0.5+0.4*0.5, 0.5*0.5+0.5*0.5, 1.0*0.5+0.6*0.5]
-  expectCloseTo([0.2, 0.5, 0.8], result, 0.01);
+  expectCloseTo([0.2, 0.5, 0.8], result);
 });
 
 test("blendHardMix3Opacity", async () => {
@@ -1317,7 +1317,7 @@ test("blendHardMix3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.0, 1.0, 1.0]
   // At 0.5: [0.0*0.5+0.4*0.5, 1.0*0.5+0.6*0.5, 1.0*0.5+0.8*0.5]
-  expectCloseTo([0.2, 0.8, 0.9], result, 0.01);
+  expectCloseTo([0.2, 0.8, 0.9], result);
 });
 
 test("blendGlow3Opacity", async () => {

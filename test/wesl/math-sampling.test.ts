@@ -27,10 +27,10 @@ test("hammersley", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify linear x component: h0.x = 0.0, h1.x = 0.125
-  expectCloseTo([0.0, 0.125], [result[0], result[2]], 0.01);
+  expectCloseTo([0.0, 0.125], [result[0], result[2]]);
 
   // Verify radical inverse y component (bit reversal): h0.y = 0.0, h1.y = 0.5
-  expectCloseTo([0.0, 0.5], [result[1], result[3]], 0.01);
+  expectCloseTo([0.0, 0.5], [result[1], result[3]]);
 });
 
 test("hammersley - bit reversal verification", async () => {
@@ -48,10 +48,10 @@ test("hammersley - bit reversal verification", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify linear x component: h2.x = 0.25, h3.x = 0.375
-  expectCloseTo([0.25, 0.375], [result[0], result[2]], 0.01);
+  expectCloseTo([0.25, 0.375], [result[0], result[2]]);
 
   // Verify radical inverse y component: h2.y = 0.25, h3.y = 0.75
-  expectCloseTo([0.25, 0.75], [result[1], result[3]], 0.01);
+  expectCloseTo([0.25, 0.75], [result[1], result[3]]);
 });
 
 test("nyquist", async () => {
@@ -92,7 +92,7 @@ test("nyquist", async () => {
   expectCloseTo([0.5], [result[2]], 0.1);
 
   // Midpoint invariant: 0.5 should remain 0.5
-  expectCloseTo([0.5], [result[3]], 0.01);
+  expectCloseTo([0.5], [result[3]]);
 });
 
 test("permute", async () => {
@@ -207,7 +207,7 @@ test("hemisphereCosSample - unit vector property", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // All outputs should be unit vectors (length H 1.0)
-  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.01);
+  expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
 
 test("hemisphereCosSample - positive hemisphere", async () => {
@@ -255,9 +255,9 @@ test("hemisphereCosSample - known values", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // u=(0,0) should give (0, 0, 1) - pointing straight up (testing z component)
-  expectCloseTo([1.0], [result[0]], 0.01);
+  expectCloseTo([1.0], [result[0]]);
   // u=(0,1) should give (cos(0)*1, sin(0)*1, 0) = (1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result.slice(1, 4), 0.01);
+  expectCloseTo([1.0, 0.0, 0.0], result.slice(1, 4));
 });
 
 test("hemisphereCosSample - cosine distribution", async () => {

@@ -146,7 +146,7 @@ test("cylinderSDF4 arbitrary orientation", async () => {
   // x = length((0.5,0.5,0)*1 - (0,1,0)*0.5) - 0.5*1 = length(0.5,0,0) - 0.5 = 0.5 - 0.5 = 0
   // y = abs(0.5 - 0.5) - 0.5 = -0.5
   // max(x,y) = max(0,-0.5) = 0, so on surface: distance = 0
-  expectCloseTo([0.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.0, 0.0], result);
 });
 
 test("torusSDF", async () => {
@@ -163,7 +163,7 @@ test("torusSDF", async () => {
   `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Point at (1,0,0): length(xz) = 1, so vec2(1-1, 0) = vec2(0, 0), length = 0, minus 0.25 = -0.25
-  expectCloseTo([-0.25, 0.0, 0.0], result, 0.01);
+  expectCloseTo([-0.25, 0.0, 0.0], result);
 });
 
 test("torusSDF4 with sin/cos", async () => {
@@ -184,8 +184,8 @@ test("torusSDF4 with sin/cos", async () => {
   // This is a partial torus (45 degree sector)
   // pos.x=abs(1)=1, k=dot((1,0), (INV_SQRT2,INV_SQRT2))=INV_SQRT2
   // sqrt(dot((1,0,0),(1,0,0)) + 1 - 2*1*INV_SQRT2) - 0.25 = sqrt(1 + 1 - Math.SQRT2) - 0.25
-  // = sqrt(0.5858) - 0.25 ≈ 0.765 - 0.25 = 0.515
-  expectCloseTo([0.515, 0.0, 0.0], result, 0.01);
+  // = sqrt(0.5858) - 0.25 ≈ 0.765 - 0.25 = 0.5154
+  expectCloseTo([0.5154, 0.0, 0.0], result);
 });
 
 test("rectSDF with vec2f size", async () => {

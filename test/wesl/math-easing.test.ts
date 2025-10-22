@@ -13,7 +13,7 @@ test("cubic", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // cubic(0) = 0, cubic(0.5) = 0.5, cubic(1) = 1
-  expectCloseTo([0.0, 0.5, 1.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.5, 1.0, 0.0], result);
 });
 
 test("quartic", async () => {
@@ -26,7 +26,7 @@ test("quartic", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // quartic(v) = v*v*(2-v*v), quartic(0.5) = 0.25 * 1.9375 H 0.4375
-  expectCloseTo([0.0, 0.4375, 1.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.4375, 1.0, 0.0], result);
 });
 
 test("quintic", async () => {
@@ -39,7 +39,7 @@ test("quintic", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // quintic(0) = 0, quintic(0.5) = 0.5, quintic(1) = 1
-  expectCloseTo([0.0, 0.5, 1.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 0.5, 1.0, 0.0], result);
 });
 
 test("invCubic", async () => {
@@ -104,7 +104,7 @@ test("parabola", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // parabola(0) = 0, parabola(0.5) = 1, parabola(1) = 0
-  expectCloseTo([0.0, 1.0, 0.0, 0.0], result, 0.01);
+  expectCloseTo([0.0, 1.0, 0.0, 0.0], result);
 });
 
 test("gaussian", async () => {
@@ -118,5 +118,5 @@ test("gaussian", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.606], result.slice(0, 2), 0.01);
+  expectCloseTo([1.0, 0.6065306663513184], result.slice(0, 2));
 });

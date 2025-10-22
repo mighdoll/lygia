@@ -288,11 +288,11 @@ test("levels4Float", async () => {
   //   g: pow(0.8, 0.6667) = 0.8618
   //   b: pow(0.0, 0.6667) = 0.0
   // Step 3: outputRange: mix(0.2, 0.9, v) = 0.2 + v * 0.7
-  //   r: 0.2 + 0.5429 * 0.7 = 0.580
-  //   g: 0.2 + 0.8618 * 0.7 = 0.803
+  //   r: 0.2 + 0.5429 * 0.7 = 0.5800
+  //   g: 0.2 + 0.8618 * 0.7 = 0.8032
   //   b: 0.2 + 0.0 * 0.7 = 0.2
   //   a: preserved at 0.85
-  expectCloseTo([0.58, 0.803, 0.2, 0.85], result, 0.001);
+  expectCloseTo([0.5800, 0.8032, 0.2, 0.85], result);
 });
 
 // Gamma function tests
@@ -330,7 +330,7 @@ test("levelsGamma4", async () => {
   // g: pow(0.5, 1/1.5) = pow(0.5, 0.6667) = 0.6300
   // b: pow(0.75, 1/3.0) = 0.9086
   // a: preserved at 0.9
-  expectCloseTo([0.5, 0.63, 0.9086, 0.9], result, 0.001);
+  expectCloseTo([0.5, 0.63, 0.9086, 0.9], result);
 });
 
 test("levelsGamma4Float", async () => {
@@ -408,7 +408,7 @@ test("levelsInputRange4Float", async () => {
   // g: (0.45 - 0.1) / 0.7 = 0.5
   // b: (0.75 - 0.1) / 0.7 = 0.9286
   // a: preserved at 0.95
-  expectCloseTo([0.0714, 0.5, 0.9286, 0.95], result, 0.001);
+  expectCloseTo([0.0714, 0.5, 0.9286, 0.95], result);
 });
 
 // Output Range function tests
@@ -486,7 +486,7 @@ test("tonemapReinhard3", async () => {
   // v / (1 + luminance(v))
   // luminance ≈ 2.0*0.2125 + 1.5*0.7154 + 1.0*0.0721 = 1.5706
   // result = hdr / (1 + 1.5706) = hdr / 2.5706
-  expectCloseTo([0.778, 0.5835, 0.389], result.slice(0, 3), 0.001);
+  expectCloseTo([0.7782, 0.5836, 0.3891], result.slice(0, 3));
 });
 
 test("tonemapUnreal3", async () => {
@@ -502,8 +502,8 @@ test("tonemapUnreal3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // x / (x + 0.155) * 1.019
-  // Each component separately: 1.0/(1.155)*1.019=0.882, 0.5/(0.655)*1.019=0.778, 0.25/(0.405)*1.019=0.629
-  expectCloseTo([0.882, 0.778, 0.629], result.slice(0, 3), 0.001);
+  // Each component separately: 1.0/(1.155)*1.019=0.8823, 0.5/(0.655)*1.019=0.7779, 0.25/(0.405)*1.019=0.6290
+  expectCloseTo([0.8823, 0.7779, 0.6290], result.slice(0, 3));
 });
 
 test("tonemapLinear3 - identity baseline", async () => {
@@ -576,7 +576,7 @@ test("vibrance", async () => {
   // r: 0.5141 + (0.6 - 0.5141) * 1.3 = 0.5141 + 0.1117 = 0.6258
   // g: 0.5141 + (0.5 - 0.5141) * 1.3 = 0.5141 - 0.0183 = 0.4958
   // b: 0.5141 + (0.4 - 0.5141) * 1.3 = 0.5141 - 0.1483 = 0.3658
-  expectCloseTo([0.6258, 0.4958, 0.3658], result, 0.001);
+  expectCloseTo([0.6258, 0.4958, 0.3658], result);
 });
 
 test("vibrance - selective saturation boost", async () => {
@@ -617,7 +617,7 @@ test("vibrance - selective saturation boost", async () => {
   // For vec3f(0.8, 0.4, 0.2), luma ≈ 0.525
   // Vibrance -0.5 with sat ≈ 0.6 gives mix factor 1.0 + (-0.5 - (-1) * 0.6) = 1.0 - 0.5 + 0.6 = 1.1
   // But mix factor is clamped/saturated, so result moves toward luma
-  expectCloseTo([0.833, 0.393], [result[2], result[3]], 0.01);
+  expectCloseTo([0.833, 0.393], [result[2], result[3]]);
 });
 
 test("ditherBayer", async () => {
@@ -652,7 +652,7 @@ test("ditherBayer", async () => {
   // step(0.8125, 0.48) = 0.0 (since 0.48 < 0.8125)
   // result = decimate3(0.53 + 0.0/16, vec3(16)) = decimate3(0.53, vec3(16))
   //        = floor(0.53 * 16) / 16 = floor(8.48) / 16 = 8/16 = 0.5
-  expectCloseTo([0.5, 0.5, 0.5, expectedBayerValue], result, 0.001);
+  expectCloseTo([0.5, 0.5, 0.5, expectedBayerValue], result);
 });
 
 test("ditherBlueNoise - spatial distribution", async () => {
