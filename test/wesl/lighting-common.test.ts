@@ -29,6 +29,8 @@ test("GGX", async () => {
   expect(result[1]).toBeLessThan(result[0]);
   // Lower roughness produces sharper, higher peak
   expect(result[2]).toBeGreaterThan(result[0]);
+  // Exact values to catch regressions
+  expectCloseTo([1.2732, 0.2943, 31.831], result.slice(0, 3));
 });
 
 test("GGXPrecise", async () => {
@@ -57,6 +59,8 @@ test("GGXPrecise", async () => {
   expectCloseTo([result[0]], [result[1]], 0.01);
   // Both should be positive and reasonable
   expect(result[0]).toBeGreaterThan(0.3);
+  // Exact values to catch regressions
+  expectCloseTo([1.2732, 1.2732], result.slice(0, 2));
 });
 
 test("importanceSamplingGGX", async () => {
@@ -85,6 +89,8 @@ test("importanceSamplingGGX", async () => {
   expectCloseTo([1.0], [result[1]], 0.01);
   // Lower roughness biases toward Z
   expect(result[2]).toBeGreaterThan(0.7);
+  // Exact values to catch regressions
+  expectCloseTo([1.0, 1.0, 0.995], result.slice(0, 3));
 });
 
 test("schlick vec3f", async () => {
@@ -117,6 +123,8 @@ test("schlick vec3f", async () => {
   // Mid-angle should be between f0 and f90
   expect(result[2]).toBeGreaterThan(0.04);
   expect(result[2]).toBeLessThan(1.0);
+  // Exact values to catch regressions
+  expectCloseTo([0.04, 1.0, 0.07], result.slice(0, 3));
 });
 
 test("schlickVec3", async () => {
@@ -143,6 +151,8 @@ test("schlickVec3", async () => {
   expectCloseTo([1.0, 0.71, 0.29], [result[0], result[1], result[2]], 0.01);
   // At grazing angle, approaches f90
   expect(result[3]).toBeGreaterThan(0.85);
+  // Exact values to catch regressions
+  expectCloseTo([1.0, 0.71, 0.29, 1.0], result);
 });
 
 test("schlickF32", async () => {
@@ -171,6 +181,8 @@ test("schlickF32", async () => {
   // Mid-angle between f0 and f90
   expect(result[2]).toBeGreaterThan(0.04);
   expect(result[2]).toBeLessThan(1.0);
+  // Exact values to catch regressions
+  expectCloseTo([0.04, 1.0, 0.07], result);
 });
 
 test("smithGGXCorrelated", async () => {
@@ -200,6 +212,8 @@ test("smithGGXCorrelated", async () => {
   expect(result[1]).toBeGreaterThan(0.0);
   // Perfect alignment has good visibility (visibility term is clamped)
   expect(result[2]).toBeGreaterThan(0.2);
+  // Exact values to catch regressions
+  expectCloseTo([0.4447, 0.3482, 0.25], result.slice(0, 3));
 });
 
 test("smithGGXCorrelated_Fast", async () => {
@@ -228,4 +242,6 @@ test("smithGGXCorrelated_Fast", async () => {
   expect(Math.abs(result[0] - result[1])).toBeLessThan(0.1);
   // Fast version should also show smooth > rough
   expect(result[2]).toBeGreaterThan(result[3]);
+  // Exact values to catch regressions
+  expectCloseTo([0.4076, 0.3817, 0.4318, 0.342], result);
 });
