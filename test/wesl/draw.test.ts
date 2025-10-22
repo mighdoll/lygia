@@ -32,7 +32,7 @@ test("stroke", async () => {
       return vec4f(center, far_inside, far_outside, in_band);
     }
   `;
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Center of stroke should be close to 1.0
   expect(result[0]).toBeGreaterThan(0.9);

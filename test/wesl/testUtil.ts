@@ -60,14 +60,26 @@ export async function testCompute(
   });
 }
 
+/** Options for testFragment function */
+export interface TestFragmentOptions {
+  size?: [number, number];
+  textureFormat?: GPUTextureFormat;
+  conditions?: Record<string, boolean>;
+  constants?: Record<string, string | number>;
+}
+
 /** test WGSL fragment shader with typical defaults */
 export async function testFragment(
   src: string,
-  size?: [number, number],
-  textureFormat: GPUTextureFormat = "rgba32float",
-  conditions?: Record<string, boolean>,
-  constants?: Record<string, string | number>,
+  options?: TestFragmentOptions,
 ) {
+  const {
+    size,
+    textureFormat = "rgba32float",
+    conditions,
+    constants,
+  } = options ?? {};
+
   const device = await getGPUDevice();
   return await testFragmentShader({
     projectDir,

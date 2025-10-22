@@ -20,7 +20,7 @@ test("aafloor with derivatives", async () => {
       return vec4f(result, 0.0, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
   // aafloor should produce something close to 2.0
   expectCloseTo([2.0], [result[0]], 0.2);
 });
@@ -37,7 +37,7 @@ test("aafloor2 with vec2", async () => {
       return vec4f(result.x, result.y, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   expectCloseTo([2.0, 3.0], result.slice(0, 2), 0.2);
 });
@@ -50,7 +50,7 @@ test("aamirror - anti-aliased triangle wave", async () => {
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
       // Test triangle wave pattern at different positions
-      // aamirror should create: 0’1’0’1’0 (triangle wave)
+      // aamirror should create: 0ï¿½1ï¿½0ï¿½1ï¿½0 (triangle wave)
       let x = pos.x / 50.0;  // Slow variation for derivatives
 
       // Test at valley (x=0), peak (x=0.5), valley (x=1.0), peak (x=1.5)
@@ -62,7 +62,7 @@ test("aamirror - anti-aliased triangle wave", async () => {
       return vec4f(valley1_aa, peak1_aa, valley2_aa, peak2_aa);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Verify triangle wave pattern: valleys near 0.0, peaks near 1.0
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -96,7 +96,7 @@ test("aastep - smooth transition near threshold", async () => {
       return vec4f(below, justBelow, justAbove, above);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Well below: should be close to 0.0 (may be exactly 0)
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -129,20 +129,20 @@ test("fcos - filtered cosine at known angles", async () => {
 
       // At very slow variation, fcos should match regular cos closely
       let at0 = fcos(x);                   // cos(~0) H 1.0
-      let atPi4 = fcos(x + PI * 0.25);     // cos(À/4) H INV_SQRT2
-      let atPi2 = fcos(x + PI * 0.5);      // cos(À/2) H 0.0
-      let atPi = fcos(x + PI);             // cos(À) H -1.0
+      let atPi4 = fcos(x + PI * 0.25);     // cos(ï¿½/4) H INV_SQRT2
+      let atPi2 = fcos(x + PI * 0.5);      // cos(ï¿½/2) H 0.0
+      let atPi = fcos(x + PI);             // cos(ï¿½) H -1.0
 
       return vec4f(at0, atPi4, atPi2, atPi);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Verify cosine values with tighter tolerance for slow variation
   expectCloseTo([1.0], [result[0]], 0.05);      // cos(0) = 1.0
-  expectCloseTo([INV_SQRT2], [result[1]], 0.05);    // cos(À/4) = 2/2
-  expectCloseTo([0.0], [result[2]], 0.05);      // cos(À/2) = 0.0
-  expectCloseTo([-1.0], [result[3]], 0.05);     // cos(À) = -1.0
+  expectCloseTo([INV_SQRT2], [result[1]], 0.05);    // cos(ï¿½/4) = 2/2
+  expectCloseTo([0.0], [result[2]], 0.05);      // cos(ï¿½/2) = 0.0
+  expectCloseTo([-1.0], [result[3]], 0.05);     // cos(ï¿½) = -1.0
 });
 
 test("fcos - band limiting at high frequency", async () => {
@@ -164,7 +164,7 @@ test("fcos - band limiting at high frequency", async () => {
       return vec4f(highFreq, lowFreq, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [32, 32]);
+  const result = await testFragment(src, { size: [32, 32] });
 
   // High frequency should be heavily attenuated (close to 0)
   expect(Math.abs(result[0])).toBeLessThan(0.3);
@@ -190,7 +190,7 @@ test("aafract - anti-aliased fract", async () => {
       return vec4f(result, regularFract, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // aafract should produce values in [0, 1] range like fract
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -216,7 +216,7 @@ test("aafract - edge anti-aliasing behavior", async () => {
       return vec4f(aaResult, regularResult, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Both should be in valid range
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -243,7 +243,7 @@ test("aafract2 - vec2 anti-aliased fract", async () => {
       return vec4f(result.x, result.y, 0.0, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // Both components should be in [0, 1] range
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
@@ -276,7 +276,7 @@ test("aafract - periodic behavior", async () => {
       return vec4f(r1, r2, r3, 1.0);
     }`;
 
-  const result = await testFragment(src, [2, 2]);
+  const result = await testFragment(src, { size: [2, 2] });
 
   // All should be close to 0.5 (the fractional part of x.5)
   expectCloseTo([0.5], [result[0]], 0.15);
