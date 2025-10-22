@@ -6,6 +6,7 @@ import {
   getGPUDevice,
   testFragmentShader,
 } from "wesl-debug";
+import { expectCloseTo } from "./testUtil.js";
 
 const projectDir = import.meta.url;
 
@@ -62,4 +63,8 @@ test("edgePrewitt", async () => {
 
   // Edge detection on gradient should be significantly stronger than on solid
   expect(gradientResult[0]).toBeGreaterThan(solidResult[0] * 10);
+
+  // Regression test - exact values to catch implementation changes
+  expectCloseTo([0.011764707043766975], [gradientResult[0]]);
+  expectCloseTo([1.1920928955078125e-7], [solidResult[0]]);
 });

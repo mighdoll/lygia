@@ -6,7 +6,7 @@ import {
   getGPUDevice,
   testFragmentShader,
 } from "wesl-debug";
-import { testCompute } from "./testUtil.ts";
+import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 const projectDir = import.meta.url;
 
@@ -63,6 +63,10 @@ test("sharpenAdaptive", async () => {
   // The function should execute without errors (non-trivial execution test)
   // Both results should be different (one has edges, one doesn't)
   expect(sharpenedChecker[0]).not.toBe(sharpenedSolid[0]);
+
+  // Exact value regression tests
+  expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));
+  expectCloseTo([0.502, 0.502, 0.502, 1], sharpenedSolid.slice(0, 4));
 });
 
 test("sharpenAdaptive4", async () => {
@@ -115,6 +119,10 @@ test("sharpenAdaptive4", async () => {
 
   // Checker and solid should produce different results (edges vs no edges)
   expect(sharpenedChecker[0]).not.toBe(sharpenedSolid[0]);
+
+  // Exact value regression tests
+  expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));
+  expectCloseTo([0.6, 0.6, 0.6, 1], sharpenedSolid.slice(0, 4));
 });
 
 test("sharpenContrastAdaptive", async () => {
@@ -162,6 +170,10 @@ test("sharpenContrastAdaptive", async () => {
 
   // Solid color sharpening should stay near original value
   expect(Math.abs(sharpenedSolid[0] - 0.5)).toBeLessThan(0.1);
+
+  // Exact value regression tests
+  expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));
+  expectCloseTo([0.502, 0.502, 0.502, 1], sharpenedSolid.slice(0, 4));
 });
 
 test("sharpenFast", async () => {
@@ -210,6 +222,10 @@ test("sharpenFast", async () => {
   // Output should be in valid range
   expect(sharpenedChecker[0]).toBeGreaterThanOrEqual(0.0);
   expect(sharpenedChecker[0]).toBeLessThanOrEqual(1.0);
+
+  // Exact value regression tests
+  expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));
+  expectCloseTo([0.6, 0.6, 0.6, 1], sharpenedSolid.slice(0, 4));
 });
 
 test("sharpenFast4", async () => {
@@ -258,6 +274,10 @@ test("sharpenFast4", async () => {
   // Alpha should be preserved
   expect(sharpenedChecker[3]).toBeCloseTo(1.0);
   expect(sharpenedSolid[3]).toBeCloseTo(1.0);
+
+  // Exact value regression tests
+  expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));
+  expectCloseTo([0.702, 0.702, 0.702, 1], sharpenedSolid.slice(0, 4));
 });
 
 test("sharpendAdaptiveControl4", async () => {

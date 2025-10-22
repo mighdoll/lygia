@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { testCompute, testFragment } from "./testUtil.ts";
+import { expectCloseTo, testCompute, testFragment } from "./testUtil.ts";
 
 // Draw utility functions
 
@@ -44,6 +44,9 @@ test("stroke", async () => {
 
   // Within stroke band should be high (close to 1.0)
   expect(result[3]).toBeGreaterThan(0.8);
+
+  // Exact values to catch regressions
+  expectCloseTo([1, 0, 0, 1], result);
 });
 
 test("strokeEdge", async () => {
@@ -81,4 +84,7 @@ test("strokeEdge", async () => {
   // On the edge should be intermediate value
   expect(result[2]).toBeGreaterThan(0.1);
   expect(result[2]).toBeLessThan(0.9);
+
+  // Exact values to catch regressions
+  expectCloseTo([1, 0, 0.5000007152557373, 0], result);
 });

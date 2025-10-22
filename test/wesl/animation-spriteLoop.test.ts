@@ -1,6 +1,7 @@
 import { expect, test } from "vitest";
 import { createSampler, getGPUDevice, testFragmentShader } from "wesl-debug";
 import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
+import { expectCloseTo } from "./testUtil.ts";
 
 const projectDir = import.meta.url;
 
@@ -53,6 +54,9 @@ test("spriteLoop - index 0", async () => {
   expect(result[1]).toBeCloseTo(0.0, 2);
   expect(result[2]).toBeCloseTo(0.0, 2);
   expect(result[3]).toBeCloseTo(1.0, 2);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.655, 0.0, 0.0, 1.0], result);
 });
 
 test("spriteLoop - index 4", async () => {
@@ -91,6 +95,9 @@ test("spriteLoop - index 4", async () => {
   expect(result[1]).toBeCloseTo(0.0, 2);
   expect(result[2]).toBeCloseTo(0.0, 2);
   expect(result[3]).toBeCloseTo(1.0, 2);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.404, 0.0, 0.0, 1.0], result);
 });
 
 test("spriteLoop - time wrapping", async () => {
@@ -154,4 +161,8 @@ test("spriteLoop - time wrapping", async () => {
   expect(resultTime16[1]).toBeCloseTo(resultTime0[1], 2);
   expect(resultTime16[2]).toBeCloseTo(resultTime0[2], 2);
   expect(resultTime16[3]).toBeCloseTo(resultTime0[3], 2);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.655, 0.0, 0.0, 1.0], resultTime0);
+  expectCloseTo([0.655, 0.0, 0.0, 1.0], resultTime16);
 });
