@@ -99,12 +99,25 @@ test("parabola", async () => {
     import lygia::math::parabola::parabola;
     @compute @workgroup_size(1)
     fn foo() {
-      test::results[0] = vec4f(parabola(0.0, 1.0), parabola(0.5, 1.0), parabola(1.0, 1.0), 0.0);
+      // Test k=1.0: basic parabola, symmetric values at 0.25 and 0.75
+      test::results[0] = vec4f(parabola(0.0, 1.0), parabola(0.25, 1.0), parabola(0.5, 1.0), parabola(0.75, 1.0));
+
+      // Test k=2.0: sharper curve (narrower peak)
+      test::results[1] = vec4f(parabola(0.25, 2.0), parabola(0.5, 2.0), parabola(0.75, 2.0), 0.0);
     }
   `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // parabola(0) = 0, parabola(0.5) = 1, parabola(1) = 0
-  expectCloseTo([0.0, 1.0, 0.0, 0.0], result);
+  const result = await testCompute(src, { elem: "vec4f", size: 2 });
+
+  // k=1.0: edges at 0, peak at 0.5, symmetric at 0.25/0.75
+  expectCloseTo([0.0, 0.75, 1.0, 0.75], result.slice(0, 4));
+
+  // k=2.0: sharper peak - values at 0.25/0.75 drop to 0.5625 (0.75^2)
+  expect(result[4]).toBeCloseTo(0.5625, 2); // sharper curve
+  expect(result[5]).toBeCloseTo(1.0, 2);    // peak always at 0.5
+  expect(result[4]).toBeLessThan(result[1]); // k=2 gives lower values than k=1
+
+  // Exact values for regression detection
+  expectCloseTo([0.0, 0.75, 1.0, 0.75, 0.5625, 1.0, 0.5625, 0.0], result);
 });
 
 test("gaussian", async () => {
