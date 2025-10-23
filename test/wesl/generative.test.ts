@@ -495,7 +495,7 @@ test("random", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.7630], [result[0]]);
+  expectCloseTo([0.763], [result[0]]);
 });
 
 test("random2", async () => {
@@ -541,7 +541,7 @@ test("random3", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.3720], [result[0]]);
+  expectCloseTo([0.372], [result[0]]);
 });
 
 test("random4", async () => {
@@ -741,13 +741,7 @@ test("random41 - determinism and range", async () => {
   });
 
   // Regression: exact output value
-  expectCloseTo(
-    [
-      0.3824, 0.4284, 0.5390,
-      0.4849,
-    ],
-    result1,
-  );
+  expectCloseTo([0.3824, 0.4284, 0.539, 0.4849], result1);
 });
 
 test("random42 - hash properties", async () => {
@@ -800,10 +794,7 @@ test("random42 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.03); // Hash property: small input → significant output change
 
   // Regression: exact output value
-  expectCloseTo(
-    [0.6688, 0.9968, 0.6032, 0.9088],
-    result,
-  );
+  expectCloseTo([0.6688, 0.9968, 0.6032, 0.9088], result);
 });
 
 test("random43 - hash properties", async () => {
@@ -856,10 +847,7 @@ test("random43 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.1);
 
   // Regression: exact output value
-  expectCloseTo(
-    [0.4080, 0.2166, 0.9606, 0.4371],
-    result,
-  );
+  expectCloseTo([0.408, 0.2166, 0.9606, 0.4371], result);
 });
 
 test("random44 - hash properties", async () => {
@@ -912,10 +900,7 @@ test("random44 - hash properties", async () => {
   expect(avgDiff).toBeGreaterThan(0.1);
 
   // Regression: exact output value
-  expectCloseTo(
-    [0.8164, 0.0728, 0.7236, 0.7064],
-    result,
-  );
+  expectCloseTo([0.8164, 0.0728, 0.7236, 0.7064], result);
 });
 
 // Simplex noise variants - vector outputs

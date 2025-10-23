@@ -278,13 +278,7 @@ test("taylorInvSqrt", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Exact values from the linear approximation formula
-  expectCloseTo(
-    [
-      0.9391, -1.6221, 1.5794,
-      0.0854,
-    ],
-    result,
-  );
+  expectCloseTo([0.9391, -1.6221, 1.5794, 0.0854], result);
 });
 
 // Anti-aliased functions (require derivatives, use fragment shaders)

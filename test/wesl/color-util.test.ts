@@ -48,7 +48,7 @@ test("colorDistance", async () => {
   const result = await testCompute(src);
   // LAB Euclidean distance between red and blue in LAB color space (0-100 scale)
   // This is a perceptual color distance metric
-  expectCloseTo([176.3140], result);
+  expectCloseTo([176.314], result);
 });
 
 test("luma", async () => {
