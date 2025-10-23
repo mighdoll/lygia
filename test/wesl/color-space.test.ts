@@ -28,11 +28,11 @@ test("rgb2xyz", async () => {
 	`;
 
   const result = await testCompute(src, { elem: "vec3f" });
-  expectCloseTo([67.05, 70.68, 57.41], result, 0.01);
+  expectCloseTo([67.04871368408203, 70.68324279785156, 57.405357360839844], result);
 
   const cie = { CIE_D50: true };
   const resultCie = await testCompute(src, { elem: "vec3f", conditions: cie });
-  expectCloseTo([68.99, 71.01, 43.62], resultCie, 0.01);
+  expectCloseTo([68.99453735351562, 71.01270294189453, 43.62055587768555], resultCie);
 });
 
 test("rgb2YPbPr", async () => {
@@ -331,7 +331,7 @@ test("srgb2xyz", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // WESL uses 0-100 scale for XYZ
-  expectCloseTo([41.24, 21.26, 1.93], result, 0.01);
+  expectCloseTo([41.245635986328125, 21.267288208007812, 1.9333899021148682], result);
 });
 
 test("xyY2rgb", async () => {
@@ -363,7 +363,7 @@ test("rgb2xyY", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // WESL: x,y chromaticity 0-1, Y luminance 0-100 (matches XYZ scale)
-  expectCloseTo([0.64, 0.33, 21.26], result, 0.01);
+  expectCloseTo([0.6399999260902405, 0.3300000727176666, 21.267290115356445], result);
 });
 
 test("xyY2srgb", async () => {
@@ -1345,7 +1345,7 @@ test("rgb2xyz4 - alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // WESL uses 0-100 scale for XYZ
-  expectCloseTo([67.05, 70.68, 57.41, 0.2], result, 0.01);
+  expectCloseTo([67.04871368408203, 70.68324279785156, 57.405357360839844, 0.20000000298023224], result);
 });
 
 test("srgb2lab4 - alpha preservation", async () => {
