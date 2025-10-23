@@ -165,10 +165,6 @@ test("linear2gamma4 - vec4 with alpha preservation", async () => {
   expectCloseTo([0.5325, 0.5325, 0.5325, 0.4], result);
 });
 
-// ============================================================================
-// RYB Color Space (with conditionals)
-// ============================================================================
-
 test("rgb2srgb_mono - f32 function", async () => {
   const src = `
      import lygia::color::space::rgb2srgb::rgb2srgb_mono;
