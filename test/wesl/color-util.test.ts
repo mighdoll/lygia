@@ -284,6 +284,9 @@ test("mixSpectral", async () => {
   // Spectral mix should differ DRAMATICALLY from linear mix
   // (physical paint mixing produces darker colors than digital RGB mixing)
   expect(Math.abs(mixed[0] - result[3])).toBeGreaterThan(0.3); // 0.067 vs 0.5 = big difference!
+
+  // Regression check - exact spectral mix values
+  expectCloseTo([0.0673, 0.0093, 0.0241], mixed);
 });
 
 test("whiteBalance3", async () => {
@@ -320,6 +323,9 @@ test("whiteBalance3", async () => {
 
   // Warm should have higher red than cool
   expect(warmR).toBeGreaterThan(coolR); // warm.r > cool.r
+
+  // Regression check - exact white balance values
+  expectCloseTo([0.5141, 0.4585, 0.4727, 0.5919], [warmR, warmB, coolR, coolB]);
 });
 
 test("whiteBalance4", async () => {
@@ -357,6 +363,9 @@ test("whiteBalance4", async () => {
   expect(greenG).toBeGreaterThan(magentaG); // green tint increases G
   expect(magentaG).toBeLessThan(0.5); // magenta tint decreases G
   expect(greenG).toBeGreaterThan(0.5); // green tint increases G
+
+  // Regression check - exact white balance values with tint
+  expectCloseTo([0.5141, 0.4585, 0.4872, 0.5132], [tempShiftR, tempShiftB, magentaG, greenG]);
 });
 
 test("saturationMatrix", async () => {
@@ -489,6 +498,9 @@ test("colorDistanceOKLAB", async () => {
 
   // Red-blue should be larger (opposite hues)
   expect(redToBlue).toBeGreaterThan(0.3);
+
+  // Regression check - exact OKLAB distance values
+  expectCloseTo([0.2917, 0.5371], [redToOrange, redToBlue]);
 });
 
 test("colorDistanceYCbCr", async () => {
@@ -524,6 +536,9 @@ test("colorDistanceYCbCr", async () => {
   // (YCbCr distance ignores Y/luma)
   // Loose precision due to floating-point chroma calculations
   expectCloseTo([0.0], [lumaDist], 0.05);
+
+  // Regression check - exact YCbCr chroma distance
+  expectCloseTo([0.5316], [chromaDist]);
 });
 
 test("colorDistanceYPbPr", async () => {
@@ -563,6 +578,9 @@ test("colorDistanceYPbPr", async () => {
 
   // Complementary colors should have significant distance
   expect(complementaryDist).toBeGreaterThan(0.5);
+
+  // Regression check - exact YPbPr distance values
+  expectCloseTo([0.9919, 0.5957], [complementaryDist, similarDist]);
 });
 
 test("colorDistanceYUV", async () => {
@@ -715,6 +733,9 @@ test("mixSpectral4", async () => {
   expect(result[1]).toBeGreaterThan(result[0]); // Green dominant
   expect(result[1]).toBeGreaterThan(result[2]); // Green > Blue
   expectCloseTo([0.7], [result[3]]); // Alpha
+
+  // Regression check - exact spectral mix RGB values
+  expectCloseTo([0.0782, 1.0272, 0.0596], [result[0], result[1], result[2]]);
 });
 
 test("mixSpectral_linear_to_reflectance", async () => {
@@ -745,6 +766,9 @@ test("mixSpectral_linear_to_reflectance", async () => {
   expect(result[0]).toBeLessThan(0.2); // Blue end - low reflectance
   expect(result[2]).toBeGreaterThan(0.8); // Red end - high reflectance
   expect(result[2]).toBeGreaterThan(result[0]); // Red > Blue
+
+  // Regression check - exact reflectance at sampled wavelengths
+  expectCloseTo([0.0315, 0.0318, 0.9855], [result[0], result[1], result[2]]);
 });
 
 test("mixSpectral_reflectance_to_xyz", async () => {
@@ -781,4 +805,7 @@ test("mixSpectral_reflectance_to_xyz", async () => {
   expect(xyz[0]).toBeLessThan(xyz[1] * 1.5);
   expect(xyz[2]).toBeGreaterThan(xyz[1] * 0.5);
   expect(xyz[2]).toBeLessThan(xyz[1] * 1.5);
+
+  // Regression check - exact XYZ values for gray input
+  expectCloseTo([0.4751, 0.5000, 0.5441], xyz);
 });
