@@ -3,10 +3,6 @@ import { getGPUDevice } from "wesl-debug";
 import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
 import { createSampler, expectCloseTo, testFragment } from "./testUtil.ts";
 
-// Animation utility functions
-// spriteLoop requires texture/sampler which cannot be easily tested in compute shaders
-// Using fragment shader approach with sprite sheet texture
-//
 // NOTE: The sprite function indices go bottom to top, left to right
 //   index 0 → texture frame 12 (bottom-left)
 //   index 4 → texture frame 8
