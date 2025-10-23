@@ -14,8 +14,8 @@ test("pack/unpack roundtrip", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // Original and unpacked should be close (limited precision)
-  expectCloseTo([0.123456, 0.123456], result.slice(0, 2), 0.001);
+  // Pack/unpack has quantization error due to 8-bit RGBA encoding
+  expectCloseTo([0.123456, 0.123456], result.slice(0, 2), 0.001); // ~0.1% precision for 8-bit quantization
 });
 
 test("pack/unpack roundtrip - multiple values", async () => {
@@ -40,8 +40,8 @@ test("pack/unpack roundtrip - multiple values", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
 
-  // Verify roundtrip accuracy (limited by packing precision)
-  expectCloseTo([0.0], [result[0]], 0.001);
+  // Verify roundtrip accuracy - 8-bit quantization limits precision
+  expectCloseTo([0.0], [result[0]], 0.001); // ~0.1% precision
   expectCloseTo([0.25], [result[1]], 0.001);
   expectCloseTo([0.5], [result[2]], 0.001);
   expectCloseTo([0.75], [result[3]], 0.001);
@@ -67,11 +67,11 @@ test("unpack256 - default base 256", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // v1 = (1,0,0)  256 / 16581375 H 0.00001544
-  expectCloseTo([0.00001544], [result[0]], 0.00000001);
-  // v2 = (0.5,0.5,0.5)  (128 + 32768 + 8388608) / 16581375 H 0.50787
-  expectCloseTo([0.50787], [result[1]], 0.001);
-  // v3 = (1,1,1)  (256 + 65536 + 16777216) / 16581375 H 1.01578
+  // v1 = (1,0,0)  256 / 16581375 ≈ 0.00001544
+  expectCloseTo([0.00001544], [result[0]], 0.00000001); // Very small value needs tight precision
+  // v2 = (0.5,0.5,0.5)  (128 + 32768 + 8388608) / 16581375 ≈ 0.50787
+  expectCloseTo([0.50787], [result[1]], 0.001); // ~0.1% precision
+  // v3 = (1,1,1)  (256 + 65536 + 16777216) / 16581375 ≈ 1.01578
   expectCloseTo([1.01578], [result[2]], 0.001);
 });
 
@@ -107,7 +107,7 @@ test("unpack8 - base 8", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.015625, 0.125, 1.0, 0.5703125], result, 0.001);
+  expectCloseTo([0.015625, 0.125, 1.0, 0.5703125], result); // Exact values, use default precision
 });
 
 test("unpack16 - base 16", async () => {
@@ -125,7 +125,7 @@ test("unpack16 - base 16", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.00390625, 0.0625, 1.0, 0.533203125], result, 0.001);
+  expectCloseTo([0.00390625, 0.0625, 1.0, 0.533203125], result); // Exact values, use default precision
 });
 
 test("unpack32 - base 32", async () => {
@@ -134,16 +134,16 @@ test("unpack32 - base 32", async () => {
     @compute @workgroup_size(1)
     fn foo() {
       // unpack32 uses dot(v, vec3(32, 1024, 32768)) / 32768
-      let v1 = vec3f(1.0, 0.0, 0.0);   // 32 / 32768 H 0.000977
-      let v2 = vec3f(0.0, 1.0, 0.0);   // 1024 / 32768 H 0.03125
+      let v1 = vec3f(1.0, 0.0, 0.0);   // 32 / 32768 = 0.0009765625
+      let v2 = vec3f(0.0, 1.0, 0.0);   // 1024 / 32768 = 0.03125
       let v3 = vec3f(0.0, 0.0, 1.0);   // 32768 / 32768 = 1.0
-      let v4 = vec3f(0.5, 0.5, 0.5);   // (16 + 512 + 16384) / 32768 H 0.515625
+      let v4 = vec3f(0.5, 0.5, 0.5);   // (16 + 512 + 16384) / 32768 = 0.51611328125
 
       test::results[0] = vec4f(unpack32(v1), unpack32(v2), unpack32(v3), unpack32(v4));
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.000977, 0.03125, 1.0, 0.515625], result, 0.001);
+  expectCloseTo([0.0009765625, 0.03125, 1.0, 0.51611328125], result); // Exact values
 });
 
 test("unpack64 - base 64", async () => {
@@ -161,7 +161,7 @@ test("unpack64 - base 64", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.000244, 0.015625, 1.0, 0.507935], result, 0.001);
+  expectCloseTo([0.000244, 0.015625, 1.0, 0.507935], result); // Use default precision
 });
 
 test("unpack128 - base 128", async () => {
@@ -179,7 +179,7 @@ test("unpack128 - base 128", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.000061, 0.0078125, 1.0, 0.503967], result, 0.001);
+  expectCloseTo([0.000061, 0.0078125, 1.0, 0.503967], result); // Use default precision
 });
 
 test("unpackBase - custom base", async () => {
@@ -203,7 +203,7 @@ test("unpackBase - custom base", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.01, 0.1, 1.0, 0.555], result, 0.001);
+  expectCloseTo([0.01, 0.1, 1.0, 0.555], result); // Exact values, use default precision
 });
 
 test("unpack4 - vec4 unpacking (ThreeJS style)", async () => {
@@ -226,8 +226,9 @@ test("unpack4 - vec4 unpacking (ThreeJS style)", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Test with specific expected values based on UnpackFactors formula
-  expectCloseTo([5.960464e-8], [result[0]], 9);    // r component weight
-  expectCloseTo([0.99609375], [result[1]], 5);     // a component weight (255/256)
-  expectCloseTo([0.5], [result[2]], 3);            // uniform 0.5  0.5 * sum
-  expectCloseTo([1.0], [result[3]], 5);            // sum of all weights
+  // UnpackFactors = (255/256) / vec4f(256^3, 256^2, 256, 1)
+  expectCloseTo([5.960464e-8], [result[0]]); // r component: very small value, use default precision
+  expectCloseTo([0.99609375], [result[1]]); // a component: 255/256
+  expectCloseTo([0.5], [result[2]]); // uniform 0.5 across all components
+  expectCloseTo([1.0], [result[3]]); // sum of all UnpackFactors ≈ 1.0
 });

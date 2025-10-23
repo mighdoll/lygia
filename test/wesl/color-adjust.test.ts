@@ -551,7 +551,8 @@ test("hueShift", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Red shifted by 120° should become green
-  expectCloseTo([0.0, 1.0, 0.0], result, 0.05);
+  // HSV color space conversion introduces small floating-point errors (~0.0002)
+  expectCloseTo([0.0, 1.0, 0.0], result, 0.001);
 });
 
 test("vibrance", async () => {

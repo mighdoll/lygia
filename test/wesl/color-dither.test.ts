@@ -57,7 +57,7 @@ test("ditherBayer - 8x8 pattern verification", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Pattern should repeat: v1 == v2 == v3
-  expectCloseTo([result[0], result[0]], result.slice(1, 3), 0.0001);
+  expectCloseTo([result[0], result[0]], result.slice(1, 3));
 
   // Different position should give different value
   expect(Math.abs(result[0] - result[3])).toBeGreaterThan(0.05);
@@ -133,9 +133,9 @@ test("ditherBayer3 - vec3 dithering", async () => {
   expect(result[1]).toBeGreaterThan(result[2]);
 
   // Gray should have all channels equal (same dither threshold applied to all)
-  expectCloseTo([result[4], result[4], result[4]], result.slice(4, 7), 0.001);
+  expectCloseTo([result[4], result[4], result[4]], result.slice(4, 7));
 
-  // Should be close to original values
+  // Should be close to original values (coarse precision for dithered output)
   expectCloseTo([0.8, 0.5, 0.2], result.slice(0, 3), 0.1);
   expectCloseTo([0.5], [result[4]], 0.1);
 });
@@ -161,7 +161,7 @@ test("ditherBayer4 - vec4 dithering preserves alpha", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
 
   // Alpha should be preserved exactly
-  expectCloseTo([0.75], [result[3]], 0.0001);
+  expectCloseTo([0.75], [result[3]]);
 
   // Color relationship should be maintained
   expect(result[0]).toBeGreaterThan(result[1]);

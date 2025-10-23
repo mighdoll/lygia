@@ -68,7 +68,7 @@ test("layerColorBurnSourceOver4", async () => {
   // G: max(1 - (1 - 0.3) / 0.5, 0) = max(1 - 1.4, 0) = 0.0
   // B: max(1 - (1 - 0.5) / 0.4, 0) = max(1 - 1.25, 0) = 0.0
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.048, 0.036, 0.06, 0.92], result, 0.001);
+  expectCloseTo([0.048, 0.036, 0.06, 0.92], result);
 });
 
 test("layerColorBurnSourceOver4 - with black blend", async () => {
@@ -88,7 +88,7 @@ test("layerColorBurnSourceOver4 - with black blend", async () => {
 
   // When blend is black (0.0), color burn returns 0.0
   // Then source-over: 0.0 * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.096, 0.072, 0.048], result.slice(0, 3), 0.001);
+  expectCloseTo([0.096, 0.072, 0.048], result.slice(0, 3));
 });
 
 test("layerColorDodgeSourceOver4", async () => {
@@ -111,7 +111,8 @@ test("layerColorDodgeSourceOver4", async () => {
   // G: min(0.5 / (1 - 0.4), 1.0) = min(0.5 / 0.6, 1.0) ≈ 0.833
   // B: min(0.6 / (1 - 0.5), 1.0) = min(0.6 / 0.5, 1.0) = 1.0
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.445, 0.643, 0.775, 0.85], result, 0.001);
+  // Division operations require slightly more tolerance
+  expectCloseTo([0.445, 0.6433333, 0.775, 0.85], result, 0.001);
 });
 
 test("layerColorDodgeSourceOver4 - with white blend", async () => {
@@ -232,7 +233,8 @@ test("layerGlowSourceOver4", async () => {
   // G: reflect(0.3, 0.6) = min(0.09 / 0.4, 1) = 0.225
   // B: reflect(0.8, 0.2) = min(0.64 / 0.8, 1) = 0.8
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.393, 0.216, 0.736, 0.92], result, 0.001);
+  // Division operations require slightly more tolerance
+  expectCloseTo([0.3933333, 0.216, 0.736, 0.92], result, 0.001);
 });
 
 test("layerHardLightSourceOver4", async () => {
@@ -445,7 +447,7 @@ test("layerLinearBurnSourceOver4", async () => {
   // G: max(0.3 + 0.5 - 1, 0) = 0.0
   // B: max(0.2 + 0.7 - 1, 0) = 0.0
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.048, 0.036, 0.024, 0.92], result, 0.001);
+  expectCloseTo([0.048, 0.036, 0.024, 0.92], result);
 });
 
 test("layerLinearBurnSourceOver4 - complete darkening", async () => {
@@ -489,7 +491,7 @@ test("layerLinearDodgeSourceOver4", async () => {
   // G: min(0.2 + 0.5, 1.0) = 0.7
   // B: min(0.1 + 0.6, 1.0) = 0.7
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.535, 0.52, 0.505, 0.85], result, 0.001);
+  expectCloseTo([0.535, 0.52, 0.505, 0.85], result);
 });
 
 test("layerLinearDodgeSourceOver4 - clamping at white", async () => {
@@ -533,7 +535,7 @@ test("layerLinearLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → linearDodge(0.5, 0.0) = min(0.5+0.0, 1) = 0.5
   // B: dst=0.7 ≥ 0.5 → linearDodge(0.6, 0.4) = min(0.6+0.4, 1) = 1.0
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.045, 0.425, 0.805, 0.85], result, 0.001);
+  expectCloseTo([0.045, 0.425, 0.805, 0.85], result);
 });
 
 test("layerLinearLightSourceOver4 - extreme contrast", async () => {
@@ -742,7 +744,8 @@ test("layerReflectSourceOver4", async () => {
   // G: min(0.6² / (1-0.3), 1) = min(0.36 / 0.7, 1) ≈ 0.514
   // B: min(0.2² / (1-0.8), 1) = min(0.04 / 0.2, 1) = 0.2
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.316, 0.447, 0.256, 0.92], result, 0.001);
+  // Division operations require slightly more tolerance
+  expectCloseTo([0.316, 0.4474286, 0.256, 0.92], result, 0.001);
 });
 
 test("layerReflectSourceOver4 - extreme reflection", async () => {
@@ -916,7 +919,8 @@ test("layerVividLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → colorDodge(0.6, 0.0) = min(0.6/(1-0), 1) = 0.6
   // B: dst=0.7 ≥ 0.5 → colorDodge(0.4, 0.4) = min(0.4/(1-0.4), 1) ≈ 0.667
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.162, 0.495, 0.572, 0.85], result, 0.001);
+  // Division operations require slightly more tolerance
+  expectCloseTo([0.1616667, 0.495, 0.5716667, 0.85], result, 0.001);
 });
 
 test("layerVividLightSourceOver4 - extreme contrast", async () => {

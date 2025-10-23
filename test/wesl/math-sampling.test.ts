@@ -31,6 +31,9 @@ test("hammersley", async () => {
 
   // Verify radical inverse y component (bit reversal): h0.y = 0.0, h1.y = 0.5
   expectCloseTo([0.0, 0.5], [result[1], result[3]]);
+
+  // Exact values to catch regressions
+  expectCloseTo([0.0, 0.0, 0.125, 0.5], result);
 });
 
 test("hammersley - bit reversal verification", async () => {
@@ -52,6 +55,9 @@ test("hammersley - bit reversal verification", async () => {
 
   // Verify radical inverse y component: h2.y = 0.25, h3.y = 0.75
   expectCloseTo([0.25, 0.75], [result[1], result[3]]);
+
+  // Exact values to catch regressions
+  expectCloseTo([0.25, 0.25, 0.375, 0.75], result);
 });
 
 test("nyquist", async () => {
@@ -82,17 +88,20 @@ test("nyquist", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // No filtering: should pass through (0.8)
-  expectCloseTo([0.8], [result[0]], 0.05);
+  expectCloseTo([0.8], [result[0]]);
 
   // Partial filtering: should be between 0.5 and 0.8
   expect(result[1]).toBeGreaterThan(0.5);
   expect(result[1]).toBeLessThan(0.8);
 
   // Heavy filtering: should be very close to 0.5 (heavily attenuated)
-  expectCloseTo([0.5], [result[2]], 0.1);
+  expectCloseTo([0.5], [result[2]]);
 
   // Midpoint invariant: 0.5 should remain 0.5
   expectCloseTo([0.5], [result[3]]);
+
+  // Exact values to catch regressions
+  expectCloseTo([0.8, 0.65, 0.5, 0.5], result);
 });
 
 test("permute", async () => {
@@ -122,12 +131,15 @@ test("permute", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify exact formula outputs
-  expectCloseTo([35.0], [result[0]], 0.1);
-  expectCloseTo([231.0], [result[1]], 1.0);
-  expectCloseTo([236.0], [result[2]], 1.0);
+  expectCloseTo([35.0], [result[0]]);
+  expectCloseTo([231.0], [result[1]]);
+  expectCloseTo([236.0], [result[2]]);
 
-  // Verify reproducibility
-  expectCloseTo([result[0]], [result[3]], 0.0001);
+  // Verify reproducibility (exact match expected)
+  expectCloseTo([result[0]], [result[3]]);
+
+  // Exact values to catch regressions
+  expectCloseTo([35.0, 231.0, 236.0, 35.0], result);
 });
 
 test("grad4 - noise gradient helper", async () => {
@@ -154,8 +166,8 @@ test("grad4 - noise gradient helper", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
 
-  // Reproducibility: g1a.x == g1b.x
-  expectCloseTo([result[0]], [result[1]], 0.0001);
+  // Reproducibility: g1a.x == g1b.x (exact match expected)
+  expectCloseTo([result[0]], [result[1]]);
 
   // All gradient components should be in reasonable range
   for (let i = 0; i < 4; i++) {
@@ -164,6 +176,9 @@ test("grad4 - noise gradient helper", async () => {
 
   // Note: We don't test that different j or positions always produce different outputs
   // because grad4 uses a hash function that may occasionally produce collisions
+
+  // Exact values to catch regressions
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], result);
 });
 
 test("grad4 - gradient range validation", async () => {
@@ -185,6 +200,9 @@ test("grad4 - gradient range validation", async () => {
   for (let i = 0; i < 4; i++) {
     expect(Math.abs(result[i])).toBeLessThan(3.0);
   }
+
+  // Exact values to catch regressions
+  expectCloseTo([0.0, 0.0, -0.8, 0.0], result);
 });
 
 test("hemisphereCosSample - unit vector property", async () => {
@@ -206,8 +224,12 @@ test("hemisphereCosSample - unit vector property", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // All outputs should be unit vectors (length H 1.0)
+
+  // All outputs should be unit vectors (length = 1.0)
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
+
+  // Exact values to catch regressions
+  expectCloseTo([1.0, 1.0, 1.0, 0.0], result);
 });
 
 test("hemisphereCosSample - positive hemisphere", async () => {
@@ -235,6 +257,9 @@ test("hemisphereCosSample - positive hemisphere", async () => {
   expect(result[1]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   expect(result[3]).toBeLessThanOrEqual(1.0);
+
+  // Exact values to catch regressions
+  expectCloseTo([1.0, 0.0, 0.707107, 0.5], result);
 });
 
 test("hemisphereCosSample - known values", async () => {
@@ -256,8 +281,12 @@ test("hemisphereCosSample - known values", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // u=(0,0) should give (0, 0, 1) - pointing straight up (testing z component)
   expectCloseTo([1.0], [result[0]]);
+
   // u=(0,1) should give (cos(0)*1, sin(0)*1, 0) = (1, 0, 0)
   expectCloseTo([1.0, 0.0, 0.0], result.slice(1, 4));
+
+  // Exact values to catch regressions
+  expectCloseTo([1.0, 1.0, 0.0, 0.0], result);
 });
 
 test("hemisphereCosSample - cosine distribution", async () => {
@@ -283,4 +312,7 @@ test("hemisphereCosSample - cosine distribution", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThan(1.0);
+
+  // Exact values to catch regressions
+  expectCloseTo([0.948683, 0.707107, 0.316228, 0.0], result);
 });

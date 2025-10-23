@@ -122,6 +122,7 @@ test("blendHue", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Hue blend - takes hue from blend, saturation and value from base
+  // Relaxed precision for HSL color space conversion
   expectCloseTo([0.2, 0.6, 0.8], result, 0.05);
 });
 
@@ -145,6 +146,7 @@ test("blendSaturation", async () => {
   expect(result[0]).toBeCloseTo(result[1], 1);
   expect(result[1]).toBeCloseTo(result[2], 1);
   // Actual result: gray with all channels equal (desaturated)
+  // Relaxed precision for HSL color space conversion
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3), 0.05);
 });
 
@@ -162,6 +164,7 @@ test("blendColor", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Color blend - takes hue and saturation from blend, value from base
+  // Relaxed precision for HSL color space conversion
   expectCloseTo([0.2, 0.6, 0.8], result, 0.05);
 });
 
@@ -187,6 +190,7 @@ test("blendLuminosity", async () => {
   // Should be darker than base
   expect(result[0]).toBeLessThan(0.5);
   // Actual result: dark red with only R channel having value
+  // Relaxed precision for HSL color space conversion
   expectCloseTo([0.1, 0.0, 0.0], result.slice(0, 3), 0.05);
 });
 
@@ -453,6 +457,7 @@ test("blendColorBurn3", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Color burn mode: 1 - (1 - base) / blend
+  // Relaxed precision for division-based blend mode
   expectCloseTo([0.0, 0.0, 0.0], result, 0.05);
 });
 
@@ -525,7 +530,7 @@ test("blendAdd - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.8], [result[0]], 0.001);
+  expectCloseTo([0.8], [result[0]]);
 });
 
 test("blendMultiply - f32", async () => {
@@ -539,7 +544,7 @@ test("blendMultiply - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.4], [result[0]], 0.001);
+  expectCloseTo([0.4], [result[0]]);
 });
 
 test("blendScreen - f32", async () => {
@@ -554,7 +559,7 @@ test("blendScreen - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Screen: 1 - (1-0.4)*(1-0.5) = 1 - 0.6*0.5 = 1 - 0.3 = 0.7
-  expectCloseTo([0.7], [result[0]], 0.001);
+  expectCloseTo([0.7], [result[0]]);
 });
 
 test("blendOverlay - f32", async () => {
@@ -583,7 +588,7 @@ test("blendDarken - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.3], [result[0]], 0.001);
+  expectCloseTo([0.3], [result[0]]);
 });
 
 test("blendLighten - f32", async () => {
@@ -597,7 +602,7 @@ test("blendLighten - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6], [result[0]], 0.001);
+  expectCloseTo([0.6], [result[0]]);
 });
 
 test("blendDifference - f32", async () => {
@@ -611,7 +616,7 @@ test("blendDifference - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.3], [result[0]], 0.001);
+  expectCloseTo([0.3], [result[0]]);
 });
 
 test("blendExclusion - f32", async () => {
@@ -686,7 +691,7 @@ test("blendSubtract - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Subtract: max(0.8 + 0.3 - 1, 0) = max(0.1, 0) = 0.1
-  expectCloseTo([0.1], [result[0]], 0.001);
+  expectCloseTo([0.1], [result[0]]);
 });
 
 test("blendSoftLight - f32", async () => {
@@ -715,7 +720,7 @@ test("blendAverage - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.5], [result[0]], 0.001);
+  expectCloseTo([0.5], [result[0]]);
 });
 
 test("blendColorBurn - f32", async () => {
@@ -730,6 +735,7 @@ test("blendColorBurn - f32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Color burn: 1 - (1-0.6)/0.3 = 1 - 0.4/0.3 = 1 - 1.333 = clamped to 0
+  // Relaxed precision for division-based blend mode
   expectCloseTo([0.0], [result[0]], 0.05);
 });
 
@@ -774,7 +780,7 @@ test("blendLinearDodge - f32", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.7], [result[0]], 0.001);
+  expectCloseTo([0.7], [result[0]]);
 });
 
 test("blendHardLight - f32", async () => {
@@ -903,7 +909,7 @@ test("blendAdd3Opacity - opacity 0", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // At opacity 0, should return base unchanged
-  expectCloseTo([0.3, 0.5, 0.7], result, 0.001);
+  expectCloseTo([0.3, 0.5, 0.7], result);
 });
 
 test("blendAdd3Opacity - opacity 1", async () => {
@@ -1172,6 +1178,7 @@ test("blendColorBurn3Opacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend: [0.0, 0.0, 0.0]
   // At 0.5: [0.0*0.5+0.6*0.5, 0.0*0.5+0.5*0.5, 0.0*0.5+0.4*0.5]
+  // Relaxed precision for division-based blend mode with opacity
   expectCloseTo([0.3, 0.25, 0.2], result, 0.05);
 });
 
@@ -1417,7 +1424,7 @@ test("blendDifference3Opacity - opacity 0 returns base", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // At opacity 0, should return base unchanged
-  expectCloseTo([0.8, 0.3, 0.6], result, 0.001);
+  expectCloseTo([0.8, 0.3, 0.6], result);
 });
 
 // Color Space Conversion Tests (Additional)

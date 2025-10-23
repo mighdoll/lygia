@@ -18,7 +18,8 @@ test("fresnel vec3f", async () => {
    `;
   const result = await testCompute(src);
   // Fresnel at normal incidence should be close to f0
-  expectCloseTo([0.04], result, 0.05);
+  // Using default precision - actual difference is ~1e-9
+  expectCloseTo([0.04], result);
 });
 
 test("fresnelF32", async () => {
@@ -57,7 +58,8 @@ test("fresnelFromVectors", async () => {
    `;
   const result = await testCompute(src);
   // Fresnel at normal incidence should be close to f0
-  expectCloseTo([0.04], result, 0.05);
+  // Using default precision - actual difference is ~1e-9
+  expectCloseTo([0.04], result);
 });
 
 test("fresnelRoughness", async () => {
@@ -242,11 +244,13 @@ test("toShininess", async () => {
 
   // Test 1: Very smooth has highest shininess
   expect(result[0]).toBeGreaterThan(150.0); // Should be ~194
-  expectCloseTo([194.4], [result[0]], 5.0);
+  // Custom precision (2.0) needed due to accumulated error in (0.95^4 * 240) computation
+  expectCloseTo([194.4], [result[0]], 2.0);
 
   // Very rough has low shininess
   expect(result[1]).toBeLessThan(15.0); // Should be ~9.8
-  expectCloseTo([9.8], [result[1]], 2.0);
+  // Custom precision (0.1) needed due to accumulated error in (0.45^4 * 240) computation
+  expectCloseTo([9.8], [result[1]], 0.1);
 
   // Test 2: Inverse relationship - smooth >> rough
   expect(result[0]).toBeGreaterThan(result[1] * 10); // At least 10x difference
@@ -254,14 +258,16 @@ test("toShininess", async () => {
   // Test 3: Mid-roughness is between extremes
   expect(result[2]).toBeGreaterThan(result[1]); // Mid > rough
   expect(result[2]).toBeLessThan(result[0]); // Mid < smooth
-  expectCloseTo([57.6], [result[2]], 5.0);
+  // Custom precision (0.1) needed due to accumulated error in (0.7^4 * 240) computation
+  expectCloseTo([57.6], [result[2]], 0.1);
 
   // Test 4: Metallic reduces shininess (smaller multiplier)
   // Note: dielectric was removed to fit in vec4f, so we test against expected value
   // Metallic: roughness=0.3, metallic=1.0 -> s = 0.8^4 * 80 ≈ 32.77
   expect(result[3]).toBeLessThan(40.0); // Metallic should be low
   expect(result[3]).toBeGreaterThan(25.0); // But not too low
-  expectCloseTo([32.77], [result[3]], 2.0);
+  // Custom precision (0.01) needed due to accumulated error in (0.8^4 * 80) computation
+  expectCloseTo([32.77], [result[3]], 0.01);
 
   // Test 5: All values should be in valid shininess range
   expect(result[0]).toBeLessThan(250.0); // Max is 240 * 0.95^4

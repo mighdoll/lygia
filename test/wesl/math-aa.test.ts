@@ -22,7 +22,7 @@ test("aafloor with derivatives", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
   // aafloor should produce something close to 2.0
-  expectCloseTo([2.0], [result[0]], 0.2);
+  expectCloseTo([2.0], [result[0]]);
 });
 
 test("aafloor2 with vec2", async () => {
@@ -39,7 +39,7 @@ test("aafloor2 with vec2", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  expectCloseTo([2.0, 3.0], result.slice(0, 2), 0.2);
+  expectCloseTo([2.0, 3.0], result.slice(0, 2)); // Try default precision
 });
 
 test("aamirror - anti-aliased triangle wave", async () => {
@@ -138,11 +138,13 @@ test("fcos - filtered cosine at known angles", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // Verify cosine values with tighter tolerance for slow variation
-  expectCloseTo([1.0], [result[0]], 0.05);      // cos(0) = 1.0
-  expectCloseTo([INV_SQRT2], [result[1]], 0.05);    // cos(�/4) = 2/2
-  expectCloseTo([0.0], [result[2]], 0.05);      // cos(�/2) = 0.0
-  expectCloseTo([-1.0], [result[3]], 0.05);     // cos(�) = -1.0
+  // Verify cosine values
+  expectCloseTo([1.0], [result[0]]);      // cos(0) = 1.0
+  // Loose precision: filtered cosine uses derivatives, introduces small error (~0.0003)
+  expectCloseTo([INV_SQRT2], [result[1]], 0.001);    // cos(�/4) = 2/2
+  // Loose precision: filtered cosine uses derivatives, small error near zero (~0.0005)
+  expectCloseTo([0.0], [result[2]], 0.001);      // cos(�/2) = 0.0
+  expectCloseTo([-1.0], [result[3]]);     // cos(�) = -1.0
 });
 
 test("fcos - band limiting at high frequency", async () => {
@@ -167,6 +169,7 @@ test("fcos - band limiting at high frequency", async () => {
   const result = await testFragment(src, { size: [32, 32] });
 
   // High frequency should be heavily attenuated (close to 0)
+  // Loose precision: band-limiting behavior varies with derivative magnitude
   expect(Math.abs(result[0])).toBeLessThan(0.3);
 
   // Low frequency should have full amplitude (not attenuated)
@@ -197,6 +200,7 @@ test("aafract - anti-aliased fract", async () => {
   expect(result[0]).toBeLessThanOrEqual(1.0);
 
   // aafract should be close to regular fract for slowly varying values
+  // Loose precision: anti-aliasing adds smoothing near integer boundaries
   expect(Math.abs(result[0] - result[1])).toBeLessThan(0.3);
 });
 
@@ -226,8 +230,10 @@ test("aafract - edge anti-aliasing behavior", async () => {
 
   // For input x H 2.25, fract(x) H 0.25
   // aafract should be similar for slowly varying values
-  expectCloseTo([0.25], [result[1]], 0.1); // Regular fract
-  expectCloseTo([0.25], [result[0]], 0.2); // Anti-aliased version
+  // Loose precision: fragment shader position varies slightly per pixel (~0.005)
+  expectCloseTo([0.25], [result[1]], 0.01); // Regular fract
+  // Loose precision: anti-aliasing smooths transitions, may vary from exact value
+  expectCloseTo([0.25], [result[0]], 0.2);
 });
 
 test("aafract2 - vec2 anti-aliased fract", async () => {
@@ -254,7 +260,7 @@ test("aafract2 - vec2 anti-aliased fract", async () => {
   // For slowly varying input (pos.xy / 100.0), derivatives are small
   // aafract should behave similar to regular fract
   // x: fract(~1.3) H 0.3, y: fract(~2.7) H 0.7
-  // Note: aafract can have wider anti-aliasing bands, so use generous tolerance
+  // Loose precision: anti-aliasing can create wider transition bands
   expectCloseTo([0.3, 0.7], result.slice(0, 2), 0.3);
 });
 
@@ -279,6 +285,7 @@ test("aafract - periodic behavior", async () => {
   const result = await testFragment(src, { size: [2, 2] });
 
   // All should be close to 0.5 (the fractional part of x.5)
+  // Loose precision: anti-aliasing smoothing varies with derivative magnitude
   expectCloseTo([0.5], [result[0]], 0.15);
   expectCloseTo([0.5], [result[1]], 0.15);
   expectCloseTo([0.5], [result[2]], 0.15);

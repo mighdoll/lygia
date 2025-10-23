@@ -48,7 +48,7 @@ test("colorDistance", async () => {
   const result = await testCompute(src);
   // LAB Euclidean distance between red and blue in LAB color space
   // This is a perceptual color distance metric
-  // Empirically measured: red to blue distance ~16
+  // Loose precision due to color space conversion variability
   expectCloseTo([16.07], result, 0.5);
 });
 
@@ -82,7 +82,7 @@ test("mixOklab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Mix red and blue in Oklab space - purple-ish result
-  expectCloseTo([0.264, 0.087, 0.363], result, 0.001);
+  expectCloseTo([0.2637, 0.0866, 0.3628], result);
 });
 
 test("brightnessContrast3", async () => {
@@ -173,6 +173,7 @@ test("hueShiftRYB", async () => {
   // RYB hue shift: Red shifted by 120° in RYB space
   // After RGB->RYB->hue shift->RGB conversion
   // Red shifted 120° in RYB color wheel goes toward yellow
+  // Loose precision due to RYB color space conversion approximations
   expectCloseTo([1.0, 1.0, 0.0], result, 0.15);
 });
 
@@ -190,7 +191,7 @@ test("heatmap", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Heatmap formula: 1.0 - (v*2.1 - vec3(1.8,1.14,0.3))^2
   // For v=0.5: 1.0 - (1.05 - vec3(1.8,1.14,0.3))^2 = vec3(0.4375, 0.9919, 0.4375)
-  expectCloseTo([0.4375, 0.992, 0.4375], result, 0.001);
+  expectCloseTo([0.4375, 0.9919, 0.4375], result);
 });
 
 test("paletteHue", async () => {
@@ -211,6 +212,7 @@ test("paletteHue", async () => {
   // Then smoothstep: v*v*(3-2*v)
   // For x=0.5, ratio=1/3: [0.5, 0.833, 0.167] -> fmod -> [0.5, 0.833, 0.167]
   // -> *2-1 -> [0, 0.666, -0.666] -> abs -> [0, 0.666, 0.666] -> smoothstep
+  // Loose precision due to smoothstep approximation differences
   expectCloseTo([0.0, 0.74, 0.743], result, 0.05);
 });
 
@@ -229,6 +231,7 @@ test("hueDefault", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // hueDefault(0.5) should match paletteHue test: hue(0.5, 0.333)
   // Result should be [0.0, 0.740, 0.743] from paletteHue test
+  // Loose precision due to smoothstep approximation differences
   expectCloseTo([0.0, 0.74, 0.743], result, 0.05);
 });
 
@@ -377,7 +380,8 @@ test("saturationMatrix", async () => {
   // Expected: R increases (>0.8), G stays similar, B decreases (<0.3)
   expect(result[0]).toBeGreaterThan(0.8); // Red should increase
   expect(result[2]).toBeLessThan(0.3); // Blue should decrease
-  expectCloseTo([0.95, 0.53, 0.17], result, 0.1); // Approximate expected values
+  // Loose precision due to matrix multiplication accumulation
+  expectCloseTo([0.95, 0.53, 0.17], result, 0.1);
 });
 
 test("levelsOutputRange3", async () => {
@@ -413,7 +417,7 @@ test("colorDistance", async () => {
    `;
   const result = await testCompute(src);
   // Default is CIE94 distance between red and blue
-  // Actual value is around 13.57
+  // Loose precision due to color space conversion variability
   expectCloseTo([13.57], result, 0.5);
 });
 
@@ -431,6 +435,7 @@ test("colorDistance4", async () => {
    `;
   const result = await testCompute(src);
   // Alpha is ignored, should be same as colorDistance
+  // Loose precision due to color space conversion variability
   expectCloseTo([13.57], result, 0.5);
 });
 
@@ -449,6 +454,7 @@ test("colorDistanceLABCIE94", async () => {
   const result = await testCompute(src);
   // CIE94 distance between green and yellow
   // These are relatively close colors in perceptual space
+  // Loose precision due to color space conversion variability
   expectCloseTo([3.04], result, 0.5);
 });
 
@@ -516,6 +522,7 @@ test("colorDistanceYCbCr", async () => {
 
   // Same chrominance (grays) should have near-zero distance
   // (YCbCr distance ignores Y/luma)
+  // Loose precision due to floating-point chroma calculations
   expectCloseTo([0.0], [lumaDist], 0.05);
 });
 
@@ -573,6 +580,7 @@ test("colorDistanceYUV", async () => {
   const result = await testCompute(src);
   // YUV distance between white and gray (mainly Y difference)
   // Should be around 0.5 (difference in luminance)
+  // Loose precision due to YUV conversion approximations
   expectCloseTo([0.5], result, 0.1);
 });
 
@@ -591,6 +599,7 @@ test("hueShift4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Red shifted by 120° should become green, alpha preserved
+  // Loose precision due to HSV conversion and hue rotation
   expectCloseTo([0.0, 1.0, 0.0, 0.85], result, 0.05);
 });
 
@@ -608,7 +617,7 @@ test("hueShiftRYB4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // RYB hue shift: Red shifted by 120° toward yellow
-  // Alpha should be preserved
+  // Loose precision due to RYB color space conversion approximations
   expectCloseTo([1.0, 1.0, 0.0, 0.7], result.slice(0, 4), 0.15);
   expectCloseTo([0.7], [result[3]]); // Alpha exact
 });
@@ -685,7 +694,7 @@ test("mixOklab4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Mix red and blue in Oklab space - purple-ish result
   // RGB should match mixOklab test, alpha should be 0.6 (mix of 0.8 and 0.4)
-  expectCloseTo([0.264, 0.087, 0.363, 0.6], result, 0.001);
+  expectCloseTo([0.2637, 0.0866, 0.3628, 0.6], result);
 });
 
 test("mixSpectral4", async () => {

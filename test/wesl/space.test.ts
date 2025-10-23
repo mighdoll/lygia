@@ -412,7 +412,7 @@ test("kaleidoscope", async () => {
   const r = result as number[];
 
   // Key property: kaleidoscope preserves distance from center
-  expectCloseTo([0.3], [r[2]], 0.05);
+  expectCloseTo([0.3], [r[2]]);
 
   // Verify output is in valid range [0,1]
   if (r[3] < 0.5) {
@@ -548,7 +548,7 @@ test("decimateNormal", async () => {
   const r = result as number[];
 
   // Test 1: Known expected output for 45° normal with precision 4.0
-  expectCloseTo([0.73], [r[0]], 0.05);
+  expectCloseTo([0.729856], [r[0]]);
 
   // Verify unit length
   expectCloseTo([1.0], [r[1]]);
@@ -748,8 +748,8 @@ test("nearest", async () => {
   // floor -> (1446, 277), /res -> (0.753125, 0.2564815)
   // + offset -> (0.753385, 0.2569445)
   const r = result as number[];
-  expectCloseTo([0.7534, 0.2569], r.slice(0, 2), 0.001);
-  expectCloseTo([0.7503, 0.2502], r.slice(2, 4), 0.001);
+  expectCloseTo([0.7534, 0.2569], r.slice(0, 2));
+  expectCloseTo([0.750260, 0.250463], r.slice(2, 4));
 });
 
 test("ratio", async () => {

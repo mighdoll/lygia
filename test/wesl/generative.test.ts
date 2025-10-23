@@ -353,7 +353,8 @@ test("noised2", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // Test that analytical derivatives match numerical derivatives (with small tolerance for numerical error)
+  // Test that analytical derivatives match numerical derivatives
+  // Note: precision=2 allows for numerical differentiation error (finite differences introduce ~0.01 error)
   expectCloseTo([result[0], result[2]], [result[1], result[3]], 2);
   // Derivatives should be in reasonable range
   expect(Math.abs(result[0])).toBeLessThan(5.0);
@@ -387,7 +388,8 @@ test("noised3", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // Test that analytical derivatives match numerical derivatives (with small tolerance for numerical error)
+  // Test that analytical derivatives match numerical derivatives
+  // Note: precision=2 allows for numerical differentiation error (finite differences introduce ~0.01 error)
   expectCloseTo([result[0], result[2]], [result[1], result[3]], 2);
   // Derivatives should be in reasonable range
   expect(Math.abs(result[0])).toBeLessThan(5.0);
@@ -803,7 +805,8 @@ test("random42 - hash properties", async () => {
      }
    `;
   const determinism = await testCompute(src1, { elem: "vec4f" });
-  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5); // Same input → same output
+  // Hash functions are deterministic - same input produces exactly same output
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism); // Should be exactly zero
 
   // Test range and independence
   const src2 = `
@@ -858,7 +861,8 @@ test("random43 - hash properties", async () => {
      }
    `;
   const determinism = await testCompute(src1, { elem: "vec4f" });
-  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
+  // Hash functions are deterministic - same input produces exactly same output
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism); // Should be exactly zero
 
   // Test range and independence
   const src2 = `
@@ -913,7 +917,8 @@ test("random44 - hash properties", async () => {
      }
    `;
   const determinism = await testCompute(src1, { elem: "vec4f" });
-  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism, 5);
+  // Hash functions are deterministic - same input produces exactly same output
+  expectCloseTo([0.0, 0.0, 0.0, 0.0], determinism); // Should be exactly zero
 
   // Test range and independence
   const src2 = `

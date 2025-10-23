@@ -236,7 +236,7 @@ test("lab2rgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // LAB(53.24, 80.09, 67.20) -> RGB(1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 });
 
 test("srgb2lab", async () => {
@@ -253,7 +253,7 @@ test("srgb2lab", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB Red -> LAB (WESL matches GLSL behavior)
   // Note: Different from standard reference values due to color space handling
-  expectCloseTo([1.921, 8.615, 3.036], result, 0.1);
+  expectCloseTo([1.9210567474365234, 8.615419387817383, 3.03562593460083], result);
 });
 
 test("lch2rgb", async () => {
@@ -269,7 +269,7 @@ test("lch2rgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // LCH -> RGB
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 });
 
 test("srgb2lch", async () => {
@@ -286,7 +286,7 @@ test("srgb2lch", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB Red -> LCH
   // L=1.921 (same as Lab), C≈9.135 (chroma from a,b), H≈19.41° (hue angle)
-  expectCloseTo([1.921, 9.135, 19.41], result, 0.1);
+  expectCloseTo([1.9210567474365234, 9.134575843811035, 19.409807205200195], result);
 });
 
 test("oklab2srgb", async () => {
@@ -302,7 +302,7 @@ test("oklab2srgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Oklab -> sRGB
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 });
 
 test("srgb2oklab", async () => {
@@ -595,7 +595,7 @@ test("lab2lch", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // LAB(50, 25, 25) -> LCH(50, ~35.36, 45°)
   // L stays same, C = sqrt(a^2 + b^2), H = atan2(b, a)
-  expectCloseTo([50.0, 35.36, 45.0], result, 0.5);
+  expectCloseTo([50.0, 35.35533905029297, 45.0], result);
 });
 
 test("lch2lab", async () => {
@@ -611,7 +611,7 @@ test("lch2lab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // LCH(50, 35.36, 45°) -> LAB(50, ~25, ~25)
-  expectCloseTo([50.0, 25.0, 25.0], result, 0.5);
+  expectCloseTo([50.0, 25.0032958984375, 25.0032958984375], result);
 });
 
 test("lab2xyz", async () => {
@@ -628,7 +628,7 @@ test("lab2xyz", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // LAB(50, 0, 0) -> XYZ (uses D65 white point scaling)
   // Output is scaled by D65 values: vec3(95.047, 100.0, 108.883)
-  expectCloseTo([17.5, 18.4, 20.0], result, 1.0);
+  expectCloseTo([17.506114959716797, 18.418649673461914, 20.05897331237793], result);
 });
 
 test("xyz2lab", async () => {
@@ -644,7 +644,7 @@ test("xyz2lab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // XYZ -> LAB (actual output)
-  expectCloseTo([50.0, 0.06, 0.07], result, 0.1);
+  expectCloseTo([49.97771453857422, 0.061511993408203125, 0.06527900695800781], result);
 });
 
 test("rgb2hcv", async () => {
@@ -757,7 +757,7 @@ test("lms2rgb", async () => {
   // G = row 1 dot lms = (-0.13050440) * 0.3 + 0.0540193266 * 0.2 + (-0.00412161469) * 0.1
   // B = row 2 dot lms = 0.116721066 * 0.3 + (-0.113614708) * 0.2 + 0.693511405 * 0.1
   // Actual output from test: [0.009854563, -0.003632165, 0.068417228]
-  expectCloseTo([0.00985, -0.00363, 0.06842], result, 0.001);
+  expectCloseTo([0.00985, -0.00363, 0.06842], result);
 });
 
 test("oklab2rgb", async () => {
@@ -773,7 +773,7 @@ test("oklab2rgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Oklab(0.628, 0.225, 0.126) -> RGB(1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787], result);
 });
 
 test("rgb2oklab", async () => {
@@ -805,7 +805,7 @@ test("rgb2lab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Gray in LAB (function appears to return different scale)
-  expectCloseTo([4.52, 0.0, 0.0], result, 0.1);
+  expectCloseTo([4.516460418701172, 0.0, 0.0000029802322387695312], result);
 });
 
 test("rgb2lch", async () => {
@@ -821,7 +821,7 @@ test("rgb2lch", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Red in LCH (actual output from function)
-  expectCloseTo([1.92, 9.13, 19.41], result, 0.5);
+  expectCloseTo([1.9210567474365234, 9.134575843811035, 19.409807205200195], result);
 });
 
 test("rgb2srgb", async () => {
@@ -869,7 +869,7 @@ test("xyY2xyz", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // xyY(0.3127, 0.329, 1) -> XYZ
-  expectCloseTo([0.9505, 1.0, 1.089], result, 0.05);
+  expectCloseTo([0.9505, 1.0, 1.089], result);
 });
 
 test("xyz2xyY", async () => {
@@ -953,7 +953,7 @@ test("xyz2rgb", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // xyz2rgb scales input by 0.01, so input needs to be 100x larger
   // XYZ(41.24, 21.26, 1.93) * 0.01 = (0.4124, 0.2126, 0.0193) -> RGB(1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0], result);
 });
 
 // ============================================================================
@@ -1047,7 +1047,7 @@ test("lab2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 35.36, 45.0, 0.75], result, 0.5);
+  expectCloseTo([50.0, 35.35533905029297, 45.0, 0.75], result);
 });
 
 test("lab2rgb4 - alpha preservation", async () => {
@@ -1062,7 +1062,7 @@ test("lab2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0, 0.4], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0, 0.4], result);
 });
 
 test("lab2srgb4 - alpha preservation", async () => {
@@ -1092,7 +1092,7 @@ test("lab2xyz4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([17.5, 18.4, 20.0, 0.3], result, 1.0);
+  expectCloseTo([17.506114959716797, 18.418649673461914, 20.05897331237793, 0.30000001192092896], result);
 });
 
 test("lch2lab4 - alpha preservation", async () => {
@@ -1107,7 +1107,7 @@ test("lch2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 25.0, 25.0, 0.95], result, 0.5);
+  expectCloseTo([50.0, 25.0032958984375, 25.0032958984375, 0.949999988079071], result);
 });
 
 test("lch2rgb4 - alpha preservation", async () => {
@@ -1122,7 +1122,7 @@ test("lch2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0, 0.2], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0, 0.2], result);
 });
 
 test("lch2srgb4 - alpha preservation", async () => {
@@ -1152,7 +1152,7 @@ test("lms2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.00985, -0.00363, 0.06842, 0.55], result, 0.001);
+  expectCloseTo([0.00985, -0.00363, 0.06842, 0.55], result);
 });
 
 test("oklab2rgb4 - alpha preservation", async () => {
@@ -1167,7 +1167,7 @@ test("oklab2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0, 0.45], result, 0.05);
+  expectCloseTo([1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787, 0.44999998807907104], result);
 });
 
 test("oklab2srgb4 - alpha preservation", async () => {
@@ -1182,7 +1182,7 @@ test("oklab2srgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0, 0.35], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0, 0.35], result);
 });
 
 test("rgb2YCbCr4 - alpha preservation", async () => {
@@ -1272,7 +1272,7 @@ test("rgb2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([4.52, 0.0, 0.0, 0.7], result, 0.1);
+  expectCloseTo([4.516460418701172, 0.0, 0.0000029802322387695312, 0.699999988079071], result);
 });
 
 test("rgb2lch4 - alpha preservation", async () => {
@@ -1287,7 +1287,7 @@ test("rgb2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.92, 9.13, 19.41, 0.8], result, 0.5);
+  expectCloseTo([1.9210567474365234, 9.134575843811035, 19.409807205200195, 0.800000011920929], result);
 });
 
 test("rgb2lms4 - alpha preservation", async () => {
@@ -1362,7 +1362,7 @@ test("srgb2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.921, 8.615, 3.036, 0.75], result, 0.1);
+  expectCloseTo([1.9210567474365234, 8.615419387817383, 3.03562593460083, 0.75], result);
 });
 
 test("srgb2lch4 - alpha preservation", async () => {
@@ -1377,7 +1377,7 @@ test("srgb2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.921, 9.135, 19.41, 0.5], result, 0.1);
+  expectCloseTo([1.9210567474365234, 9.134575843811035, 19.409807205200195, 0.5], result);
 });
 
 test("srgb2oklab4 - alpha preservation", async () => {
@@ -1422,7 +1422,7 @@ test("xyz2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 0.06, 0.07, 0.9], result, 0.1);
+  expectCloseTo([49.97771453857422, 0.061511993408203125, 0.06527900695800781, 0.8999999761581421], result);
 });
 
 test("xyz2rgb4 - alpha preservation", async () => {
@@ -1437,7 +1437,7 @@ test("xyz2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.0, 0.0, 0.6], result, 0.05);
+  expectCloseTo([1.0, 0.0, 0.0, 0.6], result);
 });
 
 // ============================================================================
@@ -1895,7 +1895,7 @@ test("xyY2xyz4 - alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // xyY -> XYZ with alpha
-  expectCloseTo([0.9505, 1.0, 1.089, 0.4], result, 0.05);
+  expectCloseTo([0.9505, 1.0, 1.089, 0.4], result);
 });
 
 test("xyz2srgb4 - alpha preservation", async () => {
