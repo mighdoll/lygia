@@ -1099,7 +1099,7 @@ test("lab2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 35.35533905029297, 45.0, 0.75], result);
+  expectCloseTo([50.0, 35.3553, 45.0, 0.75], result);
 });
 
 test("lab2rgb4 - alpha preservation", async () => {
@@ -1574,7 +1574,7 @@ test("gamma2linear - f32 overload", async () => {
    `;
   const result = await testCompute(src);
   // pow(0.5, 2.2) ≈ 0.2181 (standard gamma 2.2)
-  expectCloseTo([0.21763762831687927], result);
+  expectCloseTo([0.2176], result);
 });
 
 test("gamma2linear4 - vec4 with alpha preservation", async () => {
@@ -1592,8 +1592,8 @@ test("gamma2linear4 - vec4 with alpha preservation", async () => {
   // pow(0.5, 2.2) ≈ 0.2181 for RGB, alpha unchanged
   expectCloseTo(
     [
-      0.21763762831687927, 0.21763762831687927, 0.21763762831687927,
-      0.699999988079071,
+      0.2176, 0.2176, 0.2176,
+      0.7,
     ],
     result,
   );
@@ -1612,7 +1612,7 @@ test("linear2gamma - f32 overload", async () => {
    `;
   const result = await testCompute(src);
   // pow(0.25, 1/2.2) ≈ 0.5277 (standard gamma 2.2)
-  expectCloseTo([0.5325205326080322], result);
+  expectCloseTo([0.5325], result);
 });
 
 test("linear2gamma4 - vec4 with alpha preservation", async () => {
@@ -1630,8 +1630,8 @@ test("linear2gamma4 - vec4 with alpha preservation", async () => {
   // pow(0.25, 1/2.2) ≈ 0.5277 for RGB, alpha unchanged
   expectCloseTo(
     [
-      0.5325205326080322, 0.5325205326080322, 0.5325205326080322,
-      0.4000000059604645,
+      0.5325, 0.5325, 0.5325,
+      0.4,
     ],
     result,
   );

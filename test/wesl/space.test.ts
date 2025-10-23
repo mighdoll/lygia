@@ -225,7 +225,8 @@ test("triTile", async () => {
   const r = result as number[];
 
   // Verify tile 00 has expected within-tile coords
-  expectCloseTo([0.21132487, 0.57735026], [r[0], r[1]]);
+  const invSqrt3 = 1 / Math.sqrt(3); // ≈ 0.57735
+  expectCloseTo([0.21132487, invSqrt3], [r[0], r[1]]);
 
   // Verify tiles have different indices (difference should be non-zero)
   if (r[2] < 0.1) {
@@ -630,7 +631,7 @@ test.skip("screen2viewPosition", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.0, 0.0, -1.0, 1.0019999742507935], result);
+  expectCloseTo([0.0, 0.0, -1.0, 1.002], result);
 });
 
 test("lookAtView", async () => {

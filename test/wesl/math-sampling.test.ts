@@ -326,5 +326,6 @@ test("hemisphereCosSample - cosine distribution", async () => {
   expect(result[2]).toBeLessThan(1.0);
 
   // Exact values to catch regressions
-  expectCloseTo([0.948683, Math.SQRT1_2, 0.316228, 0.0], result);
+  const invSqrt10 = 1 / Math.sqrt(10); // ≈ 0.316228
+  expectCloseTo([0.948683, Math.SQRT1_2, invSqrt10, 0.0], result);
 });
