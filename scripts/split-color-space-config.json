@@ -5,30 +5,13 @@
       "patterns": ["->"]
     },
     "color-space-gamma.test.ts": {
-      "patterns": [
-        "gamma2linear",
-        "linear2gamma",
-        "rgb2srgb",
-        "srgb2rgb"
-      ]
+      "patterns": ["gamma2linear", "linear2gamma", "rgb2srgb", "srgb2rgb"]
     },
     "color-space-lab.test.ts": {
-      "patterns": [
-        "lab2",
-        "2lab",
-        "lch2",
-        "2lch",
-        "oklab2",
-        "2oklab"
-      ]
+      "patterns": ["lab2", "2lab", "lch2", "2lch", "oklab2", "2oklab"]
     },
     "color-space-xyz.test.ts": {
-      "patterns": [
-        "xyz2",
-        "2xyz",
-        "xyY2",
-        "2xyY"
-      ]
+      "patterns": ["xyz2", "2xyz", "xyY2", "2xyY"]
     },
     "color-space-broadcast.test.ts": {
       "patterns": [
@@ -58,14 +41,7 @@
       ]
     },
     "color-space-misc.test.ts": {
-      "patterns": [
-        "ryb",
-        "cmyk",
-        "heat",
-        "k2rgb",
-        "lms2",
-        "2lms"
-      ]
+      "patterns": ["ryb", "cmyk", "heat", "k2rgb", "lms2", "2lms"]
     }
   }
 }
