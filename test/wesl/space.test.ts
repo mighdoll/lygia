@@ -226,7 +226,7 @@ test("triTile", async () => {
 
   // Verify tile 00 has expected within-tile coords
   const invSqrt3 = 1 / Math.sqrt(3); // ≈ 0.57735
-  expectCloseTo([0.21132487, invSqrt3], [r[0], r[1]]);
+  expectCloseTo([0.21132, invSqrt3], [r[0], r[1]]);
 
   // Verify tiles have different indices (difference should be non-zero)
   if (r[2] < 0.1) {
@@ -452,7 +452,7 @@ test("bracketing", async () => {
   expect(r[2]).toBeLessThan(0.8);
   expect(r[3]).toBeGreaterThan(0.01); // vAxis0 and vAxis1 differ when bracketing
 
-  expectCloseTo([1.0, 0.0, 0.5, 0.012312], r);
+  expectCloseTo([1.0, 0.0, 0.5, 0.01231], r);
 });
 
 test("tbn", async () => {
@@ -540,7 +540,7 @@ test("decimateNormal", async () => {
   const r = result as number[];
 
   // Test 1: Known expected output for 45° normal with precision 4.0
-  expectCloseTo([0.729856], [r[0]]);
+  expectCloseTo([0.72986], [r[0]]);
 
   // Verify unit length
   expectCloseTo([1.0], [r[1]]);
@@ -737,11 +737,11 @@ test("nearest", async () => {
   // nearest snaps to pixel centers: floor(v*res)/res + offset
   // For 1920x1080: offset = 0.5/(1919, 1079) ≈ (0.00026, 0.00046)
   // (0.7533*1920, 0.2567*1080) = (1446.336, 277.236)
-  // floor -> (1446, 277), /res -> (0.753125, 0.2564815)
-  // + offset -> (0.753385, 0.2569445)
+  // floor -> (1446, 277), /res -> (0.75313, 0.25648)
+  // + offset -> (0.75339, 0.25694)
   const r = result as number[];
   expectCloseTo([0.7534, 0.2569], r.slice(0, 2));
-  expectCloseTo([0.75026, 0.250463], r.slice(2, 4));
+  expectCloseTo([0.75026, 0.25046], r.slice(2, 4));
 });
 
 test("ratio", async () => {

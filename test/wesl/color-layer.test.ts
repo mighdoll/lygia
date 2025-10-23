@@ -111,7 +111,7 @@ test("layerColorDodgeSourceOver4", async () => {
   // G: min(0.5 / (1 - 0.4), 1.0) = min(0.5 / 0.6, 1.0) ≈ 0.833
   // B: min(0.6 / (1 - 0.5), 1.0) = min(0.6 / 0.5, 1.0) = 1.0
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.445, 0.6433333, 0.775, 0.85], result);
+  expectCloseTo([0.445, 0.64333, 0.775, 0.85], result);
 });
 
 test("layerColorDodgeSourceOver4 - with white blend", async () => {
@@ -232,7 +232,7 @@ test("layerGlowSourceOver4", async () => {
   // G: reflect(0.3, 0.6) = min(0.09 / 0.4, 1) = 0.225
   // B: reflect(0.8, 0.2) = min(0.64 / 0.8, 1) = 0.8
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.3933333, 0.216, 0.736, 0.92], result);
+  expectCloseTo([0.39333, 0.216, 0.736, 0.92], result);
 });
 
 test("layerHardLightSourceOver4", async () => {
@@ -742,7 +742,7 @@ test("layerReflectSourceOver4", async () => {
   // G: min(0.6² / (1-0.3), 1) = min(0.36 / 0.7, 1) ≈ 0.514
   // B: min(0.2² / (1-0.8), 1) = min(0.04 / 0.2, 1) = 0.2
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.316, 0.4474286, 0.256, 0.92], result);
+  expectCloseTo([0.316, 0.44743, 0.256, 0.92], result);
 });
 
 test("layerReflectSourceOver4 - extreme reflection", async () => {
@@ -916,7 +916,7 @@ test("layerVividLightSourceOver4", async () => {
   // G: dst=0.5 ≥ 0.5 → colorDodge(0.6, 0.0) = min(0.6/(1-0), 1) = 0.6
   // B: dst=0.7 ≥ 0.5 → colorDodge(0.4, 0.4) = min(0.4/(1-0.4), 1) ≈ 0.667
   // Then source-over: blend * srcAlpha + dst * dstAlpha * (1 - srcAlpha)
-  expectCloseTo([0.1616667, 0.495, 0.5716667, 0.85], result);
+  expectCloseTo([0.16167, 0.495, 0.57167, 0.85], result);
 });
 
 test("layerVividLightSourceOver4 - extreme contrast", async () => {

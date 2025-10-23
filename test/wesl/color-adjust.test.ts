@@ -703,7 +703,7 @@ test("ditherBlueNoise3", async () => {
      @compute @workgroup_size(1)
      fn foo() {
        // Test blue noise dithering with a value between quantization levels
-       // At 256 levels (default), 0.503 is between level 128 (0.5) and 129 (0.50390625)
+       // At 256 levels (default), 0.503 is between level 128 (0.5) and 129 (0.50391)
        let color = vec3f(0.503, 0.503, 0.503);
        let xy = vec2f(2.0, 3.0);
        let dithered = ditherBlueNoise3(color, xy);

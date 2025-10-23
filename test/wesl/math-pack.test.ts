@@ -7,7 +7,7 @@ test("pack/unpack roundtrip", async () => {
     import lygia::math::unpack::unpack4;
     @compute @workgroup_size(1)
     fn foo() {
-      let original = 0.123456;
+      let original = 0.12346;
       let packed = pack(original);
       let unpacked = unpack4(packed);
       test::results[0] = vec4f(original, unpacked, 0.0, 0.0);
@@ -15,7 +15,7 @@ test("pack/unpack roundtrip", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Pack/unpack roundtrip should preserve value within default tolerance despite 8-bit RGBA encoding
-  expectCloseTo([0.123456, 0.123456], result.slice(0, 2));
+  expectCloseTo([0.12346, 0.12346], result.slice(0, 2));
 });
 
 test("pack/unpack roundtrip - multiple values", async () => {
@@ -67,8 +67,8 @@ test("unpack256 - default base 256", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // v1 = (1,0,0)  256 / 16581375 ≈ 0.00001544
-  expectCloseTo([0.00001544], [result[0]]); // Very small value needs tight precision
+  // v1 = (1,0,0)  256 / 16581375 ≈ 0.000015
+  expectCloseTo([0.000015], [result[0]]); // Very small value
   // v2 = (0.5,0.5,0.5)  (128 + 32768 + 8388608) / 16581375 ≈ 0.50787
   expectCloseTo([0.50787], [result[1]]);
   // v3 = (1,1,1)  (256 + 65536 + 16777216) / 16581375 ≈ 1.01578

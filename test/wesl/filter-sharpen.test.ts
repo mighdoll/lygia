@@ -255,7 +255,7 @@ test("sharpendAdaptiveControl4", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       // sharpendAdaptiveControl4 computes perceptual luma: dot(rgba*rgba, vec4(0.212655, 0.715158, 0.072187, 0.0))
+       // sharpendAdaptiveControl4 computes perceptual luma: dot(rgba*rgba, vec4(0.21266, 0.71516, 0.07219, 0.0))
        // Test with gray color
        let gray = vec4f(0.5, 0.5, 0.5, 1.0);
        let result1 = sharpendAdaptiveControl4(gray);
@@ -273,12 +273,12 @@ test("sharpendAdaptiveControl4", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
 
-  // Gray: (0.5^2) * (0.212655 + 0.715158 + 0.072187) = 0.25 * 1.0 = 0.25
+  // Gray: (0.5^2) * (0.21266 + 0.71516 + 0.07219) = 0.25 * 1.0 = 0.25
   expect(result[0]).toBeCloseTo(0.25, 2);
 
-  // Orange: (0.8^2)*0.212655 + (0.5^2)*0.715158 + (0.2^2)*0.072187
-  //       = 0.64*0.212655 + 0.25*0.715158 + 0.04*0.072187
-  //       = 0.136099 + 0.178790 + 0.002887 = 0.317776
+  // Orange: (0.8^2)*0.21266 + (0.5^2)*0.71516 + (0.2^2)*0.07219
+  //       = 0.64*0.21266 + 0.25*0.71516 + 0.04*0.07219
+  //       = 0.13610 + 0.17879 + 0.00289 = 0.31778
   expect(result[1]).toBeCloseTo(0.318, 2);
 
   // Black should be 0

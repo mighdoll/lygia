@@ -266,7 +266,7 @@ test("taylorInvSqrt", async () => {
     import lygia::math::taylorInvSqrt::taylorInvSqrt;
     @compute @workgroup_size(1)
     fn foo() {
-      // Test Taylor series approximation: 1.79284291400159 - 0.85373472095314 * r
+      // Test Taylor series approximation: 1.79284 - 0.85373 * r
       // This is a first-order approximation, accurate near r=1
       test::results[0] = vec4f(
         taylorInvSqrt(1.0),   // 1.793 - 0.854 * 1.0 = 0.939

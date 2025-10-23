@@ -62,7 +62,7 @@ test("quatLength", async () => {
     fn foo() { test::results[0] = quatLength(vec4f(1.0, 2.0, 3.0, 4.0)); }
   `;
   const result = await testCompute(src);
-  expectCloseTo([5.4772258], result);
+  expectCloseTo([5.47723], result);
 });
 
 test("quatLengthSq", async () => {

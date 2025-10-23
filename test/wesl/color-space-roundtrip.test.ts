@@ -72,8 +72,8 @@ test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo(
     [
-      0.6999999284744263, 0.4000265300273895, 0.19989511370658875,
-      0.6000000238418579,
+      0.70000, 0.40003, 0.19990,
+      0.60000,
     ],
     result,
   );
@@ -95,8 +95,8 @@ test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo(
     [
-      0.4999990463256836, 0.6006445288658142, 0.29361698031425476,
-      0.800000011920929,
+      0.50000, 0.60064, 0.29362,
+      0.80000,
     ],
     result,
   );

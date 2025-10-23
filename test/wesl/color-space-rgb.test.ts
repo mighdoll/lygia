@@ -400,7 +400,7 @@ test("rgb2srgb_mono - f32 function", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // low: 12.92 * 0.002 = 0.02584
   // high: 1.055 * pow(0.5, 0.41667) - 0.055 ≈ 0.735
-  expectCloseTo([0.025840001180768013, 0.7353569269180298, 0.0, 0.0], result);
+  expectCloseTo([0.02584, 0.73536, 0.0, 0.0], result);
 });
 
 test("srgb2rgb_mono - f32 function", async () => {
@@ -418,7 +418,7 @@ test("srgb2rgb_mono - f32 function", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // low: 0.03 * 0.0773993808 ≈ 0.00232
   // high: pow((0.735 + 0.055) * 0.9478673, 2.4) ≈ 0.5
-  expectCloseTo([0.0023219813592731953, 0.4994581639766693, 0.0, 0.0], result);
+  expectCloseTo([0.00232, 0.49946, 0.0, 0.0], result);
 });
 
 test("rgb2srgb", async () => {
@@ -482,8 +482,8 @@ test("srgb2rgb4 - alpha preservation", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo(
     [
-      0.4994581639766693, 0.30018994212150574, 0.09988708049058914,
-      0.30000001192092896,
+      0.49946, 0.30019, 0.09989,
+      0.30000,
     ],
     result,
   );

@@ -484,8 +484,8 @@ test("srgb2oklab4 - alpha preservation", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo(
     [
-      0.6279553771018982, 0.22486291825771332, 0.12584632635116577,
-      0.8500000238418579,
+      0.62796, 0.22486, 0.12585,
+      0.85000,
     ],
     result,
   );
@@ -505,8 +505,8 @@ test("xyz2lab4 - alpha preservation", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   expectCloseTo(
     [
-      49.97771453857422, 0.061511993408203125, 0.06527900695800781,
-      0.8999999761581421,
+      49.9777, 0.06151, 0.06528,
+      0.90000,
     ],
     result,
   );

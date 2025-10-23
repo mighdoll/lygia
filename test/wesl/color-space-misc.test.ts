@@ -119,10 +119,10 @@ test("rgb2lms", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // RGB(1, 0, 0) -> LMS cone response (first column of RGB2LMS matrix)
-  // L = 17.8824 * 1.0 + 43.5161 * 0.0 + 4.11935 * 0.0 = 17.8824
-  // M =  3.45565 * 1.0 + 27.1554 * 0.0 + 0.184309 * 0.0 = 3.45565
-  // S =  0.0299566 * 1.0 + 0.184309 * 0.0 + 1.46709 * 0.0 = 0.0299566
-  expectCloseTo([17.8824, 3.45565, 0.0299566], result);
+  // L = 17.882 * 1.0 + 43.516 * 0.0 + 4.119 * 0.0 = 17.882
+  // M =  3.456 * 1.0 + 27.155 * 0.0 + 0.184 * 0.0 = 3.456
+  // S =  0.030 * 1.0 + 0.184 * 0.0 + 1.467 * 0.0 = 0.030
+  expectCloseTo([17.8824, 3.45565, 0.02996], result);
 });
 
 test("lms2rgb", async () => {
@@ -139,9 +139,9 @@ test("lms2rgb", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // LMS(0.3, 0.2, 0.1) -> RGB via LMS2RGB matrix multiplication
   // Matrix is column-major in WGSL, so LMS2RGB * lms is:
-  // R = row 0 dot lms = 0.0809444479 * 0.3 + (-0.0102485335) * 0.2 + (-0.000365296938) * 0.1
-  // G = row 1 dot lms = (-0.13050440) * 0.3 + 0.0540193266 * 0.2 + (-0.00412161469) * 0.1
-  // B = row 2 dot lms = 0.116721066 * 0.3 + (-0.113614708) * 0.2 + 0.693511405 * 0.1
+  // R = row 0 dot lms = 0.0809 * 0.3 + (-0.0102) * 0.2 + (-0.00037) * 0.1
+  // G = row 1 dot lms = (-0.1305) * 0.3 + 0.0540 * 0.2 + (-0.00412) * 0.1
+  // B = row 2 dot lms = 0.1167 * 0.3 + (-0.1136) * 0.2 + 0.6935 * 0.1
   expectCloseTo([0.00985, -0.00363, 0.06842], result);
 });
 
@@ -172,7 +172,7 @@ test("rgb2lms4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([17.8824, 3.45565, 0.0299566, 0.3], result);
+  expectCloseTo([17.8824, 3.45565, 0.02996, 0.3], result);
 });
 
 test("rgb2ryb - default mode", async () => {

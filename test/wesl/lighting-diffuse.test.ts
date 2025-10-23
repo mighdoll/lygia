@@ -22,13 +22,13 @@ test("diffuseOrenNayar", async () => {
       // Test 2: Roughness=1.0 with perpendicular view
       // sigma2 = 1.0
       // A = 1.0 + 1.0 * (1.0/(1.0+0.13) + 0.5/(1.0+0.33))
-      //   = 1.0 + 1.0 * (0.884955752 + 0.375939849)
-      //   = 1.0 + 1.260895601 = 2.260895601
+      //   = 1.0 + 1.0 * (0.88496 + 0.37594)
+      //   = 1.0 + 1.26090 = 2.26090
       // LoV = dot(L,V) = NoL = 1/sqrt(3)
       // s = LoV - NoL*NoV = 1/sqrt(3) - 1/sqrt(3)*1.0 = 0
       // t = mix(1.0, max(NoL,NoV), step(0.0,s)) = mix(1.0, 1.0, 0.0) = 1.0
-      // B = 0.45 * 1.0 / (1.0 + 0.09) = 0.412844037
-      // Result = NoL * (A + B * 0 / 1.0) = NoL * 2.260895601 ≈ 1.3053568
+      // B = 0.45 * 1.0 / (1.0 + 0.09) = 0.41284
+      // Result = NoL * (A + B * 0 / 1.0) = NoL * 2.26090 ≈ 1.30536
       let roughResult = diffuseOrenNayar(L, N, V, NoV, NoL, 1.0);
 
       // Test 3: Retroreflection (V = L, roughness=1.0)
@@ -55,14 +55,14 @@ test("diffuseOrenNayar", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Expected values calculated manually from the Oren-Nayar formula:
-  const NoL = 1.0 / Math.sqrt(3); // ≈ 0.5773502691896258
+  const NoL = 1.0 / Math.sqrt(3); // ≈ 0.57735
 
   // Test 1: roughness=0 → result = NoL
   // Using 1e-5: GPU and CPU compute identical formula, should match to high precision
   expectCloseTo([NoL], [result[0]], 1e-5);
 
   // Test 2: roughness=1.0, perpendicular view
-  // A = 1.0 + 1.0 * (1.0/(1.0+0.13) + 0.5/(1.0+0.33)) ≈ 2.260895601
+  // A = 1.0 + 1.0 * (1.0/(1.0+0.13) + 0.5/(1.0+0.33)) ≈ 2.26090
   // s = 0, so Result = NoL * A
   const A = 1.0 + 1.0 * (1.0 / (1.0 + 0.13) + 0.5 / (1.0 + 0.33));
   const expectedRoughResult = NoL * A;
