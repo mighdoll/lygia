@@ -65,8 +65,7 @@ test("ditherBayer - 8x8 pattern verification", async () => {
 
 test("ditherBayerPrecision - f32 with precision control", async () => {
   const src = `
-    import lygia::color::dither::bayer::ditherBayerPrecision;
-    import lygia::color::dither::bayer::ditherBayer;
+    import lygia::color::dither::bayer::{ditherBayer, ditherBayerPrecision};
 
     @compute @workgroup_size(1)
     fn foo() {
