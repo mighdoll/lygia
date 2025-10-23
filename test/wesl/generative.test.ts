@@ -32,7 +32,7 @@ test("cnoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.4915326237678528], [result[0]]);
+  expectCloseTo([-0.4915], [result[0]]);
 });
 
 test("cnoise3", async () => {
@@ -61,7 +61,7 @@ test("cnoise3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.396228551864624], [result[0]]);
+  expectCloseTo([-0.3962], [result[0]]);
 });
 
 test("cnoise4", async () => {
@@ -90,7 +90,7 @@ test("cnoise4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.020311350002884865], [result[0]]);
+  expectCloseTo([0.0203], [result[0]]);
 });
 
 test("snoise2", async () => {
@@ -175,7 +175,7 @@ test("pnoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.4915326237678528], [result[0]]);
+  expectCloseTo([-0.4915], [result[0]]);
 });
 
 test("pnoise3", async () => {
@@ -202,7 +202,7 @@ test("pnoise3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.396228551864624], [result[0]]);
+  expectCloseTo([-0.3962], [result[0]]);
 });
 
 test("pnoise4", async () => {
@@ -229,7 +229,7 @@ test("pnoise4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.020311350002884865], [result[0]]);
+  expectCloseTo([0.0203], [result[0]]);
 });
 
 test("srandom2", async () => {
