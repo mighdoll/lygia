@@ -384,3 +384,39 @@ test("srgb2luma4 - vec4 overload with alpha preservation (FIXED)", async () => {
   // Replicated as (0.5925, 0.5925, 0.5925, 0.95)
   expectCloseTo([0.5925, 0.5925, 0.5925, 0.95], result);
 });
+
+test("rgb2srgb_mono - f32 function", async () => {
+  const src = `
+     import lygia::color::space::rgb2srgb::rgb2srgb_mono;
+
+     @compute @workgroup_size(1)
+     fn foo() {
+       // Test both branches of the function
+       let low = rgb2srgb_mono(0.002); // < 0.0031308 branch
+       let high = rgb2srgb_mono(0.5);  // >= 0.0031308 branch
+       test::results[0] = vec4f(low, high, 0.0, 0.0);
+     }
+   `;
+  const result = await testCompute(src, { elem: "vec4f" });
+  // low: 12.92 * 0.002 = 0.02584
+  // high: 1.055 * pow(0.5, 0.41667) - 0.055 ≈ 0.735
+  expectCloseTo([0.025840001180768013, 0.7353569269180298, 0.0, 0.0], result);
+});
+
+test("srgb2rgb_mono - f32 function", async () => {
+  const src = `
+     import lygia::color::space::srgb2rgb::srgb2rgb_mono;
+
+     @compute @workgroup_size(1)
+     fn foo() {
+       // Test both branches
+       let low = srgb2rgb_mono(0.03);  // < 0.04045 branch
+       let high = srgb2rgb_mono(0.735); // >= 0.04045 branch
+       test::results[0] = vec4f(low, high, 0.0, 0.0);
+     }
+   `;
+  const result = await testCompute(src, { elem: "vec4f" });
+  // low: 0.03 * 0.0773993808 ≈ 0.00232
+  // high: pow((0.735 + 0.055) * 0.9478673, 2.4) ≈ 0.5
+  expectCloseTo([0.0023219813592731953, 0.4994581639766693, 0.0, 0.0], result);
+});
