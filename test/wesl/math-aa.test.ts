@@ -1,8 +1,6 @@
 import { expect, test } from "vitest";
 import { expectCloseTo, testFragment } from "./testUtil.ts";
 
-const INV_SQRT2 = Math.SQRT2 / 2;
-
 // Anti-aliased functions requiring derivatives (use fragment shaders)
 
 test("aafloor with derivatives", async () => {
@@ -141,7 +139,7 @@ test("fcos - filtered cosine at known angles", async () => {
   // Verify cosine values
   expectCloseTo([1.0], [result[0]]);      // cos(0) = 1.0
   // Loose precision: filtered cosine uses derivatives, introduces small error (~0.0003)
-  expectCloseTo([INV_SQRT2], [result[1]], 0.001);    // cos(�/4) = 2/2
+  expectCloseTo([Math.SQRT1_2], [result[1]], 0.001);    // cos(�/4) = 2/2
   // Loose precision: filtered cosine uses derivatives, small error near zero (~0.0005)
   expectCloseTo([0.0], [result[2]], 0.001);      // cos(�/2) = 0.0
   expectCloseTo([-1.0], [result[3]]);     // cos(�) = -1.0

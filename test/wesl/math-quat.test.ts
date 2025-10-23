@@ -1,8 +1,6 @@
 import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-const INV_SQRT2 = Math.SQRT2 / 2;
-
 test("quatAdd", async () => {
   const src = `
     import lygia::math::quat::add::quatAdd;
@@ -144,8 +142,8 @@ test("quat - create from axis and angle", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, INV_SQRT2, 0, INV_SQRT2)
-  expectCloseTo([0.0, INV_SQRT2, 0.0, INV_SQRT2], result);
+  // quat from Y-axis rotation of π/2: (0, sin(π/4), 0, cos(π/4)) ≈ (0, Math.SQT1_2, 0, Math.SQT1_2)
+  expectCloseTo([0.0, Math.SQRT1_2, 0.0, Math.SQRT1_2], result);
 });
 
 test("quatDiv - divide quaternion by scalar", async () => {
