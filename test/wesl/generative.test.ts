@@ -255,7 +255,7 @@ test("srandom2", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([-0.7109375], [result[0]]);
+  expectCloseTo([-91 / 128], [result[0]]);
 });
 
 test("worley2", async () => {
@@ -353,7 +353,7 @@ test("noised3", async () => {
   expect(Math.abs(result[0])).toBeLessThan(5.0);
   expect(Math.abs(result[2])).toBeLessThan(5.0);
   // Regression: exact output value
-  expectCloseTo([-0.59765625], [result[0]]);
+  expectCloseTo([-153 / 256], [result[0]]);
 });
 
 test("wavelet2", async () => {
@@ -1044,7 +1044,7 @@ test("srandom", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.455078125], [result[0]]);
+  expectCloseTo([233 / 512], [result[0]]);
 });
 
 test("srandom22", async () => {
@@ -1097,7 +1097,7 @@ test("srandom3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.1328125], [result[0]]);
+  expectCloseTo([17 / 128], [result[0]]);
 });
 
 test("srandom33", async () => {
@@ -1126,7 +1126,7 @@ test("srandom33", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.58984375], [result[0]]);
+  expectCloseTo([-151 / 256], [result[0]]);
 });
 
 test("srandom4", async () => {
@@ -1155,7 +1155,7 @@ test("srandom4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.6796875], [result[0]]);
+  expectCloseTo([-87 / 128], [result[0]]);
 });
 
 test("srandom_tile22", async () => {
@@ -1215,7 +1215,7 @@ test("srandom_tile33", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.58984375], [result[0]]);
+  expectCloseTo([-151 / 256], [result[0]]);
 });
 
 // Worley noise variants

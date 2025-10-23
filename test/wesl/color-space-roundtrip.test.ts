@@ -70,7 +70,7 @@ test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([Math.LN2, 0.40003, 0.1999, Math.LN2], result);
+  expectCloseTo([0.70000, 0.40003, 0.19990, 0.60000], result);
 });
 
 test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
