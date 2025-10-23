@@ -33,7 +33,6 @@ test("linear2gamma", async () => {
   expectCloseTo([0.5325, 0.5325, 0.5325], result);
 });
 
-
 test("gamma2linear - f32 overload", async () => {
   const src = `
      import lygia::color::space::gamma2linear::gamma2linear;
