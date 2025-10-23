@@ -1,6 +1,23 @@
 import { expect, test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
+/**
+ * Reconstructs a 3D point from barycentric coordinates.
+ * Verifies the fundamental property: u*a + v*b + w*c where (u,v,w) are barycentric coords.
+ */
+function reconstructFromBarycentric(
+  baryCoords: number[],
+  a: number[],
+  b: number[],
+  c: number[]
+): number[] {
+  return [
+    baryCoords[0] * a[0] + baryCoords[1] * b[0] + baryCoords[2] * c[0],
+    baryCoords[0] * a[1] + baryCoords[1] * b[1] + baryCoords[2] * c[1],
+    baryCoords[0] * a[2] + baryCoords[1] * b[2] + baryCoords[2] * c[2],
+  ];
+}
+
 test("Triangle struct", async () => {
   const src = `
     import lygia::geometry::triangle::triangle::Triangle;
@@ -68,11 +85,7 @@ test("barycentric - computes normalized coordinates", async () => {
   const a = [2.0, 1.0, -0.5];
   const b = [-1.0, 3.0, 0.5];
   const c = [1.5, -0.5, 2.0];
-  const reconstructed = [
-    result[0] * a[0] + result[1] * b[0] + result[2] * c[0],
-    result[0] * a[1] + result[1] * b[1] + result[2] * c[1],
-    result[0] * a[2] + result[1] * b[2] + result[2] * c[2],
-  ];
+  const reconstructed = reconstructFromBarycentric(result, a, b, c);
   // Reconstructed point should be within triangle bounds
   expect(reconstructed[0]).toBeGreaterThan(-2.0);
   expect(reconstructed[0]).toBeLessThan(3.0);
@@ -105,11 +118,7 @@ test("barycentric2 - Triangle struct wrapper", async () => {
   const a = [2.0, 1.0, -0.5];
   const b = [-1.0, 3.0, 0.5];
   const c = [1.5, -0.5, 2.0];
-  const reconstructed = [
-    result[0] * a[0] + result[1] * b[0] + result[2] * c[0],
-    result[0] * a[1] + result[1] * b[1] + result[2] * c[1],
-    result[0] * a[2] + result[1] * b[2] + result[2] * c[2],
-  ];
+  const reconstructed = reconstructFromBarycentric(result, a, b, c);
   expect(reconstructed[0]).toBeGreaterThan(-2.0);
   expect(reconstructed[0]).toBeLessThan(3.0);
 
