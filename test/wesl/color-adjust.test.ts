@@ -52,7 +52,6 @@ test("brightnessMatrix", async () => {
   expectCloseTo([0.2, 0.2, 0.2, 1.0], result);
 });
 
-// Batch 3: color utility functions
 test("contrast", async () => {
   const src = `
      import lygia::color::contrast::contrast;
@@ -471,7 +470,6 @@ test("levelsOutputRange4Float", async () => {
   expectCloseTo([0.43, 0.69, 0.82, 0.7], result);
 });
 
-// Batch 4: composite functions
 test("tonemapReinhard3", async () => {
   const src = `
      import lygia::color::tonemap::reinhard::tonemapReinhard3;
@@ -536,7 +534,6 @@ test("tonemapLinear3 - identity baseline", async () => {
   expectCloseTo([1.5, 5.0, 10.0, -0.5], result);
 });
 
-// Batch 6: color space
 test("hueShift", async () => {
   const src = `
      import lygia::color::hueShift::hueShift;

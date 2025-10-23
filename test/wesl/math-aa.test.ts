@@ -166,7 +166,6 @@ test("fcos - band limiting at high frequency", async () => {
 
   const result = await testFragment(src, { size: [32, 32] });
 
-  // Property checks: verify band-limiting behavior
   // High frequency should be heavily attenuated (close to 0)
   expect(Math.abs(result[0])).toBeLessThan(0.01);
 

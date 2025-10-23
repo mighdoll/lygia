@@ -172,7 +172,6 @@ test("compositeSourceOut4", async () => {
   expectCloseTo([0.6, 0.0, 0.0, 0.48], result);
 });
 
-// Batch 5: tonemap functions
 test("layerMultiplySourceOver4", async () => {
   const src = `
      import lygia::color::layer::multiplySourceOver::layerMultiplySourceOver4;
