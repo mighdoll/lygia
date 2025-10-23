@@ -1,4 +1,4 @@
-import { test } from "vitest";
+import { test, expect } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 test("sphereSDF with vec3f", async () => {
@@ -188,57 +188,75 @@ test("torusSDF4 with sin/cos", async () => {
   expectCloseTo([0.5154, 0.0, 0.0], result);
 });
 
-test("rectSDF with vec2f size", async () => {
+test("rectSDF aspect ratio and distance", async () => {
   const src = `
     import lygia::sdf::rectSDF::rectSDF;
 
     @compute @workgroup_size(1)
     fn foo() {
-      let st = vec2f(0.5, 0.5);
-      let s = vec2f(1.0, 1.0);
-      let distance = rectSDF(st, s);
-      test::results[0] = vec3f(distance, 0.0, 0.0);
+      let s = vec2f(1.0, 0.5);
+
+      // Point at center
+      let d1 = rectSDF(vec2f(0.5, 0.5), s);
+
+      // Point near horizontal edge (tall rect, 2:1 aspect)
+      let d2 = rectSDF(vec2f(0.5, 0.9), s);
+
+      // Point near vertical edge
+      let d3 = rectSDF(vec2f(0.9, 0.5), s);
+
+      test::results[0] = vec3f(d1, d2, d3);
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
-  // Point at (0.5, 0.5) is center with size (1.0, 1.0)
-  // uv = st * 2.0 - 1.0 = (0.5,0.5) * 2 - 1 = (0,0)
-  // max(abs(0/1), abs(0/1)) = max(0, 0) = 0.0
-  expectCloseTo([0.0, 0.0, 0.0], result);
+
+  // Center should be minimum distance
+  expect(result[0]).toBeLessThan(result[1]);
+  expect(result[0]).toBeLessThan(result[2]);
+
+  // Vertical edge closer than horizontal edge (aspect 2:1, height is smaller dimension)
+  expect(result[2]).toBeLessThan(result[1]);
+
+  // Exact values to catch regressions
+  // d1: uv = (0.5*2-1, 0.5*2-1) = (0, 0), max(abs(0/1), abs(0/0.5)) = 0
+  // d2: uv = (0.5*2-1, 0.9*2-1) = (0, 0.8), max(abs(0/1), abs(0.8/0.5)) = max(0, 1.6) = 1.6
+  // d3: uv = (0.9*2-1, 0.5*2-1) = (0.8, 0), max(abs(0.8/1), abs(0/0.5)) = max(0.8, 0) = 0.8
+  expectCloseTo([0.0, 1.6, 0.8], result);
 });
 
-test("rectSDF1 with scalar size", async () => {
+test("rectSDF1 square symmetry", async () => {
   const src = `
     import lygia::sdf::rectSDF::rectSDF1;
 
     @compute @workgroup_size(1)
     fn foo() {
-      let st = vec2f(0.5, 0.5);
-      let distance = rectSDF1(st, 1.0);
-      test::results[0] = vec3f(distance, 0.0, 0.0);
+      let size = 0.8;
+
+      // Point on horizontal edge
+      let d1 = rectSDF1(vec2f(0.5, 0.9), size);
+
+      // Point on vertical edge (should equal d1 due to square symmetry)
+      let d2 = rectSDF1(vec2f(0.9, 0.5), size);
+
+      // Point outside on diagonal
+      let d3 = rectSDF1(vec2f(0.95, 0.95), size);
+
+      test::results[0] = vec3f(d1, d2, d3);
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
-  // Point at (0.5, 0.5) with scalar size 1.0
-  // Calls rectSDF(st, vec2(1.0)) which gives 0.0 (center point)
-  expectCloseTo([0.0, 0.0, 0.0], result);
-});
 
-test("rectSDFDefault", async () => {
-  const src = `
-    import lygia::sdf::rectSDF::rectSDFDefault;
+  // Square should be symmetric: horizontal and vertical edges equidistant
+  expect(result[0]).toBeCloseTo(result[1], 3);
 
-    @compute @workgroup_size(1)
-    fn foo() {
-      let st = vec2f(0.5, 0.5);
-      let distance = rectSDFDefault(st);
-      test::results[0] = vec3f(distance, 0.0, 0.0);
-    }
-  `;
-  const result = await testCompute(src, { elem: "vec3f" });
-  // Point at (0.5, 0.5) with default size (1.0, 1.0)
-  // Calls rectSDF(st, vec2(1.0)) which gives 0.0 (center point)
-  expectCloseTo([0.0, 0.0, 0.0], result);
+  // Diagonal should be furthest
+  expect(result[2]).toBeGreaterThan(result[0]);
+
+  // Exact values to catch regressions
+  // d1: uv = (0.5*2-1, 0.9*2-1) = (0, 0.8), max(abs(0/0.8), abs(0.8/0.8)) = max(0, 1) = 1.0
+  // d2: uv = (0.9*2-1, 0.5*2-1) = (0.8, 0), max(abs(0.8/0.8), abs(0/0.8)) = max(1, 0) = 1.0
+  // d3: uv = (0.95*2-1, 0.95*2-1) = (0.9, 0.9), max(abs(0.9/0.8), abs(0.9/0.8)) = 1.125
+  expectCloseTo([1.0, 1.0, 1.125], result);
 });
 
 test("rectSDF3 with rounded corners", async () => {

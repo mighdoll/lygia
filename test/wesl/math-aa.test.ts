@@ -39,7 +39,7 @@ test("aafloor2 with vec2", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  expectCloseTo([2.0, 3.0], result.slice(0, 2)); // Try default precision
+  expectCloseTo([2.0, 3.0], result.slice(0, 2));
 });
 
 test("aamirror - anti-aliased triangle wave", async () => {
@@ -168,12 +168,15 @@ test("fcos - band limiting at high frequency", async () => {
 
   const result = await testFragment(src, { size: [32, 32] });
 
+  // Property checks: verify band-limiting behavior
   // High frequency should be heavily attenuated (close to 0)
-  // Loose precision: band-limiting behavior varies with derivative magnitude
-  expect(Math.abs(result[0])).toBeLessThan(0.3);
+  expect(Math.abs(result[0])).toBeLessThan(0.01);
 
   // Low frequency should have full amplitude (not attenuated)
-  expect(Math.abs(result[1])).toBeGreaterThan(0.3);
+  expect(Math.abs(result[1])).toBeGreaterThan(0.95);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.0, 0.9998], result.slice(0, 2));
 });
 
 test("aafract - anti-aliased fract", async () => {
@@ -195,13 +198,16 @@ test("aafract - anti-aliased fract", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // aafract should produce values in [0, 1] range like fract
+  // Property checks: verify valid range
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
 
   // aafract should be close to regular fract for slowly varying values
   // Loose precision: anti-aliasing adds smoothing near integer boundaries
-  expect(Math.abs(result[0] - result[1])).toBeLessThan(0.3);
+  expect(Math.abs(result[0] - result[1])).toBeLessThan(0.15);
+
+  // Exact value checks to catch regressions
+  expectCloseTo([0.4375, 0.35], result.slice(0, 2));
 });
 
 test("aafract - edge anti-aliasing behavior", async () => {
@@ -251,7 +257,7 @@ test("aafract2 - vec2 anti-aliased fract", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // Both components should be in [0, 1] range
+  // Property checks: verify valid range
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
@@ -261,7 +267,10 @@ test("aafract2 - vec2 anti-aliased fract", async () => {
   // aafract should behave similar to regular fract
   // x: fract(~1.3) H 0.3, y: fract(~2.7) H 0.7
   // Loose precision: anti-aliasing can create wider transition bands
-  expectCloseTo([0.3, 0.7], result.slice(0, 2), 0.3);
+  expectCloseTo([0.3, 0.7], result.slice(0, 2), 0.05);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.3112, 0.7194], result.slice(0, 2));
 });
 
 test("aafract - periodic behavior", async () => {
@@ -284,13 +293,16 @@ test("aafract - periodic behavior", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // All should be close to 0.5 (the fractional part of x.5)
+  // Property checks: all should be close to 0.5 (the fractional part of x.5)
   // Loose precision: anti-aliasing smoothing varies with derivative magnitude
-  expectCloseTo([0.5], [result[0]], 0.15);
-  expectCloseTo([0.5], [result[1]], 0.15);
-  expectCloseTo([0.5], [result[2]], 0.15);
+  expectCloseTo([0.5], [result[0]], 0.05);
+  expectCloseTo([0.5], [result[1]], 0.05);
+  expectCloseTo([0.5], [result[2]], 0.05);
 
-  // Verify periodicity: r1, r2, r3 should be similar
-  expect(Math.abs(result[0] - result[1])).toBeLessThan(0.1);
-  expect(Math.abs(result[1] - result[2])).toBeLessThan(0.1);
+  // Verify periodicity: r1, r2, r3 should be identical
+  expect(Math.abs(result[0] - result[1])).toBeLessThan(0.01);
+  expect(Math.abs(result[1] - result[2])).toBeLessThan(0.01);
+
+  // Exact value check to catch regressions
+  expectCloseTo([0.5312, 0.5312, 0.5312], result.slice(0, 3));
 });
