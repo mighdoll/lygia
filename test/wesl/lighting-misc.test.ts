@@ -106,6 +106,9 @@ test("fresnelRoughness", async () => {
   // let normalDiff = 0.0;  // At normal incidence, roughness has no effect
   const grazingDiff = Math.abs(result[1] - result[2]);
   expect(grazingDiff).toBeGreaterThan(0.4); // Large difference at grazing angles
+
+  // Most specific check last - exact values to catch regressions
+  expectCloseTo([0.04, 0.54782, 0.07543, 0.06687], result);
 });
 
 test("specularCookTorrance", async () => {
@@ -164,6 +167,9 @@ test("specularCookTorrance", async () => {
   const smoothRatio = result[0] / (result[2] + 0.001); // Peak / off-spec
   const roughRatio = result[1] / (result[3] + 0.001);
   expect(smoothRatio).toBeGreaterThan(roughRatio); // Smooth falls off faster
+
+  // Most specific check last - exact values to catch regressions
+  expectCloseTo([0.31831, 0.00393, 0.00918, 0.00409], result);
 });
 
 test("toShininess", async () => {
