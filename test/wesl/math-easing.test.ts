@@ -1,8 +1,6 @@
 import { expect, test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-// Easing and curve functions
-
 test("cubic", async () => {
   const src = `
     import lygia::math::cubic::cubic;
@@ -88,10 +86,11 @@ test("gain", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // gain(0.5) = 0.5 always
-  expect(result[0]).toBeCloseTo(0.5, 2);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeLessThan(1.0);
+  // gain(0.5, k) = 0.5 always, gain applies symmetric contrast boost
+  expect(result[0]).toBeCloseTo(0.5, 2); // midpoint invariant
+
+  // Exact values for regression detection
+  expectCloseTo([0.5, 0.125, 0.875, 0.0], result);
 });
 
 test("parabola", async () => {
