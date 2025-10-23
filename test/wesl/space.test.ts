@@ -1,4 +1,4 @@
-import { test } from "vitest";
+import { expect, test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 const QTR_PI = Math.PI / 4;
@@ -445,22 +445,13 @@ test("bracketing", async () => {
   const result = await testCompute(src);
   const r = result as number[];
 
-  // Test 1: Canonical angle - known expected output
-  expectCloseTo([1.0, 0.0], r.slice(0, 2));
+  expect(r[0]).toBeCloseTo(1.0, 2); // vAxis0.x at canonical angle
+  expect(r[1]).toBeCloseTo(0.0, 2); // blendAlpha near zero at canonical angle
+  expect(r[2]).toBeGreaterThan(0.2); // blendAlpha in valid range for in-between angle
+  expect(r[2]).toBeLessThan(0.8);
+  expect(r[3]).toBeGreaterThan(0.01); // vAxis0 and vAxis1 differ when bracketing
 
-  // Test 2: Between canonical angles
-  if (r[2] < 0.2 || r[2] > 0.8) {
-    throw new Error(
-      `Expected blendAlpha in [0.2, 0.8] for in-between angle, got ${r[2]}`,
-    );
-  }
-
-  // vAxis0 and vAxis1 should differ (bracketing the input direction)
-  if (r[3] < 0.01) {
-    throw new Error(
-      `Expected vAxis0 and vAxis1 to bracket input, but difference was ${r[3]}`,
-    );
-  }
+  expectCloseTo([1.0, 0.0, 0.5, 0.012312], r);
 });
 
 test("tbn", async () => {
