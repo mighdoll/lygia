@@ -126,7 +126,6 @@ test("lch2srgb3", async () => {
   expectCloseTo([0.4277, 0.4903, 0.2895], result);
 });
 
-// Batch 7-9: Layer functions (blend modes with Porter-Duff compositing)
 test("hsl2rgb", async () => {
   const src = `
      import lygia::color::space::hsl2rgb::hsl2rgb;
