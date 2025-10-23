@@ -44,9 +44,9 @@ test("edgePrewitt", async () => {
 
   // Gradient should produce significant edge magnitude (Prewitt detects horizontal edges)
   // For a uniform gradient from 0 to 1 over 256 pixels, the Prewitt operator
-  // computes the gradient magnitude which should be approximately 1/256 * kernel_sum
-  expect(gradientResult[0]).toBeGreaterThan(0.01);
-  expect(gradientResult[0]).toBeLessThan(1.0);
+  // computes the gradient magnitude which should be approximately 3/255 ≈ 0.0118
+  expect(gradientResult[0]).toBeGreaterThan(0.008);
+  expect(gradientResult[0]).toBeLessThan(0.02);
 
   // Solid color should produce very small edge magnitude (near zero)
   expect(solidResult[0]).toBeLessThan(0.01);
