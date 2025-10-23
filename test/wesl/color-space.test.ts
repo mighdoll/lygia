@@ -1983,10 +1983,6 @@ test("yuv2rgb4 - alpha preservation", async () => {
   expectCloseTo([1.2402, 0.2593, 2.0896, 0.95], result);
 });
 
-// ============================================================================
-// Roundtrip Tests for New Functions
-// ============================================================================
-
 test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
   const src = `
      import lygia::color::space::rgb2yiq::rgb2yiq4;
