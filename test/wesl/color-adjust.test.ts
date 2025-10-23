@@ -848,5 +848,3 @@ test("ditherVlachos4", async () => {
     1.0 / 256.0,
   );
 });
-
-// Blend Mode Tests
