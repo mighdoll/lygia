@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 test("hsl2rgb", async () => {

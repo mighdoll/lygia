@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { getGPUDevice } from "wesl-debug";
-import { testFragment } from "./testUtil.ts";
 import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
+import { testFragment } from "./testUtil.ts";
 
 // Sample utility functions - require texture/sampler
 

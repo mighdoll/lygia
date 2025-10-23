@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
 test("sphereSDF with vec3f", async () => {
