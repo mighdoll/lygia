@@ -108,56 +108,6 @@ test("fresnelRoughness", async () => {
   expect(grazingDiff).toBeGreaterThan(0.4); // Large difference at grazing angles
 });
 
-test.skip("fresnelReflection", async () => {
-  // Skipped: requires envMap function which is not yet converted to WESL
-  const src = `
-     import lygia::lighting::fresnelReflection::fresnelReflection;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // fresnelReflection(R: vec3f, f0: vec3f, NoV: f32) -> vec3f
-       let R = vec3f(0.0, 1.0, 0.0);  // Reflection vector
-       let f0 = vec3f(0.04);  // Base reflectivity for dielectric
-       let NoV = 0.7;  // Dot product of normal and view
-       let result = fresnelReflection(R, f0, NoV);
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src, { elem: "vec3f" });
-  // Fresnel reflection should return RGB values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-});
-
-test.skip("raymarchCast", async () => {
-  // Skipped: raymarchCast requires a user-defined map() function to define the scene SDF,
-  // but WESL doesn't support defining functions before imports. This is a limitation of
-  // the module system - in practice, users would define map() in their own code before
-  // importing raymarchCast, but in a test environment this creates a circular dependency.
-  const src = `
-     // Define a simple scene: a sphere at origin with radius 1.0
-     fn map(p: vec3f) -> f32 {
-       return length(p) - 1.0;  // SDF for sphere
-     }
-
-     import lygia::lighting::raymarch::cast::raymarchCast;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // Ray from (0, 0, -5) looking toward +Z should hit sphere at z=-1
-       let ro = vec3f(0.0, 0.0, -5.0);
-       let rd = vec3f(0.0, 0.0, 1.0);
-       let result = raymarchCast(ro, rd);
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src);
-  // Should hit sphere at distance ~4.0 (from -5 to -1)
-  expectCloseTo([4.0], result);
-});
-
 test("specularCookTorrance", async () => {
   const src = `
      import lygia::lighting::specular::cookTorrance::specularCookTorrance;
