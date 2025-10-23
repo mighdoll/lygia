@@ -1,8 +1,6 @@
 import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-// Min/max functions
-
 test("mmax2", async () => {
   const src = `
     import lygia::math::mmax::mmax2;
