@@ -6,46 +6,6 @@ import {
   testDistribution,
 } from "./testUtil.ts";
 
-/**
- * Generative Functions Test Suite
- *
- * This test suite uses a hybrid testing approach with three layers:
- *
- * 1. Property Tests (✅ Implemented)
- *    - Determinism: Same input produces same output
- *    - Continuity: Nearby points produce similar values
- *    - Periodicity: Periodic noise repeats correctly
- *    - Derivatives: Analytical derivatives match numerical derivatives
- *    - Hash properties: Avalanche effect, component independence
- *    - Mathematical properties: F1 ≤ F2 for Worley noise, tiling behavior
- *
- * 2. Range Tests (✅ Implemented)
- *    - Verify outputs are within expected bounds
- *    - Different functions have different ranges:
- *      - noise functions: [-1, 1]
- *      - random functions: [0, 1]
- *      - srandom functions: [-1, 1]
- *      - worley distances: [0, ~1.5] or [0, ~2.0]
- *
- * 3. GLSL Parity Tests (⏳ TODO - requires GLSL reference values)
- *    - Verify WESL outputs match GLSL outputs for specific inputs
- *    - Acts as regression test for conversion accuracy
- *    - Catches systematic biases or implementation bugs
- *
- *    To add GLSL parity tests:
- *    a) Run GLSL version with test inputs (e.g., vec2f(1.0, 2.0))
- *    b) Record exact output values
- *    c) Add specific value tests like:
- *       expectCloseTo([expected_glsl_value], [wesl_result], 3);
- *
- *    Priority order for adding parity tests:
- *    1. cnoise (classic noise - most commonly used)
- *    2. snoise (simplex noise - also very common)
- *    3. random (pseudo-random - frequently used)
- *    4. worley (cellular noise - specialty use)
- *    5. wavelet (wavelet noise - specialty use)
- */
-
 test("cnoise2", async () => {
   const src = `
      import lygia::generative::cnoise::cnoise2;
@@ -71,7 +31,6 @@ test("cnoise2", async () => {
   // Classic noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
-  // TODO: Add GLSL parity test - verify result[0] matches GLSL cnoise2(vec2(1.0, 2.0))
   // Regression: exact output value
   expectCloseTo([0], [result[0]]);
 });
@@ -159,7 +118,6 @@ test("snoise2", async () => {
   // Simplex noise should return values in range [-1, 1]
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
-  // TODO: Add GLSL parity test - verify result[0] matches GLSL snoise2(vec2(1.0, 2.0))
   // Regression: exact output value
   expectCloseTo([0.36833828687667847], [result[0]]);
 });
@@ -536,7 +494,6 @@ test("random", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // TODO: Add GLSL parity test - verify result[0] matches GLSL random(1.0)
   // Regression: exact output value
   expectCloseTo([0.7629680633544922], [result[0]]);
 });
