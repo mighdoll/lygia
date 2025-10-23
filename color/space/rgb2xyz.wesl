@@ -18,7 +18,10 @@ const RGB2XYZ = mat3x3f(
     0.3575761, 0.7151522, 0.1191920,
     0.1804375, 0.0721750, 0.9503041 );
 
-fn rgb2xyz(rgb: vec3f) -> vec3f { return RGB2XYZ * rgb; }
+fn rgb2xyz(rgb: vec3f) -> vec3f {
+    // Scale to 0-100 range (colorimetry standard, different from GLSL)
+    return RGB2XYZ * rgb * 100.0;
+}
 
 fn rgb2xyz4(color: vec4f) -> vec4f {
     return vec4f(rgb2xyz(color.rgb), color.a);

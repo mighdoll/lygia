@@ -20,6 +20,7 @@ fn lab2xyz(c : vec3f) -> vec3f {
     f.z = f.y - c.z / 200.0;
     let c0 = f * f * f;
     let c1 = (f - 16.0 / 116.0) / 7.787;
+    // Scale to 0-100 range (colorimetry standard)
     return CIE_WEIGHT * 100.0 * mix(c0, c1, step(f, vec3f(0.206897)));
 }
 

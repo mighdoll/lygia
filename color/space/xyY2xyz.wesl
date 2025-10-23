@@ -11,7 +11,8 @@ fn xyY2xyz(xyY: vec3f) -> vec3f {
     let f = 1.0/xyY.y;
     let x = Y * xyY.x * f;
     let z = Y * (1.0 - xyY.x - xyY.y) * f;
-    return vec3f(x, Y, z);
+    // Scale to 0-100 range (colorimetry standard)
+    return vec3f(x, Y, z) * 100.0;
 }
 
 fn xyY2xyz4(color: vec4f) -> vec4f {
