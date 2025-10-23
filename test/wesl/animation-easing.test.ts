@@ -160,7 +160,7 @@ test("elasticIn", async () => {
     fn foo() { test::results[0] = elasticIn(0.5); }
   `;
   const result = await testCompute(src);
-  expectCloseTo([-0.02210], result);
+  expectCloseTo([-0.0221], result);
 });
 
 test("elasticOut", async () => {
@@ -170,7 +170,7 @@ test("elasticOut", async () => {
     fn foo() { test::results[0] = elasticOut(0.5); }
   `;
   const result = await testCompute(src);
-  expectCloseTo([1.02210], result);
+  expectCloseTo([1.0221], result);
 });
 
 test("elasticInOut", async () => {

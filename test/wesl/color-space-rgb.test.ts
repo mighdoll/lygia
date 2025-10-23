@@ -480,11 +480,5 @@ test("srgb2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo(
-    [
-      0.49946, 0.30019, 0.09989,
-      0.30000,
-    ],
-    result,
-  );
+  expectCloseTo([0.49946, 0.30019, 0.09989, 0.3], result);
 });

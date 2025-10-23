@@ -70,13 +70,7 @@ test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo(
-    [
-      0.70000, 0.40003, 0.19990,
-      0.60000,
-    ],
-    result,
-  );
+  expectCloseTo([Math.LN2, 0.40003, 0.1999, Math.LN2], result);
 });
 
 test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
@@ -93,13 +87,7 @@ test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo(
-    [
-      0.50000, 0.60064, 0.29362,
-      0.80000,
-    ],
-    result,
-  );
+  expectCloseTo([0.5, 0.60064, 0.29362, 0.8], result);
 });
 
 test("rgb2xyY4 -> xyY2rgb4 roundtrip (note: precision issues in xyY)", async () => {
