@@ -19,7 +19,7 @@ const RGB2XYZ = mat3x3f(
     0.1804375, 0.0721750, 0.9503041 );
 
 fn rgb2xyz(rgb: vec3f) -> vec3f {
-    // Scale to 0-100 range (colorimetry standard, different from GLSL)
+    // Scale to 0-100 range (colorimetry standard, different from GLSL, see #271)
     return RGB2XYZ * rgb * 100.0;
 }
 
