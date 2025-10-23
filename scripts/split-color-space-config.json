@@ -1,0 +1,71 @@
+{
+  "header": "import { expect, test } from \"vitest\";\nimport { expectCloseTo, testCompute } from \"./testUtil.ts\";\n\n",
+  "categories": {
+    "color-space-roundtrip.test.ts": {
+      "patterns": ["->"]
+    },
+    "color-space-gamma.test.ts": {
+      "patterns": [
+        "gamma2linear",
+        "linear2gamma",
+        "rgb2srgb",
+        "srgb2rgb"
+      ]
+    },
+    "color-space-lab.test.ts": {
+      "patterns": [
+        "lab2",
+        "2lab",
+        "lch2",
+        "2lch",
+        "oklab2",
+        "2oklab"
+      ]
+    },
+    "color-space-xyz.test.ts": {
+      "patterns": [
+        "xyz2",
+        "2xyz",
+        "xyY2",
+        "2xyY"
+      ]
+    },
+    "color-space-broadcast.test.ts": {
+      "patterns": [
+        "yuv2",
+        "2yuv",
+        "YPbPr2",
+        "2YPbPr",
+        "YCbCr2",
+        "2YCbCr",
+        "yiq2",
+        "2yiq"
+      ]
+    },
+    "color-space-rgb.test.ts": {
+      "patterns": [
+        "hsl2",
+        "2hsl",
+        "hsv2",
+        "2hsv",
+        "hcy2",
+        "2hcy",
+        "hcv2",
+        "2hcv",
+        "hue2",
+        "2hue",
+        "2luma"
+      ]
+    },
+    "color-space-misc.test.ts": {
+      "patterns": [
+        "ryb",
+        "cmyk",
+        "heat",
+        "k2rgb",
+        "lms2",
+        "2lms"
+      ]
+    }
+  }
+}
