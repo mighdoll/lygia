@@ -1,8 +1,6 @@
 import { test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-// Distance and length functions
-
 test("lengthSq2", async () => {
   const src = `
     import lygia::math::lengthSq::lengthSq2;
@@ -13,7 +11,6 @@ test("lengthSq2", async () => {
     }
   `;
   const result = await testCompute(src);
-  // 3� + 4� = 25
   expectCloseTo([25.0], result);
 });
 
@@ -27,7 +24,6 @@ test("lengthSq3", async () => {
     }
   `;
   const result = await testCompute(src);
-  // 1� + 2� + 2� = 9
   expectCloseTo([9.0], result);
 });
 
