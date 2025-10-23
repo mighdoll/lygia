@@ -165,11 +165,6 @@ test("layerColorSourceOver4", async () => {
   expect(maxChannel).toBeGreaterThan(0.3);
   expect(maxChannel).toBeLessThan(0.9);
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
-
   // Current implementation's specific output
   expectCloseTo([0.17, 0.51, 0.68, 0.85], result);
 });
