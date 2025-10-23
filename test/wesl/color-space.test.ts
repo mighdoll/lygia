@@ -1660,7 +1660,7 @@ test("rgb2oklab4 -> oklab2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6, 0.4, 0.2, 0.9], result, 0.02);
+  expectCloseTo([0.6, 0.4, 0.2, 0.9], result);
 });
 
 // ============================================================================

@@ -173,8 +173,7 @@ test("hueShiftRYB", async () => {
   // RYB hue shift: Red shifted by 120° in RYB space
   // After RGB->RYB->hue shift->RGB conversion
   // Red shifted 120° in RYB color wheel goes toward yellow
-  // Loose precision due to RYB color space conversion approximations
-  expectCloseTo([1.0, 1.0, 0.0], result, 0.15);
+  expectCloseTo([1.0, 1.0, 0.0], result);
 });
 
 test("heatmap", async () => {
@@ -534,8 +533,7 @@ test("colorDistanceYCbCr", async () => {
 
   // Same chrominance (grays) should have near-zero distance
   // (YCbCr distance ignores Y/luma)
-  // Loose precision due to floating-point chroma calculations
-  expectCloseTo([0.0], [lumaDist], 0.05);
+  expectCloseTo([0.0], [lumaDist]);
 
   // Regression check - exact YCbCr chroma distance
   expectCloseTo([0.5316], [chromaDist]);
@@ -598,8 +596,7 @@ test("colorDistanceYUV", async () => {
   const result = await testCompute(src);
   // YUV distance between white and gray (mainly Y difference)
   // Should be around 0.5 (difference in luminance)
-  // Loose precision due to YUV conversion approximations
-  expectCloseTo([0.5], result, 0.1);
+  expectCloseTo([0.5], result);
 });
 
 // Color transformation function tests

@@ -136,7 +136,7 @@ test("ditherBayer3 - vec3 dithering", async () => {
 
   // Should be close to original values (coarse precision for dithered output)
   expectCloseTo([0.8, 0.5, 0.2], result.slice(0, 3), 0.1);
-  expectCloseTo([0.5], [result[4]], 0.1);
+  expectCloseTo([0.5], [result[4]]);
 });
 
 test("ditherBayer4 - vec4 dithering preserves alpha", async () => {

@@ -123,7 +123,7 @@ test("blendHue", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Hue blend - takes hue from blend, saturation and value from base
   // Relaxed precision for HSL color space conversion
-  expectCloseTo([0.2, 0.6, 0.8], result, 0.05);
+  expectCloseTo([0.2, 0.6, 0.8], result);
 });
 
 test("blendSaturation", async () => {
@@ -165,7 +165,7 @@ test("blendColor", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Color blend - takes hue and saturation from blend, value from base
   // Relaxed precision for HSL color space conversion
-  expectCloseTo([0.2, 0.6, 0.8], result, 0.05);
+  expectCloseTo([0.2, 0.6, 0.8], result);
 });
 
 test("blendLuminosity", async () => {
@@ -458,7 +458,7 @@ test("blendColorBurn3", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Color burn mode: 1 - (1 - base) / blend
   // Relaxed precision for division-based blend mode
-  expectCloseTo([0.0, 0.0, 0.0], result, 0.05);
+  expectCloseTo([0.0, 0.0, 0.0], result);
 });
 
 test("blendColorDodge3", async () => {
@@ -512,13 +512,6 @@ test("blendLinearDodge3", async () => {
   expectCloseTo([0.7, 0.7, 0.7], result);
 });
 
-// Color Space Conversion Tests (Additional)
-
-// ============================================================================
-// TESTS FOR F32 BLEND VARIANTS AND OPACITY FUNCTIONS
-// ============================================================================
-
-// Test f32 variants (base blend functions)
 test("blendAdd - f32", async () => {
   const src = `
      import lygia::color::blend::add::blendAdd;
@@ -736,7 +729,7 @@ test("blendColorBurn - f32", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Color burn: 1 - (1-0.6)/0.3 = 1 - 0.4/0.3 = 1 - 1.333 = clamped to 0
   // Relaxed precision for division-based blend mode
-  expectCloseTo([0.0], [result[0]], 0.05);
+  expectCloseTo([0.0], [result[0]]);
 });
 
 test("blendColorDodge - f32", async () => {
@@ -1179,7 +1172,7 @@ test("blendColorBurn3Opacity", async () => {
   // Full blend: [0.0, 0.0, 0.0]
   // At 0.5: [0.0*0.5+0.6*0.5, 0.0*0.5+0.5*0.5, 0.0*0.5+0.4*0.5]
   // Relaxed precision for division-based blend mode with opacity
-  expectCloseTo([0.3, 0.25, 0.2], result, 0.05);
+  expectCloseTo([0.3, 0.25, 0.2], result);
 });
 
 test("blendColorDodge3Opacity", async () => {
@@ -1360,7 +1353,7 @@ test("blendHueOpacity", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // Full blend takes hue from blend
   // At 0.5: interpolate between base and blend result
-  expectCloseTo([0.5, 0.5, 0.5], result, 0.1);
+  expectCloseTo([0.5, 0.5, 0.5], result);
 });
 
 test("blendSaturationOpacity", async () => {

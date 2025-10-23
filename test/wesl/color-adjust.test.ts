@@ -692,7 +692,7 @@ test("ditherBlueNoise - spatial distribution", async () => {
   expect(result[0]).toBeGreaterThan(0.01);
 
   // Deterministic: same input should produce same output
-  expectCloseTo([result[1]], [result[2]], 0.0001);
+  expectCloseTo([result[1]], [result[2]]);
 
   // All values should be in [0, 1] range
   expect(result[3]).toBeGreaterThanOrEqual(0.0);
@@ -731,7 +731,7 @@ test("ditherBlueNoise3", async () => {
   expect([quantLevel128, quantLevel129]).toContain(result[2]);
 
   // Verify original value was 0.503
-  expectCloseTo([0.503], [result[3]], 0.0001);
+  expectCloseTo([0.503], [result[3]]);
 });
 
 test("ditherBlueNoise3Precision", async () => {
@@ -807,7 +807,7 @@ test("ditherVlachos3", async () => {
   ).toBeLessThan(tolerance);
 
   // Undithered should be exactly 0.5 (no noise added)
-  expectCloseTo([0.5], [result[3]], 0.0001);
+  expectCloseTo([0.5], [result[3]]);
 });
 
 test("ditherVlachos4", async () => {
@@ -839,7 +839,7 @@ test("ditherVlachos4", async () => {
   ).toBeLessThan(tolerance);
 
   // Alpha should be preserved exactly
-  expectCloseTo([0.85], [result[3]], 0.0001);
+  expectCloseTo([0.85], [result[3]]);
 
   // RGB should be in valid range and close to original
   expectCloseTo(

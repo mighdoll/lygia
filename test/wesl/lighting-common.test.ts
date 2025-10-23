@@ -56,7 +56,7 @@ test("GGXPrecise", async () => {
    `;
   const result = await testCompute(src, { elem: "vec2f" });
   // GGXPrecise should produce similar results to standard GGX (identical on desktop)
-  expectCloseTo([result[0]], [result[1]], 0.01);
+  expectCloseTo([result[0]], [result[1]]);
   // Both should be positive and reasonable
   expect(result[0]).toBeGreaterThan(0.3);
   // Exact values to catch regressions
@@ -84,7 +84,7 @@ test("importanceSamplingGGX", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // u=(0,0) produces direction close to Z axis
-  expectCloseTo([1.0], [result[0]], 0.1);
+  expectCloseTo([1.0], [result[0]]);
   // Samples should be normalized (unit length)
   expectCloseTo([1.0], [result[1]]);
   // Lower roughness biases toward Z
@@ -119,7 +119,7 @@ test("schlick vec3f", async () => {
   // At normal incidence, Fresnel equals f0
   expectCloseTo([0.04], [result[0]]);
   // At grazing angle, Fresnel approaches f90
-  expectCloseTo([1.0], [result[1]], 0.05);
+  expectCloseTo([1.0], [result[1]]);
   // Mid-angle should be between f0 and f90
   expect(result[2]).toBeGreaterThan(0.04);
   expect(result[2]).toBeLessThan(1.0);
@@ -175,7 +175,7 @@ test("schlickF32", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // At normal incidence, equals f0
-  expectCloseTo([0.04], [result[0]], 0.001);
+  expectCloseTo([0.04], [result[0]]);
   // At grazing, approaches f90
   expectCloseTo([1.0], [result[1]]);
   // Mid-angle between f0 and f90
