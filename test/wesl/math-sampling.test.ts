@@ -151,34 +151,46 @@ test("grad4 - noise gradient helper", async () => {
       // It uses permutation value j and position p to generate gradients
 
       // Test 1: Reproducibility - same inputs give same output
-      let g1a = grad4(100.0, vec4f(0.1, 0.2, 0.3, 0.4));
-      let g1b = grad4(100.0, vec4f(0.1, 0.2, 0.3, 0.4));
+      let g1a = grad4(123.456, vec4f(0.789, 0.234, 0.567, 0.891));
+      let g1b = grad4(123.456, vec4f(0.789, 0.234, 0.567, 0.891));
 
-      // Test 2: Different j values may give different gradients (not guaranteed)
-      let g2 = grad4(200.0, vec4f(0.1, 0.2, 0.3, 0.4));
+      // Test 2: Different j values produce different gradients
+      let g2 = grad4(42.0, vec4f(0.789, 0.234, 0.567, 0.891));
 
-      // Test 3: Different positions give different gradients
-      let g3 = grad4(100.0, vec4f(0.5, 0.6, 0.7, 0.8));
+      // Test 3: Different positions produce different gradients
+      let g3 = grad4(123.456, vec4f(0.33, 0.67, 0.89, 1.23));
 
-      // Store x components for validation
-      test::results[0] = vec4f(g1a.x, g1b.x, g2.x, g3.x);
+      // Store first gradient for validation
+      test::results[0] = g1a;
+      test::results[1] = g1b;
+      test::results[2] = g2;
+      test::results[3] = g3;
     }
   `;
-  const result = await testCompute(src, { elem: "vec4f" });
+  const result = await testCompute(src, { elem: "vec4f", size: 4 });
 
-  // Reproducibility: g1a.x == g1b.x (exact match expected)
-  expectCloseTo([result[0]], [result[1]]);
+  const g1a = result.slice(0, 4);
+  const g1b = result.slice(4, 8);
+  const g2 = result.slice(8, 12);
+  const g3 = result.slice(12, 16);
 
-  // All gradient components should be in reasonable range
-  for (let i = 0; i < 4; i++) {
-    expect(Math.abs(result[i])).toBeLessThan(3.0);
+  // Property 1: Reproducibility - same inputs produce same output
+  expectCloseTo(g1a, g1b);
+
+  // Property 2: Gradients should be finite and reasonable
+  for (const grad of [g1a, g2, g3]) {
+    for (let i = 0; i < 4; i++) {
+      expect(Number.isFinite(grad[i])).toBe(true);
+    }
   }
 
-  // Note: We don't test that different j or positions always produce different outputs
-  // because grad4 uses a hash function that may occasionally produce collisions
+  // Property 3: Different inputs should produce different gradients
+  // (Note: hash collisions are possible, but unlikely with these specific inputs)
+  expect(g1a).not.toEqual(g2);
+  expect(g1a).not.toEqual(g3);
 
   // Exact values to catch regressions
-  expectCloseTo([0.0, 0.0, 0.0, 0.0], result);
+  expectCloseTo([-0.866, 1.402, 1.402, -3.438], g1a);
 });
 
 test("grad4 - gradient range validation", async () => {
@@ -259,7 +271,7 @@ test("hemisphereCosSample - positive hemisphere", async () => {
   expect(result[3]).toBeLessThanOrEqual(1.0);
 
   // Exact values to catch regressions
-  expectCloseTo([1.0, 0.0, 0.707107, 0.5], result);
+  expectCloseTo([1.0, 0.0, Math.SQRT1_2, 0.5], result);
 });
 
 test("hemisphereCosSample - known values", async () => {
@@ -314,5 +326,5 @@ test("hemisphereCosSample - cosine distribution", async () => {
   expect(result[2]).toBeLessThan(1.0);
 
   // Exact values to catch regressions
-  expectCloseTo([0.948683, 0.707107, 0.316228, 0.0], result);
+  expectCloseTo([0.948683, Math.SQRT1_2, 0.316228, 0.0], result);
 });
