@@ -498,12 +498,12 @@ test("powFast", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
 
   // Verify approximation values (not exact pow, but close)
-  expectCloseTo([0.6667], [result[0]], 0.01);
-  expectCloseTo([0.9302], [result[1]], 0.01);
-  expectCloseTo([0.3077], [result[2]], 0.01);
+  expectCloseTo([0.6667], [result[0]]);
+  expectCloseTo([0.9302], [result[1]]);
+  expectCloseTo([0.3077], [result[2]]);
 
   // Edge case: powFast(1, x) = 1 for any x
-  expectCloseTo([1.0], [result[3]], 0.01);
+  expectCloseTo([1.0], [result[3]]);
 });
 
 test("round", async () => {

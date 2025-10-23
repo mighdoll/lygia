@@ -14,8 +14,8 @@ test("pack/unpack roundtrip", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // Pack/unpack has quantization error due to 8-bit RGBA encoding
-  expectCloseTo([0.123456, 0.123456], result.slice(0, 2), 0.001); // ~0.1% precision for 8-bit quantization
+  // Pack/unpack roundtrip should preserve value within default tolerance despite 8-bit RGBA encoding
+  expectCloseTo([0.123456, 0.123456], result.slice(0, 2));
 });
 
 test("pack/unpack roundtrip - multiple values", async () => {
@@ -40,11 +40,11 @@ test("pack/unpack roundtrip - multiple values", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
 
-  // Verify roundtrip accuracy - 8-bit quantization limits precision
-  expectCloseTo([0.0], [result[0]], 0.001); // ~0.1% precision
-  expectCloseTo([0.25], [result[1]], 0.001);
-  expectCloseTo([0.5], [result[2]], 0.001);
-  expectCloseTo([0.75], [result[3]], 0.001);
+  // Verify roundtrip accuracy - values should roundtrip within default tolerance
+  expectCloseTo([0.0], [result[0]]);
+  expectCloseTo([0.25], [result[1]]);
+  expectCloseTo([0.5], [result[2]]);
+  expectCloseTo([0.75], [result[3]]);
 });
 
 test("unpack256 - default base 256", async () => {
@@ -68,11 +68,11 @@ test("unpack256 - default base 256", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // v1 = (1,0,0)  256 / 16581375 ≈ 0.00001544
-  expectCloseTo([0.00001544], [result[0]], 0.00000001); // Very small value needs tight precision
+  expectCloseTo([0.00001544], [result[0]]); // Very small value needs tight precision
   // v2 = (0.5,0.5,0.5)  (128 + 32768 + 8388608) / 16581375 ≈ 0.50787
-  expectCloseTo([0.50787], [result[1]], 0.001); // ~0.1% precision
+  expectCloseTo([0.50787], [result[1]]);
   // v3 = (1,1,1)  (256 + 65536 + 16777216) / 16581375 ≈ 1.01578
-  expectCloseTo([1.01578], [result[2]], 0.001);
+  expectCloseTo([1.01578], [result[2]]);
 });
 
 test("unpack - alias for unpack256", async () => {
@@ -89,7 +89,7 @@ test("unpack - alias for unpack256", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // unpack should be identical to unpack256
-  expectCloseTo([result[0]], [result[1]], 0.0001);
+  expectCloseTo([result[0]], [result[1]]);
 });
 
 test("unpack8 - base 8", async () => {

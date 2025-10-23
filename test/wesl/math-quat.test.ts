@@ -252,9 +252,9 @@ test("quatForwardUp - create quat from forward and up vectors", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
   // Rotated forward should point in +X direction
-  expectCloseTo([1.0], [result[0]], 0.1);
+  expectCloseTo([1.0], [result[0]]);
   // Rotated up should still point in +Y direction
-  expectCloseTo([1.0], [result[1]], 0.1);
+  expectCloseTo([1.0], [result[1]]);
   // Quaternion should be normalized
   expectCloseTo([1.0], [result[2]]);
 });
