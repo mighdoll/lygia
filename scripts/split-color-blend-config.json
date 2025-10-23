@@ -1,0 +1,119 @@
+{
+  "header": "import { expect, test } from \"vitest\";\nimport { expectCloseTo, testCompute } from \"./testUtil.ts\";\n\n",
+  "categories": {
+    "color-blend-basic.test.ts": {
+      "tests": [
+        "blendAdd3",
+        "blendAdd - f32",
+        "blendMultiply3",
+        "blendMultiply - f32",
+        "blendScreen3",
+        "blendScreen - f32",
+        "blendAverage3",
+        "blendAverage - f32"
+      ]
+    },
+    "color-blend-darken.test.ts": {
+      "tests": [
+        "blendDarken3",
+        "blendDarken - f32",
+        "blendColorBurn3",
+        "blendColorBurn - f32",
+        "blendLinearBurn3",
+        "blendLinearBurn - f32"
+      ]
+    },
+    "color-blend-lighten.test.ts": {
+      "tests": [
+        "blendLighten3",
+        "blendLighten - f32",
+        "blendColorDodge3",
+        "blendColorDodge - f32",
+        "blendLinearDodge3",
+        "blendLinearDodge - f32"
+      ]
+    },
+    "color-blend-contrast.test.ts": {
+      "tests": [
+        "blendOverlay3",
+        "blendOverlay - f32",
+        "blendSoftLight3",
+        "blendSoftLight - f32",
+        "blendHardLight3",
+        "blendHardLight - f32"
+      ]
+    },
+    "color-blend-light.test.ts": {
+      "tests": [
+        "blendVividLight3",
+        "blendVividLight - f32",
+        "blendPinLight3",
+        "blendPinLight - f32",
+        "blendLinearLight3",
+        "blendLinearLight - f32",
+        "blendHardMix3",
+        "blendHardMix - f32",
+        "blendGlow3",
+        "blendGlow - f32"
+      ]
+    },
+    "color-blend-inversion.test.ts": {
+      "tests": [
+        "blendDifference3",
+        "blendDifference - f32",
+        "blendExclusion3",
+        "blendExclusion - f32",
+        "blendSubtract3",
+        "blendSubtract - f32",
+        "blendNegation3",
+        "blendNegation - f32",
+        "blendPhoenix3",
+        "blendPhoenix - f32",
+        "blendReflect3",
+        "blendReflect - f32"
+      ]
+    },
+    "color-blend-hsl.test.ts": {
+      "tests": [
+        "blendHue",
+        "blendSaturation",
+        "blendColor",
+        "blendLuminosity"
+      ]
+    },
+    "color-blend-opacity.test.ts": {
+      "tests": [
+        "blendAdd3Opacity - opacity 0.5",
+        "blendAdd3Opacity - opacity 0",
+        "blendAdd3Opacity - opacity 1",
+        "blendMultiply3Opacity",
+        "blendScreen3Opacity",
+        "blendOverlay3Opacity",
+        "blendDarken3Opacity",
+        "blendLighten3Opacity",
+        "blendDifference3Opacity",
+        "blendExclusion3Opacity",
+        "blendNegation3Opacity",
+        "blendPhoenix3Opacity",
+        "blendReflect3Opacity",
+        "blendSubtract3Opacity",
+        "blendSoftLight3Opacity",
+        "blendAverage3Opacity",
+        "blendColorBurn3Opacity",
+        "blendColorDodge3Opacity",
+        "blendLinearBurn3Opacity",
+        "blendLinearDodge3Opacity",
+        "blendHardLight3Opacity",
+        "blendVividLight3Opacity",
+        "blendPinLight3Opacity",
+        "blendLinearLight3Opacity",
+        "blendHardMix3Opacity",
+        "blendGlow3Opacity",
+        "blendHueOpacity",
+        "blendSaturationOpacity",
+        "blendLuminosityOpacity",
+        "blendDifference3Opacity - opacity 0 returns base"
+      ]
+    }
+  }
+}
