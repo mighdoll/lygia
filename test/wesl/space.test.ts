@@ -598,42 +598,6 @@ test("lookAt", async () => {
   expectCloseTo([0.0, 0.0, -1.0, 0.0], result);
 });
 
-test.skip("view2screenPosition", async () => {
-  // SKIPPED: Requires CAMERA_PROJECTION_MATRIX to be defined as a compile-time constant
-  // which is not currently supported by the test framework's option passing mechanism.
-  // The function uses @if(CAMERA_PROJECTION_MATRIX) conditional compilation.
-  const src = `
-     import lygia::space::view2screenPosition::view2screenPosition;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // Test with a point at (0,0,-1) in view space
-       let result = view2screenPosition(vec3f(0.0, 0.0, -1.0));
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src, { elem: "vec2f" });
-  expectCloseTo([0.5, 0.5], result);
-});
-
-test.skip("screen2viewPosition", async () => {
-  // SKIPPED: Requires CAMERA_PROJECTION_MATRIX to be defined as a compile-time constant
-  // which is not currently supported by the test framework's option passing mechanism.
-  // The function uses @if(CAMERA_PROJECTION_MATRIX) conditional compilation.
-  const src = `
-     import lygia::space::screen2viewPosition::screen2viewPosition;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       // Test with screen center (0.5, 0.5), depth 0.5, viewZ -1.0
-       let result = screen2viewPosition(vec2f(0.5, 0.5), 0.5, -1.0);
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.0, 0.0, -1.0, 1.002], result);
-});
-
 test("lookAtView", async () => {
   const src = `
      import lygia::space::lookAtView::lookAtView;
