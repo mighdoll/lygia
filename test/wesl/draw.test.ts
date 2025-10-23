@@ -3,8 +3,9 @@ import { expectCloseTo, testCompute, testFragment } from "./testUtil.ts";
 
 // Draw utility functions
 
+// TODO: Add image test - render strokes at various distances/widths in 4x4 or 8x8 texture
 // stroke uses aastep which requires fwidth (fragment shader only)
-test("stroke", async () => {
+test("stroke - basic behavior", async () => {
   const src = `
     import lygia::draw::stroke::stroke;
 
@@ -49,7 +50,8 @@ test("stroke", async () => {
   expectCloseTo([1, 0, 0, 1], result);
 });
 
-test("strokeEdge", async () => {
+// TODO: Add image test - render strokeEdge with various edge widths in 4x4 or 8x8 texture
+test("strokeEdge - basic behavior", async () => {
   const src = `
     import lygia::draw::stroke::strokeEdge;
 
