@@ -1,9 +1,7 @@
 import { expect, test } from "vitest";
-import { createSampler, getGPUDevice, testFragmentShader } from "wesl-debug";
+import { getGPUDevice } from "wesl-debug";
 import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
-import { expectCloseTo } from "./testUtil.ts";
-
-const projectDir = import.meta.url;
+import { createSampler, expectCloseTo, testFragment } from "./testUtil.ts";
 
 // Animation utility functions
 // spriteLoop requires texture/sampler which cannot be easily tested in compute shaders
@@ -37,10 +35,7 @@ test("spriteLoop - index 0", async () => {
       return spriteLoop(sprite_tex, sprite_samp, uv, grid, start_index, end_index, time);
     }`;
 
-  const result = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const result = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: spriteTex, sampler }],
@@ -80,10 +75,7 @@ test("spriteLoop - index 4", async () => {
       return spriteLoop(sprite_tex, sprite_samp, uv, grid, start_index, end_index, time);
     }`;
 
-  const result = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const result = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: spriteTex, sampler }],
@@ -138,19 +130,13 @@ test("spriteLoop - time wrapping", async () => {
       return spriteLoop(sprite_tex, sprite_samp, uv, grid, start_index, end_index, time);
     }`;
 
-  const resultTime0 = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcTime0,
+  const resultTime0 = await testFragment(srcTime0, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: spriteTex, sampler }],
   });
 
-  const resultTime16 = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcTime16,
+  const resultTime16 = await testFragment(srcTime16, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: spriteTex, sampler }],

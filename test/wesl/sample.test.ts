@@ -1,8 +1,7 @@
 import { expect, test } from "vitest";
-import { getGPUDevice, testFragmentShader } from "wesl-debug";
+import { getGPUDevice } from "wesl-debug";
+import { testFragment } from "./testUtil.ts";
 import { createSimpleSpriteSheet } from "./spriteTestUtil.ts";
-
-const projectDir = import.meta.url;
 
 // Sample utility functions - require texture/sampler
 
@@ -43,10 +42,7 @@ test("sampleSprite", async () => {
       return sampleSprite(sprite_tex, sprite_samp, uv, grid, 0.0);
     }`;
 
-  const frame0Result = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcFrame0,
+  const frame0Result = await testFragment(srcFrame0, {
     textureFormat: "rgba32float",
     size: [128, 128],
     inputTextures: [{ texture: spriteTex, sampler }],
@@ -66,10 +62,7 @@ test("sampleSprite", async () => {
       return sampleSprite(sprite_tex, sprite_samp, uv, grid, 2.0);
     }`;
 
-  const frame2Result = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcFrame2,
+  const frame2Result = await testFragment(srcFrame2, {
     textureFormat: "rgba32float",
     size: [128, 128],
     inputTextures: [{ texture: spriteTex, sampler }],

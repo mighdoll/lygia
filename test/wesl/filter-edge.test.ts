@@ -1,16 +1,12 @@
 import { expect, test } from "vitest";
+import { getGPUDevice } from "wesl-debug";
 import {
   createGradientTexture,
   createSampler,
   createSolidTexture,
-  getGPUDevice,
-  testFragmentShader,
-} from "wesl-debug";
-import { expectCloseTo } from "./testUtil.js";
-
-const projectDir = import.meta.url;
-
-// Edge detection filter tests - require texture/sampler, use fragment shaders
+  expectCloseTo,
+  testFragment,
+} from "./testUtil.js";
 
 test("edgePrewitt", async () => {
   const device = await getGPUDevice();
@@ -33,20 +29,14 @@ test("edgePrewitt", async () => {
       return vec4f(edge, 1.0);
     }`;
 
-  const gradientResult = await testFragmentShader({
-    projectDir,
-    device,
-    src: src1,
+  const gradientResult = await testFragment(src1, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: gradientTex, sampler }],
   });
 
   // Test 2: Solid color should produce near-zero edge response
-  const solidResult = await testFragmentShader({
-    projectDir,
-    device,
-    src: src1,
+  const solidResult = await testFragment(src1, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],

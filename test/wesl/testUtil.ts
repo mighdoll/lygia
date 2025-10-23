@@ -66,6 +66,7 @@ export interface TestFragmentOptions {
   textureFormat?: GPUTextureFormat;
   conditions?: Record<string, boolean>;
   constants?: Record<string, string | number>;
+  inputTextures?: Array<{ texture: GPUTexture; sampler: GPUSampler }>;
 }
 
 /** test WGSL fragment shader with typical defaults */
@@ -78,6 +79,7 @@ export async function testFragment(
     textureFormat = "rgba32float",
     conditions,
     constants,
+    inputTextures,
   } = options ?? {};
 
   const device = await getGPUDevice();
@@ -89,6 +91,7 @@ export async function testFragment(
     size,
     conditions,
     constants,
+    inputTextures,
   });
 }
 

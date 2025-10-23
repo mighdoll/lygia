@@ -1,14 +1,13 @@
 import { expect, test } from "vitest";
+import { getGPUDevice } from "wesl-debug";
 import {
   createCheckerboardTexture,
   createSampler,
   createSolidTexture,
-  getGPUDevice,
-  testFragmentShader,
-} from "wesl-debug";
-import { expectCloseTo, testCompute } from "./testUtil.ts";
-
-const projectDir = import.meta.url;
+  expectCloseTo,
+  testCompute,
+  testFragment,
+} from "./testUtil.ts";
 
 // Sharpen filter tests - require texture/sampler, use fragment shaders
 
@@ -32,20 +31,14 @@ test("sharpenAdaptive", async () => {
     }`;
 
   // Test sharpening on solid color (no edges to sharpen)
-  const sharpenedSolid = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcSharpen,
+  const sharpenedSolid = await testFragment(srcSharpen, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
   });
 
   // Test sharpening on checkerboard (has edges to sharpen)
-  const sharpenedChecker = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcSharpen,
+  const sharpenedChecker = await testFragment(srcSharpen, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: checkerTex, sampler }],
@@ -88,19 +81,13 @@ test("sharpenAdaptive4", async () => {
       return sharpenAdaptive4(input_tex, input_samp, uv, pixel_size, 1.0);
     }`;
 
-  const sharpenedChecker = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcSharpen,
+  const sharpenedChecker = await testFragment(srcSharpen, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: checkerTex, sampler }],
   });
 
-  const sharpenedSolid = await testFragmentShader({
-    projectDir,
-    device,
-    src: srcSharpen,
+  const sharpenedSolid = await testFragment(srcSharpen, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
@@ -145,19 +132,13 @@ test("sharpenContrastAdaptive", async () => {
       return vec4f(sharpened, 1.0);
     }`;
 
-  const sharpenedChecker = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedChecker = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: checkerTex, sampler }],
   });
 
-  const sharpenedSolid = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedSolid = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
@@ -195,19 +176,13 @@ test("sharpenFast", async () => {
       return sharpenFast(input_tex, input_samp, uv, pixel_size);
     }`;
 
-  const sharpenedChecker = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedChecker = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: checkerTex, sampler }],
   });
 
-  const sharpenedSolid = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedSolid = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
@@ -247,19 +222,13 @@ test("sharpenFast4", async () => {
       return sharpenFast4(input_tex, input_samp, uv, pixel_size, 1.0);
     }`;
 
-  const sharpenedChecker = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedChecker = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: checkerTex, sampler }],
   });
 
-  const sharpenedSolid = await testFragmentShader({
-    projectDir,
-    device,
-    src,
+  const sharpenedSolid = await testFragment(src, {
     textureFormat: "rgba32float",
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
