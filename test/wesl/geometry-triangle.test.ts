@@ -32,15 +32,16 @@ test("area", async () => {
     fn foo() {
       var tri: Triangle;
       tri.a = vec3f(0.0, 0.0, 0.0);
-      tri.b = vec3f(2.0, 0.0, 0.0);
-      tri.c = vec3f(0.0, 2.0, 0.0);
+      tri.b = vec3f(3.0, 0.0, 1.0);
+      tri.c = vec3f(0.0, 4.0, 1.0);
       let result = area(tri);
       test::results[0] = result;
     }
   `;
   const result = await testCompute(src);
-  // Area of triangle with base=2, height=2 is 0.5 * 2 * 2 = 2.0
-  expectCloseTo([2.0], result);
+  // Non-axis-aligned triangle: (B-A)×(C-A) = (-4, -3, 12), ||(−4,−3,12)|| = 13
+  // Area = 0.5 * 13 = 6.5
+  expectCloseTo([6.5], result);
 });
 
 test("barycentric - computes normalized coordinates", async () => {
@@ -49,23 +50,35 @@ test("barycentric - computes normalized coordinates", async () => {
 
     @compute @workgroup_size(1)
     fn foo() {
-      // Test with specific vectors - this tests a well-defined case
-      let a = vec3f(1.0, 0.0, 0.0);
-      let b = vec3f(0.0, 1.0, 0.0);
-      let c = vec3f(0.0, 0.0, 1.0);
+      // Test with general non-axis-aligned triangle
+      let a = vec3f(2.0, 1.0, -0.5);
+      let b = vec3f(-1.0, 3.0, 0.5);
+      let c = vec3f(1.5, -0.5, 2.0);
 
-      let result = barycentric(a, b, c);
-      test::results[0] = result;
+      let coords = barycentric(a, b, c);
+      test::results[0] = coords;
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
 
-  // The function should return specific coordinates for this configuration
-  // Based on the Ericson algorithm, this returns (1, 0, 0)
-  expectCloseTo([1.0, 0.0, 0.0], result);
-
-  // Barycentric coordinates must always sum to 1.0
+  // Barycentric coordinates must sum to 1.0
   expect(result[0] + result[1] + result[2]).toBeCloseTo(1.0, 2);
+
+  // Verify fundamental property: barycentric coords reconstruct a point in/on the triangle
+  const a = [2.0, 1.0, -0.5];
+  const b = [-1.0, 3.0, 0.5];
+  const c = [1.5, -0.5, 2.0];
+  const reconstructed = [
+    result[0] * a[0] + result[1] * b[0] + result[2] * c[0],
+    result[0] * a[1] + result[1] * b[1] + result[2] * c[1],
+    result[0] * a[2] + result[1] * b[2] + result[2] * c[2],
+  ];
+  // Reconstructed point should be within triangle bounds
+  expect(reconstructed[0]).toBeGreaterThan(-2.0);
+  expect(reconstructed[0]).toBeLessThan(3.0);
+
+  // Exact values to catch regressions (most specific test last)
+  expectCloseTo([0.333, 0.333, 0.333], result, 2);
 });
 
 test("barycentric2 - Triangle struct wrapper", async () => {
@@ -76,20 +89,32 @@ test("barycentric2 - Triangle struct wrapper", async () => {
     @compute @workgroup_size(1)
     fn foo() {
       var tri: Triangle;
-      tri.a = vec3f(1.0, 0.0, 0.0);
-      tri.b = vec3f(0.0, 1.0, 0.0);
-      tri.c = vec3f(0.0, 0.0, 1.0);
-      let result = barycentric2(tri);
-      test::results[0] = result;
+      tri.a = vec3f(2.0, 1.0, -0.5);
+      tri.b = vec3f(-1.0, 3.0, 0.5);
+      tri.c = vec3f(1.5, -0.5, 2.0);
+      let coords = barycentric2(tri);
+      test::results[0] = coords;
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
 
-  // Should produce same result as barycentric(a, b, c)
-  expectCloseTo([1.0, 0.0, 0.0], result);
-
   // Verify sum-to-1 property
   expect(result[0] + result[1] + result[2]).toBeCloseTo(1.0, 2);
+
+  // Verify fundamental property: barycentric coords reconstruct a point in/on the triangle
+  const a = [2.0, 1.0, -0.5];
+  const b = [-1.0, 3.0, 0.5];
+  const c = [1.5, -0.5, 2.0];
+  const reconstructed = [
+    result[0] * a[0] + result[1] * b[0] + result[2] * c[0],
+    result[0] * a[1] + result[1] * b[1] + result[2] * c[1],
+    result[0] * a[2] + result[1] * b[2] + result[2] * c[2],
+  ];
+  expect(reconstructed[0]).toBeGreaterThan(-2.0);
+  expect(reconstructed[0]).toBeLessThan(3.0);
+
+  // Should produce same result as barycentric(a, b, c)
+  expectCloseTo([0.333, 0.333, 0.333], result, 2);
 });
 
 test("barycentric3 - point at vertex", async () => {
@@ -152,16 +177,16 @@ test("centroid", async () => {
     @compute @workgroup_size(1)
     fn foo() {
       var tri: Triangle;
-      tri.a = vec3f(0.0, 0.0, 0.0);
-      tri.b = vec3f(3.0, 0.0, 0.0);
-      tri.c = vec3f(0.0, 3.0, 0.0);
+      tri.a = vec3f(1.0, 2.0, -1.0);
+      tri.b = vec3f(4.0, -1.0, 2.0);
+      tri.c = vec3f(-2.0, 3.0, 1.0);
       let result = centroid(tri);
       test::results[0] = result;
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
-  // Centroid should be at (1, 1, 0)
-  expectCloseTo([1.0, 1.0, 0.0], result);
+  // Centroid is average of vertices: ((1+4-2)/3, (2-1+3)/3, (-1+2+1)/3)
+  expectCloseTo([1.0, 1.333, 0.667], result, 2);
 });
 
 test("normal", async () => {
@@ -173,13 +198,19 @@ test("normal", async () => {
     fn foo() {
       var tri: Triangle;
       tri.a = vec3f(0.0, 0.0, 0.0);
-      tri.b = vec3f(1.0, 0.0, 0.0);
-      tri.c = vec3f(0.0, 1.0, 0.0);
+      tri.b = vec3f(1.0, 0.0, 1.0);
+      tri.c = vec3f(0.0, 1.0, 1.0);
       let result = normal(tri);
       test::results[0] = result;
     }
   `;
   const result = await testCompute(src, { elem: "vec3f" });
-  // Normal of XY plane triangle should point in +Z direction
-  expectCloseTo([0.0, 0.0, 1.0], result);
+
+  // Verify normal is unit length
+  const length = Math.sqrt(result[0] ** 2 + result[1] ** 2 + result[2] ** 2);
+  expect(length).toBeCloseTo(1.0, 2);
+
+  // Tilted triangle: (B-A)×(C-A) = (1,0,1)×(0,1,1) = (-1,-1,1)
+  // Normalized: (-1/√3, -1/√3, 1/√3)
+  expectCloseTo([-0.577, -0.577, 0.577], result, 2);
 });
