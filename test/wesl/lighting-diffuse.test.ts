@@ -13,10 +13,10 @@ test("diffuseOrenNayar", async () => {
       let N = vec3f(0.0, 0.0, 1.0);
       let V = vec3f(0.0, 0.0, 1.0);
       let NoV = dot(N, V);  // = 1.0
-      let NoL = dot(N, L);  // = 1/sqrt(3) ≈ 0.5773502691896258
+      let NoL = dot(N, L);  // = 1/sqrt(3) ≈ 0.5774
 
       // At roughness=0: sigma2=0, A=1.0, B=0.0
-      // Result = NoL * (1.0 + 0) = NoL ≈ 0.5773502691896258
+      // Result = NoL * (1.0 + 0) = NoL ≈ 0.5774
       let smoothResult = diffuseOrenNayar(L, N, V, NoV, NoL, 0.0);
 
       // Test 2: Roughness=1.0 with perpendicular view
@@ -34,17 +34,17 @@ test("diffuseOrenNayar", async () => {
       // Test 3: Retroreflection (V = L, roughness=1.0)
       // NoV = NoL = 1/sqrt(3)
       // LoV = dot(L,L) = 1.0
-      // s = 1.0 - (1/sqrt(3))*(1/sqrt(3)) = 1.0 - 1/3 = 2/3 ≈ 0.6666667
+      // s = 1.0 - (1/sqrt(3))*(1/sqrt(3)) = 1.0 - 1/3 = 2/3 ≈ 0.6667
       // t = mix(1.0, max(NoL,NoV), step(0.0,s))
-      //   = mix(1.0, 1/sqrt(3), 1.0) = 1/sqrt(3) ≈ 0.5773502691896258
-      // A = 2.260895601 (same as test 2)
-      // B = 0.412844037 (same as test 2)
+      //   = mix(1.0, 1/sqrt(3), 1.0) = 1/sqrt(3) ≈ 0.5774
+      // A = 2.2609 (same as test 2)
+      // B = 0.4128 (same as test 2)
       // Result = NoL * (A + B * s / t)
-      //        = (1/sqrt(3)) * (2.260895601 + 0.412844037 * (2/3) / (1/sqrt(3)))
-      //        = 0.5773502691896258 * (2.260895601 + 0.412844037 * 1.1547005383792517)
-      //        = 0.5773502691896258 * (2.260895601 + 0.4767312946587544)
-      //        = 0.5773502691896258 * 2.7376268956587544
-      //        ≈ 1.5806274
+      //        = (1/sqrt(3)) * (2.2609 + 0.4128 * (2/3) / (1/sqrt(3)))
+      //        = 0.5774 * (2.2609 + 0.4128 * 1.1547)
+      //        = 0.5774 * (2.2609 + 0.4767)
+      //        = 0.5774 * 2.7376
+      //        ≈ 1.5806
       let V2 = L;
       let NoV2 = dot(N, V2);
       let retroResult = diffuseOrenNayar(L, N, V2, NoV2, NoL, 1.0);

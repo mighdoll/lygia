@@ -130,5 +130,5 @@ test("gaussian", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0, 0.6065306663513184], result.slice(0, 2));
+  expectCloseTo([1.0, 0.6065], result.slice(0, 2));
 });

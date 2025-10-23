@@ -353,7 +353,7 @@ test("linearizeDepth", async () => {
   // Linearize depth with near=0.1, far=100.0, depth=0.5
   // d = 2*0.5 - 1 = 0
   // result = (2 * 0.1 * 100) / (100 + 0.1 - 0 * (100 - 0.1)) = 20 / 100.1 = 0.1998...
-  expectCloseTo([0.1998001998001998], result);
+  expectCloseTo([0.1998], result);
 });
 
 test("depth2viewZ perspective", async () => {
@@ -368,7 +368,7 @@ test("depth2viewZ perspective", async () => {
   const result = await testCompute(src);
   // Perspective: (near * far) / ((far - near) * depth - far)
   // = (1 * 100) / ((100 - 1) * 0.5 - 100) = 100 / (49.5 - 100) = 100 / -50.5
-  expectCloseTo([-1.9801980198019802], result);
+  expectCloseTo([-1.9802], result);
 });
 
 test("viewZ2depth perspective", async () => {
@@ -376,7 +376,7 @@ test("viewZ2depth perspective", async () => {
     import lygia::space::viewZ2depth::viewZ2depth;
     @compute @workgroup_size(1)
     fn foo() {
-      let result = viewZ2depth(-1.9801980198019802, 1.0, 100.0);
+      let result = viewZ2depth(-1.9802, 1.0, 100.0);
       test::results[0] = result;
     }
   `;

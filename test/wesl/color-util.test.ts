@@ -48,7 +48,7 @@ test("colorDistance", async () => {
   const result = await testCompute(src);
   // LAB Euclidean distance between red and blue in LAB color space (0-100 scale)
   // This is a perceptual color distance metric
-  expectCloseTo([176.3140411376953], result);
+  expectCloseTo([176.3140], result);
 });
 
 test("luma", async () => {
@@ -427,7 +427,7 @@ test("colorDistance", async () => {
    `;
   const result = await testCompute(src);
   // Default is CIE94 distance between red and blue (0-100 scale)
-  expectCloseTo([71.04913330078125], result);
+  expectCloseTo([71.0491], result);
 });
 
 test("colorDistance4", async () => {
@@ -444,7 +444,7 @@ test("colorDistance4", async () => {
    `;
   const result = await testCompute(src);
   // Alpha is ignored, should be same as colorDistance (0-100 scale)
-  expectCloseTo([71.04913330078125], result);
+  expectCloseTo([71.0491], result);
 });
 
 test("colorDistanceLABCIE94", async () => {
@@ -462,7 +462,7 @@ test("colorDistanceLABCIE94", async () => {
   const result = await testCompute(src);
   // CIE94 distance between green and yellow (0-100 scale)
   // These are relatively close colors in perceptual space
-  expectCloseTo([10.06259822845459], result);
+  expectCloseTo([10.0626], result);
 });
 
 test("colorDistanceOKLAB", async () => {

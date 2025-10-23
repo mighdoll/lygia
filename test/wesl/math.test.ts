@@ -280,8 +280,8 @@ test("taylorInvSqrt", async () => {
   // Exact values from the linear approximation formula
   expectCloseTo(
     [
-      0.93910813331604, -1.622096061706543, 1.579409122467041,
-      0.0853734016418457,
+      0.9391, -1.6221, 1.5794,
+      0.0854,
     ],
     result,
   );

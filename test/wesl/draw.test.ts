@@ -88,5 +88,5 @@ test("strokeEdge - basic behavior", async () => {
   expect(result[2]).toBeLessThan(0.9);
 
   // Exact values to catch regressions
-  expectCloseTo([1, 0, 0.5000007152557373, 0], result);
+  expectCloseTo([1, 0, 0.5000, 0], result);
 });

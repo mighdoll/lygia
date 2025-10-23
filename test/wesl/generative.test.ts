@@ -119,7 +119,7 @@ test("snoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.36833828687667847], [result[0]]);
+  expectCloseTo([0.3683], [result[0]]);
 });
 
 test("snoise3", async () => {
@@ -148,7 +148,7 @@ test("snoise3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.7335153818130493], [result[0]]);
+  expectCloseTo([0.7335], [result[0]]);
 });
 
 test("pnoise2", async () => {
@@ -284,7 +284,7 @@ test("worley2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.7470544576644897], [result[0]]);
+  expectCloseTo([0.7471], [result[0]]);
 });
 
 // Noise with derivatives
@@ -318,7 +318,7 @@ test("noised2", async () => {
   expect(Math.abs(result[0])).toBeLessThan(5.0);
   expect(Math.abs(result[2])).toBeLessThan(5.0);
   // Regression: exact output value
-  expectCloseTo([-0.3647780418395996], [result[0]]);
+  expectCloseTo([-0.3648], [result[0]]);
 });
 
 test("noised3", async () => {
@@ -382,7 +382,7 @@ test("wavelet2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.19464324414730072], [result[0]]);
+  expectCloseTo([-0.1946], [result[0]]);
 });
 
 test("wavelet3", async () => {
@@ -412,7 +412,7 @@ test("wavelet3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.19464324414730072], [result[0]]);
+  expectCloseTo([-0.1946], [result[0]]);
 });
 
 test("waveletScaled2", async () => {
@@ -441,7 +441,7 @@ test("waveletScaled2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.11138363927602768], [result[0]]);
+  expectCloseTo([-0.1114], [result[0]]);
 });
 
 test("waveletScaled3 - with custom scale parameter", async () => {
@@ -473,7 +473,7 @@ test("waveletScaled3 - with custom scale parameter", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.094538614153862], [result[0]]);
+  expectCloseTo([0.0945], [result[0]]);
 });
 
 test("random", async () => {
@@ -495,7 +495,7 @@ test("random", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.7629680633544922], [result[0]]);
+  expectCloseTo([0.7630], [result[0]]);
 });
 
 test("random2", async () => {
@@ -518,7 +518,7 @@ test("random2", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.61529541015625], [result[0]]);
+  expectCloseTo([0.6153], [result[0]]);
 });
 
 test("random3", async () => {
@@ -541,7 +541,7 @@ test("random3", async () => {
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
-  expectCloseTo([0.37200927734375], [result[0]]);
+  expectCloseTo([0.3720], [result[0]]);
 });
 
 test("random4", async () => {
@@ -567,7 +567,7 @@ test("random4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.51806640625], [result[0]]);
+  expectCloseTo([0.5181], [result[0]]);
 });
 
 test("random21 - basic output", async () => {
@@ -593,7 +593,7 @@ test("random21 - basic output", async () => {
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.8786392211914062], [result[0]]);
+  expectCloseTo([0.8786], [result[0]]);
 });
 
 test("random22 - basic output", async () => {
@@ -614,7 +614,7 @@ test("random22 - basic output", async () => {
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
-  expectCloseTo([0.2332763671875], [result[0]]);
+  expectCloseTo([0.2333], [result[0]]);
 });
 
 test("random23 - basic output", async () => {
@@ -640,7 +640,7 @@ test("random23 - basic output", async () => {
   expect(result[1]).toBeGreaterThanOrEqual(0.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.683746337890625], [result[0]]);
+  expectCloseTo([0.6837], [result[0]]);
 });
 
 test("random31 - basic output", async () => {
@@ -667,7 +667,7 @@ test("random31 - basic output", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.8786392211914062], [result[0]]);
+  expectCloseTo([0.8786], [result[0]]);
 });
 
 test("random32 - basic output", async () => {
@@ -695,7 +695,7 @@ test("random32 - basic output", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.25337982177734375], [result[0]]);
+  expectCloseTo([0.2534], [result[0]]);
 });
 
 test("random33 - basic output", async () => {
@@ -716,7 +716,7 @@ test("random33 - basic output", async () => {
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
   // Regression: exact output value
-  expectCloseTo([0.45416259765625], [result[0]]);
+  expectCloseTo([0.4542], [result[0]]);
 });
 
 test("random41 - determinism and range", async () => {
@@ -743,8 +743,8 @@ test("random41 - determinism and range", async () => {
   // Regression: exact output value
   expectCloseTo(
     [
-      0.382354736328125, 0.42840576171875, 0.5390167236328125,
-      0.4849395751953125,
+      0.3824, 0.4284, 0.5390,
+      0.4849,
     ],
     result1,
   );
@@ -801,7 +801,7 @@ test("random42 - hash properties", async () => {
 
   // Regression: exact output value
   expectCloseTo(
-    [0.66876220703125, 0.996826171875, 0.603179931640625, 0.9088134765625],
+    [0.6688, 0.9968, 0.6032, 0.9088],
     result,
   );
 });
@@ -857,7 +857,7 @@ test("random43 - hash properties", async () => {
 
   // Regression: exact output value
   expectCloseTo(
-    [0.407958984375, 0.216583251953125, 0.96063232421875, 0.4371337890625],
+    [0.4080, 0.2166, 0.9606, 0.4371],
     result,
   );
 });
@@ -913,7 +913,7 @@ test("random44 - hash properties", async () => {
 
   // Regression: exact output value
   expectCloseTo(
-    [0.81640625, 0.07281494140625, 0.7236328125, 0.70635986328125],
+    [0.8164, 0.0728, 0.7236, 0.7064],
     result,
   );
 });
@@ -975,7 +975,7 @@ test("snoise33", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.7335153818130493], [result[0]]);
+  expectCloseTo([0.7335], [result[0]]);
 });
 
 test("snoise34", async () => {
@@ -1007,7 +1007,7 @@ test("snoise34", async () => {
   expect(result[2]).toBeGreaterThanOrEqual(-1.0);
   expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.37476846575737], [result[0]]);
+  expectCloseTo([-0.3748], [result[0]]);
 });
 
 test("snoise4", async () => {
@@ -1036,7 +1036,7 @@ test("snoise4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.37476846575737], [result[0]]);
+  expectCloseTo([-0.3748], [result[0]]);
 });
 
 // Signed random variants
@@ -1083,7 +1083,7 @@ test("srandom22", async () => {
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
-  expectCloseTo([-0.3647780418395996], [result[0]]);
+  expectCloseTo([-0.3648], [result[0]]);
 });
 
 test("srandom3", async () => {
@@ -1199,7 +1199,7 @@ test("srandom_tile22", async () => {
   expect(result[1]).toBeGreaterThanOrEqual(-1.0);
   expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([-0.3647780418395996], [result[0]]);
+  expectCloseTo([-0.3648], [result[0]]);
 });
 
 test("srandom_tile33", async () => {
@@ -1262,7 +1262,7 @@ test("worley22", async () => {
   // F1 should be less than or equal to F2 (closest point <= second closest)
   expect(result[0]).toBeLessThanOrEqual(result[1] + 0.001);
   // Regression: exact output value
-  expectCloseTo([0.25294554233551025], [result[0]]);
+  expectCloseTo([0.2529], [result[0]]);
 });
 
 test("worley3", async () => {
@@ -1291,7 +1291,7 @@ test("worley3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.38763654232025146], [result[0]]);
+  expectCloseTo([0.3876], [result[0]]);
 });
 
 test("worley32", async () => {
@@ -1320,7 +1320,7 @@ test("worley32", async () => {
   // F1 should be less than or equal to F2 (closest point <= second closest)
   expect(result[0]).toBeLessThanOrEqual(result[1] + 0.001);
   // Regression: exact output value
-  expectCloseTo([0.6123634576797485], [result[0]]);
+  expectCloseTo([0.6124], [result[0]]);
 });
 
 test("wavelet - base function with custom phase and scale", async () => {
@@ -1357,7 +1357,7 @@ test("wavelet - base function with custom phase and scale", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0.18840710818767548], [result[0]]);
+  expectCloseTo([0.1884], [result[0]]);
 });
 
 // ============================================================================

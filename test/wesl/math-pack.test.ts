@@ -134,16 +134,16 @@ test("unpack32 - base 32", async () => {
     @compute @workgroup_size(1)
     fn foo() {
       // unpack32 uses dot(v, vec3(32, 1024, 32768)) / 32768
-      let v1 = vec3f(1.0, 0.0, 0.0);   // 32 / 32768 = 0.0009765625
+      let v1 = vec3f(1.0, 0.0, 0.0);   // 32 / 32768 = 0.00098
       let v2 = vec3f(0.0, 1.0, 0.0);   // 1024 / 32768 = 0.03125
       let v3 = vec3f(0.0, 0.0, 1.0);   // 32768 / 32768 = 1.0
-      let v4 = vec3f(0.5, 0.5, 0.5);   // (16 + 512 + 16384) / 32768 = 0.51611328125
+      let v4 = vec3f(0.5, 0.5, 0.5);   // (16 + 512 + 16384) / 32768 = 0.5161
 
       test::results[0] = vec4f(unpack32(v1), unpack32(v2), unpack32(v3), unpack32(v4));
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.0009765625, 0.03125, 1.0, 0.51611328125], result);
+  expectCloseTo([0.00098, 0.03125, 1.0, 0.5161], result);
 });
 
 test("unpack64 - base 64", async () => {

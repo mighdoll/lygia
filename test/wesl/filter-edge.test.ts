@@ -55,6 +55,6 @@ test("edgePrewitt", async () => {
   expect(gradientResult[0]).toBeGreaterThan(solidResult[0] * 10);
 
   // Regression test - exact values to catch implementation changes
-  expectCloseTo([0.011764707043766975], [gradientResult[0]]);
-  expectCloseTo([1.1920928955078125e-7], [solidResult[0]]);
+  expectCloseTo([0.0118], [gradientResult[0]]);
+  expectCloseTo([1.192e-7], [solidResult[0]]);
 });
