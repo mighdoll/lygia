@@ -201,11 +201,13 @@ test("ditherBayer - gradient banding reduction", async () => {
   }
 
   // Not all values should be identical - spatial variation breaks up banding
-  const uniqueValues = new Set(result.slice(0, 8).map(v => Math.round(v * 16)));
+  const uniqueValues = new Set(
+    result.slice(0, 8).map((v) => Math.round(v * 16)),
+  );
   expect(uniqueValues.size).toBeGreaterThan(1);
 
   // All values should be close to 0.5 (the input)
-  result.slice(0, 8).forEach(v => {
+  result.slice(0, 8).forEach((v) => {
     expect(Math.abs(v - 0.5)).toBeLessThan(0.2);
   });
 });

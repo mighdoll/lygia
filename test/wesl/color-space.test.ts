@@ -28,11 +28,17 @@ test("rgb2xyz", async () => {
 	`;
 
   const result = await testCompute(src, { elem: "vec3f" });
-  expectCloseTo([67.04871368408203, 70.68324279785156, 57.405357360839844], result);
+  expectCloseTo(
+    [67.04871368408203, 70.68324279785156, 57.405357360839844],
+    result,
+  );
 
   const cie = { CIE_D50: true };
   const resultCie = await testCompute(src, { elem: "vec3f", conditions: cie });
-  expectCloseTo([68.99453735351562, 71.01270294189453, 43.62055587768555], resultCie);
+  expectCloseTo(
+    [68.99453735351562, 71.01270294189453, 43.62055587768555],
+    resultCie,
+  );
 });
 
 test("rgb2YPbPr", async () => {
@@ -50,7 +56,10 @@ test("rgb2YPbPr", async () => {
   expectCloseTo(expected, result);
 
   const sdtv = { YPBPR_SDTV: true };
-  const resultSdtv = await testCompute(src, { elem: "vec3f", conditions: sdtv });
+  const resultSdtv = await testCompute(src, {
+    elem: "vec3f",
+    conditions: sdtv,
+  });
   const expectedSdtv = [0.6473, -0.0831, -0.0338];
   expectCloseTo(expectedSdtv, resultSdtv);
 });
@@ -70,7 +79,10 @@ test("rgb2yuv", async () => {
   expectCloseTo(expected, result);
 
   const sdtv = { YUV_SDTV: true };
-  const resultSdtv = await testCompute(src, { elem: "vec3f", conditions: sdtv });
+  const resultSdtv = await testCompute(src, {
+    elem: "vec3f",
+    conditions: sdtv,
+  });
   const expectedSdtv = [0.6473, -0.0725, -0.0415];
   expectCloseTo(expectedSdtv, resultSdtv);
 });
@@ -89,7 +101,10 @@ test("yuv2rgb", async () => {
   expectCloseTo(expected, result);
 
   const sdtv = { YUV_SDTV: true };
-  const resultSdtv = await testCompute(src, { elem: "vec3f", conditions: sdtv });
+  const resultSdtv = await testCompute(src, {
+    elem: "vec3f",
+    conditions: sdtv,
+  });
   const expectedSdtv = [1.1699, 0.0334, 2.0225];
   expectCloseTo(expectedSdtv, resultSdtv);
 });
@@ -251,7 +266,10 @@ test("srgb2lab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB Red -> LAB (L* now in 0-100 scale, matching standard Lab convention)
-  expectCloseTo([53.24079132080078, 80.09246063232422, 67.20319366455078], result);
+  expectCloseTo(
+    [53.24079132080078, 80.09246063232422, 67.20319366455078],
+    result,
+  );
 });
 
 test("lch2rgb", async () => {
@@ -283,7 +301,10 @@ test("srgb2lch", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB Red -> LCH (L now in 0-100 scale, matching standard LCH convention)
-  expectCloseTo([53.24079132080078, 104.55176544189453, 39.9990119934082], result);
+  expectCloseTo(
+    [53.24079132080078, 104.55176544189453, 39.9990119934082],
+    result,
+  );
 });
 
 test("oklab2srgb", async () => {
@@ -315,7 +336,10 @@ test("srgb2oklab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB(1, 0, 0) -> Oklab
-  expectCloseTo([0.6279553771018982, 0.22486291825771332, 0.12584632635116577], result);
+  expectCloseTo(
+    [0.6279553771018982, 0.22486291825771332, 0.12584632635116577],
+    result,
+  );
 });
 
 test("srgb2xyz", async () => {
@@ -331,7 +355,10 @@ test("srgb2xyz", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // WESL uses 0-100 scale for XYZ
-  expectCloseTo([41.245635986328125, 21.267288208007812, 1.9333899021148682], result);
+  expectCloseTo(
+    [41.245635986328125, 21.267288208007812, 1.9333899021148682],
+    result,
+  );
 });
 
 test("xyY2rgb", async () => {
@@ -363,7 +390,10 @@ test("rgb2xyY", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // WESL: x,y chromaticity 0-1, Y luminance 0-100 (matches XYZ scale)
-  expectCloseTo([0.6399999260902405, 0.3300000727176666, 21.267290115356445], result);
+  expectCloseTo(
+    [0.6399999260902405, 0.3300000727176666, 21.267290115356445],
+    result,
+  );
 });
 
 test("xyY2srgb", async () => {
@@ -492,7 +522,10 @@ test("gamma2linear", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // pow(0.5, 2.2) ≈ 0.2181 (standard gamma 2.2)
-  expectCloseTo([0.21763762831687927, 0.21763762831687927, 0.21763762831687927], result);
+  expectCloseTo(
+    [0.21763762831687927, 0.21763762831687927, 0.21763762831687927],
+    result,
+  );
 });
 
 test("linear2gamma", async () => {
@@ -508,7 +541,10 @@ test("linear2gamma", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // pow(0.25, 1/2.2) ≈ 0.5277 (standard gamma 2.2)
-  expectCloseTo([0.5325205326080322, 0.5325205326080322, 0.5325205326080322], result);
+  expectCloseTo(
+    [0.5325205326080322, 0.5325205326080322, 0.5325205326080322],
+    result,
+  );
 });
 
 test("rgb2YCbCr", async () => {
@@ -623,7 +659,10 @@ test("lab2xyz", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // WESL uses 0-100 scale for XYZ (colorimetry standard)
   // LAB(50, 0, 0) -> XYZ (uses D65 white point scaling)
-  expectCloseTo([17.506114959716797, 18.418649673461914, 20.05897331237793], result);
+  expectCloseTo(
+    [17.506114959716797, 18.418649673461914, 20.05897331237793],
+    result,
+  );
 });
 
 test("xyz2lab", async () => {
@@ -639,7 +678,10 @@ test("xyz2lab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // XYZ -> LAB (actual output)
-  expectCloseTo([49.97771453857422, 0.061511993408203125, 0.06527900695800781], result);
+  expectCloseTo(
+    [49.97771453857422, 0.061511993408203125, 0.06527900695800781],
+    result,
+  );
 });
 
 test("rgb2hcv", async () => {
@@ -768,7 +810,10 @@ test("oklab2rgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Oklab(0.628, 0.225, 0.126) -> RGB(1, 0, 0)
-  expectCloseTo([1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787], result);
+  expectCloseTo(
+    [1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787],
+    result,
+  );
 });
 
 test("rgb2oklab", async () => {
@@ -784,7 +829,10 @@ test("rgb2oklab", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // RGB(1, 0, 0) -> Oklab
-  expectCloseTo([0.6279553771018982, 0.22486303746700287, 0.12584632635116577], result);
+  expectCloseTo(
+    [0.6279553771018982, 0.22486303746700287, 0.12584632635116577],
+    result,
+  );
 });
 
 test("rgb2lab", async () => {
@@ -816,7 +864,10 @@ test("rgb2lch", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Red in LCH (L now in 0-100 scale)
-  expectCloseTo([53.24079132080078, 104.55176544189453, 39.9990119934082], result);
+  expectCloseTo(
+    [53.24079132080078, 104.55176544189453, 39.9990119934082],
+    result,
+  );
 });
 
 test("rgb2srgb", async () => {
@@ -832,7 +883,10 @@ test("rgb2srgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // Linear RGB -> sRGB (gamma correction)
-  expectCloseTo([0.7353569269180298, 0.5838314890861511, 0.3491901755332947], result);
+  expectCloseTo(
+    [0.7353569269180298, 0.5838314890861511, 0.3491901755332947],
+    result,
+  );
 });
 
 test("srgb2rgb", async () => {
@@ -848,7 +902,10 @@ test("srgb2rgb", async () => {
    `;
   const result = await testCompute(src, { elem: "vec3f" });
   // sRGB -> Linear RGB
-  expectCloseTo([0.4994581639766693, 0.30018994212150574, 0.09988708049058914], result);
+  expectCloseTo(
+    [0.4994581639766693, 0.30018994212150574, 0.09988708049058914],
+    result,
+  );
 });
 
 test("xyY2xyz", async () => {
@@ -998,7 +1055,10 @@ test("hcy2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.75, 0.39336663484573364, 0.39336663484573364, 0.6000000238418579], result);
+  expectCloseTo(
+    [0.75, 0.39336663484573364, 0.39336663484573364, 0.6000000238418579],
+    result,
+  );
 });
 
 test("hsl2rgb4 - alpha preservation", async () => {
@@ -1089,7 +1149,10 @@ test("lab2xyz4 - alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // WESL uses 0-100 scale for XYZ
-  expectCloseTo([17.506114959716797, 18.418649673461914, 20.05897331237793, 0.3], result);
+  expectCloseTo(
+    [17.506114959716797, 18.418649673461914, 20.05897331237793, 0.3],
+    result,
+  );
 });
 
 test("lch2lab4 - alpha preservation", async () => {
@@ -1104,7 +1167,10 @@ test("lch2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([50.0, 25.0032958984375, 25.0032958984375, 0.949999988079071], result);
+  expectCloseTo(
+    [50.0, 25.0032958984375, 25.0032958984375, 0.949999988079071],
+    result,
+  );
 });
 
 test("lch2rgb4 - alpha preservation", async () => {
@@ -1164,7 +1230,13 @@ test("oklab2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787, 0.44999998807907104], result);
+  expectCloseTo(
+    [
+      1.0008004903793335, -0.0001880880445241928, -0.00018487870693206787,
+      0.44999998807907104,
+    ],
+    result,
+  );
 });
 
 test("oklab2srgb4 - alpha preservation", async () => {
@@ -1269,7 +1341,10 @@ test("rgb2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([76.06926727294922, 0, 0.000011920928955078125, 0.699999988079071], result);
+  expectCloseTo(
+    [76.06926727294922, 0, 0.000011920928955078125, 0.699999988079071],
+    result,
+  );
 });
 
 test("rgb2lch4 - alpha preservation", async () => {
@@ -1284,7 +1359,13 @@ test("rgb2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([53.24079132080078, 104.55176544189453, 39.9990119934082, 0.800000011920929], result);
+  expectCloseTo(
+    [
+      53.24079132080078, 104.55176544189453, 39.9990119934082,
+      0.800000011920929,
+    ],
+    result,
+  );
 });
 
 test("rgb2lms4 - alpha preservation", async () => {
@@ -1314,7 +1395,13 @@ test("rgb2oklab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6279553771018982, 0.22486303746700287, 0.12584632635116577, 0.6000000238418579], result);
+  expectCloseTo(
+    [
+      0.6279553771018982, 0.22486303746700287, 0.12584632635116577,
+      0.6000000238418579,
+    ],
+    result,
+  );
 });
 
 test("rgb2srgb4 - alpha preservation", async () => {
@@ -1329,7 +1416,13 @@ test("rgb2srgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.7353569269180298, 0.5838314890861511, 0.3491901755332947, 0.4000000059604645], result);
+  expectCloseTo(
+    [
+      0.7353569269180298, 0.5838314890861511, 0.3491901755332947,
+      0.4000000059604645,
+    ],
+    result,
+  );
 });
 
 test("rgb2xyz4 - alpha preservation", async () => {
@@ -1345,7 +1438,13 @@ test("rgb2xyz4 - alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // WESL uses 0-100 scale for XYZ
-  expectCloseTo([67.04871368408203, 70.68324279785156, 57.405357360839844, 0.20000000298023224], result);
+  expectCloseTo(
+    [
+      67.04871368408203, 70.68324279785156, 57.405357360839844,
+      0.20000000298023224,
+    ],
+    result,
+  );
 });
 
 test("srgb2lab4 - alpha preservation", async () => {
@@ -1360,7 +1459,10 @@ test("srgb2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([53.24079132080078, 80.09246063232422, 67.20319366455078, 0.75], result);
+  expectCloseTo(
+    [53.24079132080078, 80.09246063232422, 67.20319366455078, 0.75],
+    result,
+  );
 });
 
 test("srgb2lch4 - alpha preservation", async () => {
@@ -1375,7 +1477,10 @@ test("srgb2lch4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([53.24079132080078, 104.55176544189453, 39.9990119934082, 0.5], result);
+  expectCloseTo(
+    [53.24079132080078, 104.55176544189453, 39.9990119934082, 0.5],
+    result,
+  );
 });
 
 test("srgb2oklab4 - alpha preservation", async () => {
@@ -1390,7 +1495,13 @@ test("srgb2oklab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6279553771018982, 0.22486291825771332, 0.12584632635116577, 0.8500000238418579], result);
+  expectCloseTo(
+    [
+      0.6279553771018982, 0.22486291825771332, 0.12584632635116577,
+      0.8500000238418579,
+    ],
+    result,
+  );
 });
 
 test("srgb2rgb4 - alpha preservation", async () => {
@@ -1405,7 +1516,13 @@ test("srgb2rgb4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.4994581639766693, 0.30018994212150574, 0.09988708049058914, 0.30000001192092896], result);
+  expectCloseTo(
+    [
+      0.4994581639766693, 0.30018994212150574, 0.09988708049058914,
+      0.30000001192092896,
+    ],
+    result,
+  );
 });
 
 test("xyz2lab4 - alpha preservation", async () => {
@@ -1420,7 +1537,13 @@ test("xyz2lab4 - alpha preservation", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([49.97771453857422, 0.061511993408203125, 0.06527900695800781, 0.8999999761581421], result);
+  expectCloseTo(
+    [
+      49.97771453857422, 0.061511993408203125, 0.06527900695800781,
+      0.8999999761581421,
+    ],
+    result,
+  );
 });
 
 test("xyz2rgb4 - alpha preservation", async () => {
@@ -1471,7 +1594,13 @@ test("gamma2linear4 - vec4 with alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // pow(0.5, 2.2) ≈ 0.2181 for RGB, alpha unchanged
-  expectCloseTo([0.21763762831687927, 0.21763762831687927, 0.21763762831687927, 0.699999988079071], result);
+  expectCloseTo(
+    [
+      0.21763762831687927, 0.21763762831687927, 0.21763762831687927,
+      0.699999988079071,
+    ],
+    result,
+  );
 });
 
 test("linear2gamma - f32 overload", async () => {
@@ -1503,7 +1632,13 @@ test("linear2gamma4 - vec4 with alpha preservation", async () => {
    `;
   const result = await testCompute(src, { elem: "vec4f" });
   // pow(0.25, 1/2.2) ≈ 0.5277 for RGB, alpha unchanged
-  expectCloseTo([0.5325205326080322, 0.5325205326080322, 0.5325205326080322, 0.4000000059604645], result);
+  expectCloseTo(
+    [
+      0.5325205326080322, 0.5325205326080322, 0.5325205326080322,
+      0.4000000059604645,
+    ],
+    result,
+  );
 });
 
 // ============================================================================
@@ -1978,7 +2113,13 @@ test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.6999999284744263, 0.4000265300273895, 0.19989511370658875, 0.6000000238418579], result);
+  expectCloseTo(
+    [
+      0.6999999284744263, 0.4000265300273895, 0.19989511370658875,
+      0.6000000238418579,
+    ],
+    result,
+  );
 });
 
 test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
@@ -1995,7 +2136,13 @@ test("rgb2yuv4 -> yuv2rgb4 roundtrip", async () => {
      }
    `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.4999990463256836, 0.6006445288658142, 0.29361698031425476, 0.800000011920929], result);
+  expectCloseTo(
+    [
+      0.4999990463256836, 0.6006445288658142, 0.29361698031425476,
+      0.800000011920929,
+    ],
+    result,
+  );
 });
 
 test("rgb2xyY4 -> xyY2rgb4 roundtrip (note: precision issues in xyY)", async () => {

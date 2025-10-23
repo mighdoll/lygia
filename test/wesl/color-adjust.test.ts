@@ -291,7 +291,7 @@ test("levels4Float", async () => {
   //   g: 0.2 + 0.8618 * 0.7 = 0.8032
   //   b: 0.2 + 0.0 * 0.7 = 0.2
   //   a: preserved at 0.85
-  expectCloseTo([0.5800, 0.8032, 0.2, 0.85], result);
+  expectCloseTo([0.58, 0.8032, 0.2, 0.85], result);
 });
 
 // Gamma function tests
@@ -501,7 +501,7 @@ test("tonemapUnreal3", async () => {
   const result = await testCompute(src, { elem: "vec3f" });
   // x / (x + 0.155) * 1.019
   // Each component separately: 1.0/(1.155)*1.019=0.8823, 0.5/(0.655)*1.019=0.7779, 0.25/(0.405)*1.019=0.6290
-  expectCloseTo([0.8823, 0.7779, 0.6290], result.slice(0, 3));
+  expectCloseTo([0.8823, 0.7779, 0.629], result.slice(0, 3));
 });
 
 test("tonemapLinear3 - identity baseline", async () => {

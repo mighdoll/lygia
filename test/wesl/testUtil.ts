@@ -33,10 +33,7 @@ export interface TestComputeOptions {
 }
 
 /** test WGSL compute shader with typical defaults */
-export async function testCompute(
-  src: string,
-  options?: TestComputeOptions,
-) {
+export async function testCompute(src: string, options?: TestComputeOptions) {
   const {
     elem = "f32",
     size: sizeInElements,
@@ -70,10 +67,7 @@ export interface TestFragmentOptions {
 }
 
 /** test WGSL fragment shader with typical defaults */
-export async function testFragment(
-  src: string,
-  options?: TestFragmentOptions,
-) {
+export async function testFragment(src: string, options?: TestFragmentOptions) {
   const {
     size,
     textureFormat = "rgba32float",

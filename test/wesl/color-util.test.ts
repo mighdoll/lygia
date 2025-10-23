@@ -363,7 +363,10 @@ test("whiteBalance4", async () => {
   expect(greenG).toBeGreaterThan(0.5); // green tint increases G
 
   // Regression check - exact white balance values with tint
-  expectCloseTo([0.5141, 0.4585, 0.4872, 0.5132], [tempShiftR, tempShiftB, magentaG, greenG]);
+  expectCloseTo(
+    [0.5141, 0.4585, 0.4872, 0.5132],
+    [tempShiftR, tempShiftB, magentaG, greenG],
+  );
 });
 
 test("saturationMatrix", async () => {
@@ -800,5 +803,5 @@ test("mixSpectral_reflectance_to_xyz", async () => {
   expect(xyz[2]).toBeLessThan(xyz[1] * 1.5);
 
   // Regression check - exact XYZ values for gray input
-  expectCloseTo([0.4751, 0.5000, 0.5441], xyz);
+  expectCloseTo([0.4751, 0.5, 0.5441], xyz);
 });

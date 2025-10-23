@@ -112,7 +112,7 @@ test("parabola", async () => {
 
   // k=2.0: sharper peak - values at 0.25/0.75 drop to 0.5625 (0.75^2)
   expect(result[4]).toBeCloseTo(0.5625, 2); // sharper curve
-  expect(result[5]).toBeCloseTo(1.0, 2);    // peak always at 0.5
+  expect(result[5]).toBeCloseTo(1.0, 2); // peak always at 0.5
   expect(result[4]).toBeLessThan(result[1]); // k=2 gives lower values than k=1
 
   // Exact values for regression detection

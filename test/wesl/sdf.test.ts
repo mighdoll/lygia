@@ -312,7 +312,7 @@ test("rectSDF - with custom CENTER_2D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec3f",
     conditions: { CENTER_2D: true },
-    constants: { CENTER_2D: "vec2f(0.3, 0.3)" }
+    constants: { CENTER_2D: "vec2f(0.3, 0.3)" },
   });
   // With custom center (0.3, 0.3):
   // uv = (0.8, 0.3) - (0.3, 0.3) = (0.5, 0.0)

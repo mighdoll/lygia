@@ -740,7 +740,7 @@ test("nearest", async () => {
   // + offset -> (0.753385, 0.2569445)
   const r = result as number[];
   expectCloseTo([0.7534, 0.2569], r.slice(0, 2));
-  expectCloseTo([0.750260, 0.250463], r.slice(2, 4));
+  expectCloseTo([0.75026, 0.250463], r.slice(2, 4));
 });
 
 test("ratio", async () => {
@@ -892,7 +892,7 @@ test("scale2 - with custom CENTER_2D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec2f",
     conditions: { CENTER_2D: true },
-    constants: { CENTER_2D: "vec2f(0.3, 0.7)" }
+    constants: { CENTER_2D: "vec2f(0.3, 0.7)" },
   });
   // Scale (0.8, 0.9) by (2.0, 2.0) around center (0.3, 0.7)
   // (0.8 - 0.3) * 2.0 + 0.3 = 0.5 * 2.0 + 0.3 = 1.3
@@ -914,7 +914,7 @@ test("scale3 - with custom CENTER_3D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec4f",
     conditions: { CENTER_3D: true },
-    constants: { CENTER_3D: "vec3f(0.2, 0.3, 0.4)" }
+    constants: { CENTER_3D: "vec3f(0.2, 0.3, 0.4)" },
   });
   // Scale (0.7, 0.8, 0.9) by (2.0, 3.0, 0.5) around center (0.2, 0.3, 0.4)
   // (0.7 - 0.2) * 2.0 + 0.2 = 0.5 * 2.0 + 0.2 = 1.2
@@ -937,7 +937,7 @@ test("rotate - with custom CENTER_2D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec2f",
     conditions: { CENTER_2D: true },
-    constants: { CENTER_2D: "vec2f(0.3, 0.3)" }
+    constants: { CENTER_2D: "vec2f(0.3, 0.3)" },
   });
   // Rotating (0.8, 0.3) around (0.3, 0.3) by 90°
   // Offset: (0.5, 0.0), rotated 90° -> (0.0, 0.5), result: (0.3, 0.8)
@@ -957,7 +957,7 @@ test("rotateX3 - with custom CENTER_3D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec4f",
     conditions: { CENTER_3D: true },
-    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
   });
   // Offset from center: (0.5, 1.0, 0.0)
   // Rotate X by 90°: x stays same, (y,z) -> (0.0, -1.0) from (1.0, 0.0)
@@ -978,7 +978,7 @@ test("rotateY3 - with custom CENTER_3D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec4f",
     conditions: { CENTER_3D: true },
-    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
   });
   // Offset from center: (1.0, 0.5, 0.0)
   // Rotate Y by 90°: (x,z) -> (z, -x), y stays same
@@ -999,7 +999,7 @@ test("rotateZ3 - with custom CENTER_3D via constants", async () => {
   const result = await testCompute(src, {
     elem: "vec4f",
     conditions: { CENTER_3D: true },
-    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" }
+    constants: { CENTER_3D: "vec3f(0.5, 0.5, 0.5)" },
   });
   // Offset from center: (1.0, 0.0, 0.5)
   // Rotate Z by 90°: z stays same, (x,y) = (1.0, 0.0) -> (0.0, -1.0)

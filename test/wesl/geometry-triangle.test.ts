@@ -9,7 +9,7 @@ function reconstructFromBarycentric(
   baryCoords: number[],
   a: number[],
   b: number[],
-  c: number[]
+  c: number[],
 ): number[] {
   return [
     baryCoords[0] * a[0] + baryCoords[1] * b[0] + baryCoords[2] * c[0],

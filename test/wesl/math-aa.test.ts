@@ -64,16 +64,16 @@ test("aamirror - anti-aliased triangle wave", async () => {
 
   // Verify triangle wave pattern: valleys near 0.0, peaks near 1.0
   expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThan(0.2);  // Valley
+  expect(result[0]).toBeLessThan(0.2); // Valley
 
   expect(result[1]).toBeGreaterThan(0.8);
-  expect(result[1]).toBeLessThanOrEqual(1.0);  // Peak
+  expect(result[1]).toBeLessThanOrEqual(1.0); // Peak
 
   expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThan(0.2);  // Valley (periodic)
+  expect(result[2]).toBeLessThan(0.2); // Valley (periodic)
 
   expect(result[3]).toBeGreaterThan(0.8);
-  expect(result[3]).toBeLessThanOrEqual(1.0);  // Peak (periodic)
+  expect(result[3]).toBeLessThanOrEqual(1.0); // Peak (periodic)
 });
 
 test("aastep - smooth transition near threshold", async () => {
@@ -137,12 +137,12 @@ test("fcos - filtered cosine at known angles", async () => {
   const result = await testFragment(src, { size: [2, 2] });
 
   // Verify cosine values
-  expectCloseTo([1.0], [result[0]]);      // cos(0) = 1.0
+  expectCloseTo([1.0], [result[0]]); // cos(0) = 1.0
   // Loose precision: filtered cosine uses derivatives, introduces small error (~0.0003)
-  expectCloseTo([Math.SQRT1_2], [result[1]], 0.001);    // cos(�/4) = 2/2
+  expectCloseTo([Math.SQRT1_2], [result[1]], 0.001); // cos(�/4) = 2/2
   // Loose precision: filtered cosine uses derivatives, small error near zero (~0.0005)
-  expectCloseTo([0.0], [result[2]], 0.001);      // cos(�/2) = 0.0
-  expectCloseTo([-1.0], [result[3]]);     // cos(�) = -1.0
+  expectCloseTo([0.0], [result[2]], 0.001); // cos(�/2) = 0.0
+  expectCloseTo([-1.0], [result[3]]); // cos(�) = -1.0
 });
 
 test("fcos - band limiting at high frequency", async () => {
