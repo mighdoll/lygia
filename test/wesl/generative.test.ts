@@ -12,9 +12,9 @@ test("cnoise2", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec2f(1.0, 2.0);
-       let p2 = vec2f(1.0, 2.0); // Same point
-       let p3 = vec2f(1.01, 2.01); // Nearby point
+       let p1 = vec2f(0.5, 0.5);
+       let p2 = vec2f(0.5, 0.5); // Same point
+       let p3 = vec2f(0.51, 0.51); // Nearby point
 
        let n1 = cnoise2(p1);
        let n2 = cnoise2(p2);
@@ -32,7 +32,7 @@ test("cnoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([-0.4915326237678528], [result[0]]);
 });
 
 test("cnoise3", async () => {
@@ -41,9 +41,9 @@ test("cnoise3", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec3f(1.0, 2.0, 3.0);
-       let p2 = vec3f(1.0, 2.0, 3.0); // Same point
-       let p3 = vec3f(1.01, 2.01, 3.01); // Nearby point
+       let p1 = vec3f(0.5, 0.5, 0.5);
+       let p2 = vec3f(0.5, 0.5, 0.5); // Same point
+       let p3 = vec3f(0.51, 0.51, 0.51); // Nearby point
 
        let n1 = cnoise3(p1);
        let n2 = cnoise3(p2);
@@ -61,7 +61,7 @@ test("cnoise3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([-0.396228551864624], [result[0]]);
 });
 
 test("cnoise4", async () => {
@@ -70,9 +70,9 @@ test("cnoise4", async () => {
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec4f(1.0, 2.0, 3.0, 4.0);
-       let p2 = vec4f(1.0, 2.0, 3.0, 4.0); // Same point
-       let p3 = vec4f(1.01, 2.01, 3.01, 4.01); // Nearby point
+       let p1 = vec4f(0.5, 0.5, 0.5, 0.5);
+       let p2 = vec4f(0.5, 0.5, 0.5, 0.5); // Same point
+       let p3 = vec4f(0.51, 0.51, 0.51, 0.51); // Nearby point
 
        let n1 = cnoise4(p1);
        let n2 = cnoise4(p2);
@@ -90,7 +90,7 @@ test("cnoise4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([0.020311350002884865], [result[0]]);
 });
 
 test("snoise2", async () => {
@@ -158,7 +158,7 @@ test("pnoise2", async () => {
      @compute @workgroup_size(1)
      fn foo() {
        let period = vec2f(4.0, 4.0);
-       let p = vec2f(1.0, 2.0);
+       let p = vec2f(0.5, 0.5);
 
        // Test periodicity: pnoise(p, period) == pnoise(p + period, period)
        let n1 = pnoise2(p, period);
@@ -175,7 +175,7 @@ test("pnoise2", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([-0.4915326237678528], [result[0]]);
 });
 
 test("pnoise3", async () => {
@@ -185,7 +185,7 @@ test("pnoise3", async () => {
      @compute @workgroup_size(1)
      fn foo() {
        let period = vec3f(4.0, 4.0, 4.0);
-       let p = vec3f(1.0, 2.0, 3.0);
+       let p = vec3f(0.5, 0.5, 0.5);
 
        // Test periodicity: pnoise(p, period) == pnoise(p + period, period)
        let n1 = pnoise3(p, period);
@@ -202,7 +202,7 @@ test("pnoise3", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([-0.396228551864624], [result[0]]);
 });
 
 test("pnoise4", async () => {
@@ -212,7 +212,7 @@ test("pnoise4", async () => {
      @compute @workgroup_size(1)
      fn foo() {
        let period = vec4f(4.0, 4.0, 4.0, 4.0);
-       let p = vec4f(1.0, 2.0, 3.0, 4.0);
+       let p = vec4f(0.5, 0.5, 0.5, 0.5);
 
        // Test periodicity: pnoise(p, period) == pnoise(p + period, period)
        let n1 = pnoise4(p, period);
@@ -229,7 +229,7 @@ test("pnoise4", async () => {
   expect(result[0]).toBeGreaterThanOrEqual(-1.0);
   expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
-  expectCloseTo([0], [result[0]]);
+  expectCloseTo([0.020311350002884865], [result[0]]);
 });
 
 test("srandom2", async () => {
