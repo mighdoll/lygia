@@ -107,7 +107,7 @@ test("unpack8 - base 8", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.015625, 0.125, 1.0, 0.5703125], result); // Exact values, use default precision
+  expectCloseTo([0.015625, 0.125, 1.0, 0.5703125], result);
 });
 
 test("unpack16 - base 16", async () => {
@@ -125,7 +125,7 @@ test("unpack16 - base 16", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.00390625, 0.0625, 1.0, 0.533203125], result); // Exact values, use default precision
+  expectCloseTo([0.00390625, 0.0625, 1.0, 0.533203125], result);
 });
 
 test("unpack32 - base 32", async () => {
@@ -143,7 +143,7 @@ test("unpack32 - base 32", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.0009765625, 0.03125, 1.0, 0.51611328125], result); // Exact values
+  expectCloseTo([0.0009765625, 0.03125, 1.0, 0.51611328125], result);
 });
 
 test("unpack64 - base 64", async () => {
@@ -161,7 +161,7 @@ test("unpack64 - base 64", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.000244, 0.015625, 1.0, 0.507935], result); // Use default precision
+  expectCloseTo([0.000244, 0.015625, 1.0, 0.507935], result);
 });
 
 test("unpack128 - base 128", async () => {
@@ -179,7 +179,7 @@ test("unpack128 - base 128", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.000061, 0.0078125, 1.0, 0.503967], result); // Use default precision
+  expectCloseTo([0.000061, 0.0078125, 1.0, 0.503967], result);
 });
 
 test("unpackBase - custom base", async () => {
@@ -203,7 +203,7 @@ test("unpackBase - custom base", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  expectCloseTo([0.01, 0.1, 1.0, 0.555], result); // Exact values, use default precision
+  expectCloseTo([0.01, 0.1, 1.0, 0.555], result);
 });
 
 test("unpack4 - vec4 unpacking (ThreeJS style)", async () => {
