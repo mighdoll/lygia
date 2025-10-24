@@ -1,25 +1,25 @@
 import { expect, test } from "vitest";
 import { getGPUDevice } from "wesl-debug";
 import {
-  createGradientTexture,
+  gradientTexture,
   createSampler,
-  createSolidTexture,
+  solidTexture,
   expectCloseTo,
   testFragment,
 } from "./testUtil.js";
 
 test("edgePrewitt", async () => {
   const device = await getGPUDevice();
-  const gradientTex = createGradientTexture(device, 256, 256, "horizontal");
-  const solidTex = createSolidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
+  const gradientTex = gradientTexture(device, 256, 256, "horizontal");
+  const solidTex = solidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   // Test 1: Horizontal gradient should produce strong horizontal edge response
   const src1 = `
     import lygia::filter::edge::prewitt::edgePrewitt;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {

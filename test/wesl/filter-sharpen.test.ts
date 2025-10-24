@@ -1,9 +1,9 @@
 import { expect, test } from "vitest";
 import { getGPUDevice } from "wesl-debug";
 import {
-  createCheckerboardTexture,
+  checkerboardTexture,
   createSampler,
-  createSolidTexture,
+  solidTexture,
   expectCloseTo,
   testCompute,
   testFragment,
@@ -13,15 +13,15 @@ import {
 
 test("sharpenAdaptive", async () => {
   const device = await getGPUDevice();
-  const checkerTex = createCheckerboardTexture(device, 256, 256, 8); // Larger cells for more edge visibility
-  const solidTex = createSolidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
+  const checkerTex = checkerboardTexture(device, 256, 256, 8); // Larger cells for more edge visibility
+  const solidTex = solidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   const srcSharpen = `
     import lygia::filter::sharpen::adaptive::sharpenAdaptive;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -64,15 +64,15 @@ test("sharpenAdaptive", async () => {
 
 test("sharpenAdaptive4", async () => {
   const device = await getGPUDevice();
-  const checkerTex = createCheckerboardTexture(device, 256, 256, 8); // Larger cells
-  const solidTex = createSolidTexture(device, [0.6, 0.6, 0.6, 1.0], 256, 256);
+  const checkerTex = checkerboardTexture(device, 256, 256, 8); // Larger cells
+  const solidTex = solidTexture(device, [0.6, 0.6, 0.6, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   const srcSharpen = `
     import lygia::filter::sharpen::adaptive::sharpenAdaptive4;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -114,15 +114,15 @@ test("sharpenAdaptive4", async () => {
 
 test("sharpenContrastAdaptive", async () => {
   const device = await getGPUDevice();
-  const checkerTex = createCheckerboardTexture(device, 256, 256, 32);
-  const solidTex = createSolidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
+  const checkerTex = checkerboardTexture(device, 256, 256, 32);
+  const solidTex = solidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   const src = `
     import lygia::filter::sharpen::adaptive::sharpenContrastAdaptive;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -159,15 +159,15 @@ test("sharpenContrastAdaptive", async () => {
 
 test("sharpenFast", async () => {
   const device = await getGPUDevice();
-  const checkerTex = createCheckerboardTexture(device, 256, 256, 32);
-  const solidTex = createSolidTexture(device, [0.6, 0.6, 0.6, 1.0], 256, 256);
+  const checkerTex = checkerboardTexture(device, 256, 256, 32);
+  const solidTex = solidTexture(device, [0.6, 0.6, 0.6, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   const src = `
     import lygia::filter::sharpen::fast::sharpenFast;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -205,15 +205,15 @@ test("sharpenFast", async () => {
 
 test("sharpenFast4", async () => {
   const device = await getGPUDevice();
-  const checkerTex = createCheckerboardTexture(device, 256, 256, 32);
-  const solidTex = createSolidTexture(device, [0.7, 0.7, 0.7, 1.0], 256, 256);
+  const checkerTex = checkerboardTexture(device, 256, 256, 32);
+  const solidTex = solidTexture(device, [0.7, 0.7, 0.7, 1.0], 256, 256);
   const sampler = createSampler(device);
 
   const src = `
     import lygia::filter::sharpen::fast::sharpenFast4;
 
-    @group(0) @binding(0) var input_tex: texture_2d<f32>;
-    @group(0) @binding(1) var input_samp: sampler;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {

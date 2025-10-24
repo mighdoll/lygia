@@ -18,8 +18,8 @@ test("spriteLoop - index 0", async () => {
   const src = `
     import lygia::animation::spriteLoop::spriteLoop;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -58,8 +58,8 @@ test("spriteLoop - index 4", async () => {
   const src = `
     import lygia::animation::spriteLoop::spriteLoop;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -97,8 +97,8 @@ test("spriteLoop - time wrapping", async () => {
   const srcTime0 = `
     import lygia::animation::spriteLoop::spriteLoop;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -113,8 +113,8 @@ test("spriteLoop - time wrapping", async () => {
   const srcTime16 = `
     import lygia::animation::spriteLoop::spriteLoop;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {

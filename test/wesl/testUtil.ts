@@ -2,10 +2,10 @@ import { elementStride } from "thimbleberry";
 import { expect } from "vitest";
 import type { WgslElementType } from "wesl-debug";
 import {
-  createCheckerboardTexture,
-  createGradientTexture,
+  checkerboardTexture,
+  gradientTexture,
   createSampler,
-  createSolidTexture,
+  solidTexture,
   getGPUDevice,
   testComputeShader,
   testFragmentShader,
@@ -180,8 +180,8 @@ export function expectDistribution(
 
 // Re-export texture helpers for convenience
 export {
-  createCheckerboardTexture,
-  createGradientTexture,
+  checkerboardTexture,
+  gradientTexture,
   createSampler,
-  createSolidTexture,
+  solidTexture,
 };

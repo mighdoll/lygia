@@ -32,8 +32,8 @@ test("sampleSprite", async () => {
   const srcFrame0 = `
     import lygia::sample::sprite::sampleSprite;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
@@ -52,8 +52,8 @@ test("sampleSprite", async () => {
   const srcFrame2 = `
     import lygia::sample::sprite::sampleSprite;
 
-    @group(0) @binding(0) var sprite_tex: texture_2d<f32>;
-    @group(0) @binding(1) var sprite_samp: sampler;
+    @group(0) @binding(1) var sprite_tex: texture_2d<f32>;
+    @group(0) @binding(2) var sprite_samp: sampler;
 
     @fragment
     fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
