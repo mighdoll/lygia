@@ -14,3 +14,9 @@ GEMINI.md
 copilot-instructions.md
 agent-*.md
 agent-notes
+
+# Image test outputs (don't commit)
+test/wesl-examples/__image_diffs__/
+test/wesl-examples/__image_actual__/
+test/wesl-examples/__image_diff_report__/
+test/wesl-examples/__image_dev__/
