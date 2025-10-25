@@ -1,5 +1,16 @@
-import { expect, test } from "vitest";
+import { afterEach, beforeEach, expect, test } from "vitest";
 import { expectCloseTo, testCompute, testDistribution } from "./testUtil.ts";
+import { getGPUDevice } from "wesl-debug";
+
+beforeEach(async () => {
+  const device = await getGPUDevice();
+  await device.queue.onSubmittedWorkDone();
+});
+
+afterEach(async () => {
+  const device = await getGPUDevice();
+  await device.queue.onSubmittedWorkDone();
+});
 
 test("cnoise2", async () => {
   const pairCount = 256;
@@ -479,23 +490,36 @@ test("pnoise4", async () => {
 });
 
 test("pnoise4 - periodicity", async () => {
-  const src = `
-     import lygia::generative::pnoise::pnoise4;
+  const period = "vec4f(4.0, 4.0, 4.0, 4.0)";
+  const p = "vec4f(0.5, 0.5, 0.5, 0.5)";
 
+  // Test periodicity by running three separate shader invocations
+  const src1 = `
+     import lygia::generative::pnoise::pnoise4;
      @compute @workgroup_size(1)
      fn foo() {
-       let period = vec4f(4.0, 4.0, 4.0, 4.0);
-       let p = vec4f(0.5, 0.5, 0.5, 0.5);
-
-       // Test periodicity: pnoise(p, period) == pnoise(p + period, period)
-       let n1 = pnoise4(p, period);
-       let n2 = pnoise4(p + period, period);
-       let n3 = pnoise4(p + period * 2.0, period);
-
-       test::results[0] = vec4f(n1, n2, n3, 0.0);
+       test::results[0] = pnoise4(${p}, ${period});
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
+  const src2 = `
+     import lygia::generative::pnoise::pnoise4;
+     @compute @workgroup_size(1)
+     fn foo() {
+       test::results[0] = pnoise4(${p} + ${period}, ${period});
+     }
+   `;
+  const src3 = `
+     import lygia::generative::pnoise::pnoise4;
+     @compute @workgroup_size(1)
+     fn foo() {
+       test::results[0] = pnoise4(${p} + ${period} * 2.0, ${period});
+     }
+   `;
+
+  const n1 = await testCompute(src1, { elem: "f32", size: 1 });
+  const n2 = await testCompute(src2, { elem: "f32", size: 1 });
+  const n3 = await testCompute(src3, { elem: "f32", size: 1 });
+
   // Test periodicity property: noise repeats exactly after one period
-  expectCloseTo([result[0], result[0]], [result[1], result[2]]);
+  expectCloseTo([n1[0], n1[0]], [n2[0], n3[0]]);
 });
