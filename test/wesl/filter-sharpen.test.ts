@@ -44,12 +44,6 @@ test("sharpenAdaptive", async () => {
     inputTextures: [{ texture: checkerTex, sampler }],
   });
 
-  // Sharpening should produce valid output in [0,1] range
-  expect(sharpenedChecker[0]).toBeGreaterThanOrEqual(0.0);
-  expect(sharpenedChecker[0]).toBeLessThanOrEqual(1.0);
-  expect(sharpenedSolid[0]).toBeGreaterThanOrEqual(0.0);
-  expect(sharpenedSolid[0]).toBeLessThanOrEqual(1.0);
-
   // Sharpening a solid color should produce minimal change (no edges to enhance)
   expect(Math.abs(sharpenedSolid[0] - 0.5)).toBeLessThan(0.1);
 
@@ -92,10 +86,6 @@ test("sharpenAdaptive4", async () => {
     size: [256, 256],
     inputTextures: [{ texture: solidTex, sampler }],
   });
-
-  // Output should be in valid range
-  expect(sharpenedChecker[0]).toBeGreaterThanOrEqual(0.0);
-  expect(sharpenedChecker[0]).toBeLessThanOrEqual(1.0);
 
   // Alpha should be preserved
   expect(sharpenedChecker[3]).toBeCloseTo(1.0);
@@ -193,10 +183,6 @@ test("sharpenFast", async () => {
 
   // Solid should remain close to original (0.6)
   expect(Math.abs(sharpenedSolid[0] - 0.6)).toBeLessThan(0.1);
-
-  // Output should be in valid range
-  expect(sharpenedChecker[0]).toBeGreaterThanOrEqual(0.0);
-  expect(sharpenedChecker[0]).toBeLessThanOrEqual(1.0);
 
   // Exact value regression tests
   expectCloseTo([0, 0, 0, 1], sharpenedChecker.slice(0, 4));

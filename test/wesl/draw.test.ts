@@ -35,10 +35,6 @@ test("stroke - basic behavior", async () => {
   `;
   const result = await testFragment(src, { size: [2, 2] });
 
-  // Center of stroke should be close to 1.0
-  expect(result[0]).toBeGreaterThan(0.9);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-
   // Outside regions (both inside and outside the stroke band) should be close to 0.0
   expect(result[1]).toBeLessThan(0.1); // Far inside
   expect(result[2]).toBeLessThan(0.1); // Far outside

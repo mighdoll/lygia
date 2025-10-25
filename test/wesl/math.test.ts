@@ -351,7 +351,6 @@ test("atan2Custom - additional angles", async () => {
 
   const PI = Math.PI;
 
-  // Verify diagonal angle
   expectCloseTo([(5 * PI) / 4], [result[0]]); // 5π/4 ≈ 3.927
 });
 

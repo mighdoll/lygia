@@ -60,14 +60,6 @@ test("layerColorSourceOver4 - grayscale dst", async () => {
   // Verify valid output (HSV edge case handling varies)
   expect(result[3]).toBeCloseTo(1.0);
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
-
   // Current implementation's specific output
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));
 });
@@ -103,11 +95,6 @@ test("layerHueSourceOver4", async () => {
   const maxChannel = Math.max(result[0], result[1], result[2]);
   expect(maxChannel).toBeGreaterThan(0.3);
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
-
   // Current implementation's specific output
   expectCloseTo([0.17, 0.51, 0.68, 0.85], result);
 });
@@ -133,14 +120,6 @@ test("layerHueSourceOver4 - red to gray", async () => {
 
   // Verify valid output
   expect(result[3]).toBeCloseTo(1.0);
-
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
 
   // Current implementation's specific output
   expectCloseTo([1.0, 0.0, 0.0], result.slice(0, 3));
@@ -173,11 +152,6 @@ test("layerSaturationSourceOver4", async () => {
     Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeGreaterThan(0.2); // Significantly saturated
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[1]).toBeGreaterThan(0.0);
-  expect(result[2]).toBeGreaterThan(0.0);
-
   // Current implementation's specific output
   expectCloseTo([0.59, 0.37, 0.26, 0.85], result);
 });
@@ -207,10 +181,6 @@ test("layerSaturationSourceOver4 - desaturate with gray", async () => {
     Math.min(result[0], result[1], result[2]);
   expect(colorRange).toBeLessThan(0.8); // Somewhat desaturated
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
   expect(result[3]).toBeCloseTo(1.0);
 
   // Current implementation's specific output
@@ -243,11 +213,6 @@ test("layerLuminositySourceOver4", async () => {
   expect(maxChannel).toBeGreaterThan(0.2); // Reasonably bright
   expect(maxChannel).toBeLessThan(1.0); // Not overly bright
 
-  // All channels should be valid
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-
   // Current implementation's specific output
   expectCloseTo([0.59, 0.37, 0.26, 0.85], result);
 });
@@ -274,12 +239,6 @@ test("layerLuminositySourceOver4 - gray to color", async () => {
   // Verify red hue is preserved (R should be dominant or equal to other channels)
   expect(result[0]).toBeGreaterThanOrEqual(result[1]);
   expect(result[0]).toBeGreaterThanOrEqual(result[2]);
-
-  // All channels should be valid (some may be low but not negative)
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
 
   // Current implementation's specific output
   expectCloseTo([1.0, 1.0, 1.0], result.slice(0, 3));

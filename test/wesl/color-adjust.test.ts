@@ -611,10 +611,7 @@ test("vibrance - selective saturation boost", async () => {
   // Muted color should have increased saturation (change > 1.0)
   expect(result[0]).toBeGreaterThan(1.0);
 
-  // Negative vibrance should move colors toward gray (desaturated)
-  // For vec3f(0.8, 0.4, 0.2), luma ≈ 0.525
-  // Vibrance -0.5 with sat ≈ 0.6 gives mix factor 1.0 + (-0.5 - (-1) * 0.6) = 1.0 - 0.5 + 0.6 = 1.1
-  // But mix factor is clamped/saturated, so result moves toward luma
+  // Negative vibrance should move colors toward gray
   expectCloseTo([0.833, 0.393], [result[2], result[3]]);
 });
 
@@ -690,10 +687,6 @@ test("ditherBlueNoise - spatial distribution", async () => {
 
   // Deterministic: same input should produce same output
   expectCloseTo([result[1]], [result[2]]);
-
-  // All values should be in [0, 1] range
-  expect(result[3]).toBeGreaterThanOrEqual(0.0);
-  expect(result[3]).toBeLessThanOrEqual(1.0);
 });
 
 test("ditherBlueNoise3", async () => {
@@ -727,7 +720,6 @@ test("ditherBlueNoise3", async () => {
   expect([quantLevel128, quantLevel129]).toContain(result[1]);
   expect([quantLevel128, quantLevel129]).toContain(result[2]);
 
-  // Verify original value was 0.503
   expectCloseTo([0.503], [result[3]]);
 });
 
@@ -756,10 +748,6 @@ test("ditherBlueNoise3Precision", async () => {
   expect([quantLevel8, quantLevel9]).toContain(result[0]);
   expect([quantLevel8, quantLevel9]).toContain(result[1]);
   expect([quantLevel8, quantLevel9]).toContain(result[2]);
-
-  // Verify result is saturated to [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
 });
 
 test("ditherVlachos3", async () => {

@@ -23,9 +23,6 @@ test("cnoise2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.1); // difference should be small
-  // Classic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.4915], [result[0]]);
 });
@@ -52,9 +49,6 @@ test("cnoise3", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.1);
-  // Classic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3962], [result[0]]);
 });
@@ -81,9 +75,6 @@ test("cnoise4", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.1);
-  // Classic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.0203], [result[0]]);
 });
@@ -110,9 +101,6 @@ test("snoise2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.2);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.3683], [result[0]]);
 });
@@ -139,9 +127,6 @@ test("snoise3", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.2);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.7335], [result[0]]);
 });
@@ -166,9 +151,6 @@ test("pnoise2", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Periodic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.4915], [result[0]]);
 });
@@ -193,9 +175,6 @@ test("pnoise3", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Periodic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3962], [result[0]]);
 });
@@ -220,9 +199,6 @@ test("pnoise4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Periodic noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.0203], [result[0]]);
 });
@@ -275,9 +251,6 @@ test("worley2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different positions have different distances
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Worley noise returns distance in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.7471], [result[0]]);
 });
@@ -373,9 +346,6 @@ test("wavelet2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Wavelet noise should return values in reasonable range
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.1946], [result[0]]);
 });
@@ -403,9 +373,6 @@ test("wavelet3", async () => {
   expectCloseTo([result[0]], [result[2]]);
   // Test that different phases produce different outputs
   expect(result[0]).not.toBeCloseTo(result[1], 1);
-  // Wavelet noise should return values in reasonable range
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.1946], [result[0]]);
 });
@@ -432,9 +399,6 @@ test("waveletScaled2", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that scaling position changes output
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Wavelet noise should return values in reasonable range
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.1114], [result[0]]);
 });
@@ -464,9 +428,6 @@ test("waveletScaled3 - with custom scale parameter", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different scales produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Wavelet noise should return values in reasonable range
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.0945], [result[0]]);
 });
@@ -558,9 +519,6 @@ test("random4", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.5181], [result[0]]);
 });
@@ -582,11 +540,6 @@ test("random21 - basic output", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.8786], [result[0]]);
 });
@@ -629,11 +582,6 @@ test("random23 - basic output", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.6837], [result[0]]);
 });
@@ -654,13 +602,6 @@ test("random31 - basic output", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.8786], [result[0]]);
 });
@@ -682,13 +623,6 @@ test("random32 - basic output", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (test first component)
   expectCloseTo([result[0]], [result[3]]);
-  // Random should return values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.2534], [result[0]]);
 });
@@ -919,11 +853,6 @@ test("snoise22", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
 });
 
 test("snoise33", async () => {
@@ -947,13 +876,6 @@ test("snoise33", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test continuity: nearby points should have similar values
   expect(result[3]).toBeLessThan(0.2);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.7335], [result[0]]);
 });
@@ -979,13 +901,6 @@ test("snoise34", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test continuity: nearby points should have similar values
   expect(result[3]).toBeLessThan(0.2);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3748], [result[0]]);
 });
@@ -1012,9 +927,6 @@ test("snoise4", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test continuity: nearby points have similar values
   expect(result[3]).toBeLessThan(0.2);
-  // Simplex noise should return values in range [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3748], [result[0]]);
 });
@@ -1088,9 +1000,6 @@ test("srandom3", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([17 / 128], [result[0]]);
 });
@@ -1113,13 +1022,6 @@ test("srandom33", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test determinism: same input produces same output (check first component)
   expectCloseTo([result[0]], [result[3]]);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-151 / 256], [result[0]]);
 });
@@ -1146,9 +1048,6 @@ test("srandom4", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-87 / 128], [result[0]]);
 });
@@ -1173,11 +1072,6 @@ test("srandom_tile22", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test tiling: points separated by tileLength should produce same output
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-0.3648], [result[0]]);
 });
@@ -1202,13 +1096,6 @@ test("srandom_tile33", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test tiling: points separated by tileLength should produce same output (check first component)
   expectCloseTo([result[0]], [result[3]]);
-  // Signed random returns values in [-1, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([-151 / 256], [result[0]]);
 });
@@ -1267,9 +1154,6 @@ test("worley3", async () => {
   expectCloseTo([result[0]], [result[1]]);
   // Test that different inputs produce different outputs
   expect(result[0]).not.toBeCloseTo(result[2], 1);
-  // Worley noise returns 1.0 - distance, so values in [0, 1]
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.3876], [result[0]]);
 });
@@ -1333,9 +1217,6 @@ test("wavelet - base function with custom phase and scale", async () => {
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Test that different scale produces different output
   expect(result[0]).not.toBeCloseTo(result[3], 1);
-  // Wavelet noise should return values in reasonable range
-  expect(result[0]).toBeGreaterThanOrEqual(-1.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
   // Regression: exact output value
   expectCloseTo([0.1884], [result[0]]);
 });

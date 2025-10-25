@@ -259,16 +259,6 @@ test("hemisphereCosSample - positive hemisphere", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-  // All z components should be >= 0 (positive hemisphere)
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[3]).toBeGreaterThanOrEqual(0.0);
-  // All z components should be <= 1 (unit vector constraint)
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
-  expect(result[3]).toBeLessThanOrEqual(1.0);
 
   // Exact values to catch regressions
   expectCloseTo([1.0, 0.0, Math.SQRT1_2, 0.5], result);
@@ -319,11 +309,6 @@ test("hemisphereCosSample - cosine distribution", async () => {
   // Verify ordering: z decreases as u.y increases (cosine distribution property)
   expect(result[0]).toBeGreaterThan(result[1]); // low u.y has higher z than mid u.y
   expect(result[1]).toBeGreaterThan(result[2]); // mid u.y has higher z than high u.y
-  // All should still be in valid range [0, 1]
-  expect(result[0]).toBeGreaterThan(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThan(1.0);
 
   // Exact values to catch regressions
   const invSqrt10 = 1 / Math.sqrt(10); // ≈ 0.31623

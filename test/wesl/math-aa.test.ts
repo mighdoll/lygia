@@ -195,10 +195,6 @@ test("aafract - anti-aliased fract", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // Property checks: verify valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-
   // aafract should be close to regular fract for slowly varying values
   // Loose precision: anti-aliasing adds smoothing near integer boundaries
   expect(Math.abs(result[0] - result[1])).toBeLessThan(0.15);
@@ -225,12 +221,6 @@ test("aafract - edge anti-aliasing behavior", async () => {
 
   const result = await testFragment(src, { size: [2, 2] });
 
-  // Both should be in valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-
   // For input x H 2.25, fract(x) H 0.25
   // aafract should be similar for slowly varying values
   // Loose precision: fragment shader position varies slightly per pixel (~0.005)
@@ -253,12 +243,6 @@ test("aafract2 - vec2 anti-aliased fract", async () => {
     }`;
 
   const result = await testFragment(src, { size: [2, 2] });
-
-  // Property checks: verify valid range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
 
   // For slowly varying input (pos.xy / 100.0), derivatives are small
   // aafract should behave similar to regular fract

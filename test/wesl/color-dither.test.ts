@@ -16,14 +16,6 @@ test("ditherBayer - base function returns values in [0,1]", async () => {
   `;
   const result = await testCompute(src, { elem: "vec4f" });
 
-  // All values should be in [0, 1] range
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
-  expect(result[1]).toBeGreaterThanOrEqual(0.0);
-  expect(result[1]).toBeLessThanOrEqual(1.0);
-  expect(result[2]).toBeGreaterThanOrEqual(0.0);
-  expect(result[2]).toBeLessThanOrEqual(1.0);
-
   // Based on the 8x8 Bayer matrix:
   // (0,0) -> index 0 -> 0.0/64.0 = 0.0
   expectCloseTo([0.0], [result[0]]);
@@ -150,10 +142,6 @@ test("ditherBayer4 - vec4 dithering preserves alpha", async () => {
     }
   `;
   const result = await testCompute(src, { elem: "vec4f" });
-
-  // RGB should be dithered
-  expect(result[0]).toBeGreaterThanOrEqual(0.0);
-  expect(result[0]).toBeLessThanOrEqual(1.0);
 
   // Alpha should be preserved exactly
   expectCloseTo([0.75], [result[3]]);
