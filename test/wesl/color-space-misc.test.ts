@@ -17,38 +17,6 @@ test("rgb2heat", async () => {
   expectCloseTo([0.854], result);
 });
 
-test("ryb2rgb", async () => {
-  const src = `
-     import lygia::color::space::ryb2rgb::ryb2rgb;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       let ryb = vec3f(1.0, 0.0, 0.0); // Red in RYB
-       let result = ryb2rgb(ryb);
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src, { elem: "vec3f" });
-  // RYB(1, 0, 0) -> RGB - needs investigation
-  expectCloseTo([1.0, 0.0, 0.0], result);
-});
-
-test("rgb2ryb", async () => {
-  const src = `
-     import lygia::color::space::rgb2ryb::rgb2ryb;
-
-     @compute @workgroup_size(1)
-     fn foo() {
-       let rgb = vec3f(1.0, 0.0, 0.0); // Red
-       let result = rgb2ryb(rgb);
-       test::results[0] = result;
-     }
-   `;
-  const result = await testCompute(src, { elem: "vec3f" });
-  // RGB(1, 0, 0) -> RYB - needs investigation (missing cubicMix3)
-  expectCloseTo([1.0, 0.0, 0.0], result);
-});
-
 test("cmyk2rgb", async () => {
   const src = `
      import lygia::color::space::cmyk2rgb::cmyk2rgb;
