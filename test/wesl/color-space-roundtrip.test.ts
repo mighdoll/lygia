@@ -52,10 +52,6 @@ test("rgb2oklab4 -> oklab2rgb4 roundtrip", async () => {
   expectCloseTo([0.6, 0.4, 0.2, 0.9], result);
 });
 
-// ============================================================================
-// Additional vec4 Overloads and Mono Functions
-// ============================================================================
-
 test("rgb2yiq4 -> yiq2rgb4 roundtrip", async () => {
   const src = `
      import lygia::color::space::rgb2yiq::rgb2yiq4;

@@ -237,11 +237,7 @@ test("ryb2rgb4 - alpha preservation", async () => {
   expectCloseTo([1.0, 1.0, 0.0, 0.75], result);
 });
 
-// ============================================================================
-// Roundtrip Tests
-// ============================================================================
-
-test("rgb2heat4 - vec4 overload with alpha preservation (FIXED)", async () => {
+test("rgb2heat4 - vec4 overload with alpha preservation", async () => {
   const src = `
      import lygia::color::space::rgb2heat::rgb2heat4;
 

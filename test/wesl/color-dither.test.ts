@@ -1,10 +1,6 @@
 import { expect, test } from "vitest";
 import { expectCloseTo, testCompute } from "./testUtil.ts";
 
-// ============================================================================
-// Bayer Dithering Tests
-// ============================================================================
-
 test("ditherBayer - base function returns values in [0,1]", async () => {
   const src = `
     import lygia::color::dither::bayer::ditherBayer;

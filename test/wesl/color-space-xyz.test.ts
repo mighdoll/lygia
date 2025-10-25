@@ -180,9 +180,6 @@ test("xyz2rgb4 - alpha preservation", async () => {
   expectCloseTo([1.0, 0.0, 0.0, 0.6], result);
 });
 
-// ============================================================================
-// Gamma Functions
-// ============================================================================
 
 test("rgb2xyY4 - alpha preservation", async () => {
   const src = `
