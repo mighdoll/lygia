@@ -1,137 +1,246 @@
 import { expect, test } from "vitest";
-import { expectCloseTo, testCompute } from "./testUtil.ts";
+import { expectCloseTo, testCompute, testDistribution } from "./testUtil.ts";
 
 test("cnoise2", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::cnoise::cnoise2;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec2f(0.5, 0.5);
-       let p2 = vec2f(0.5, 0.5); // Same point
-       let p3 = vec2f(0.51, 0.51); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5) - our regression point
+         let x = f32(i % 16u) * 0.2 + 0.5;
+         let y = f32(i / 16u) * 0.2 + 0.5;
 
-       let n1 = cnoise2(p1);
-       let n2 = cnoise2(p2);
-       let n3 = cnoise2(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = cnoise2(vec2f(x, y));
+         test::results[i * 2 + 1] = cnoise2(vec2f(x + 0.01, y + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.1); // difference should be small
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5)
   expectCloseTo([-0.4915], [result[0]]);
 });
 
 test("cnoise3", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::cnoise::cnoise3;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec3f(0.5, 0.5, 0.5);
-       let p2 = vec3f(0.5, 0.5, 0.5); // Same point
-       let p3 = vec3f(0.51, 0.51, 0.51); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5, 0.5) - our regression point
+         let x = f32(i % 8u) * 0.2 + 0.5;
+         let y = f32((i / 8u) % 8u) * 0.2 + 0.5;
+         let z = f32(i / 64u) * 0.2 + 0.5;
 
-       let n1 = cnoise3(p1);
-       let n2 = cnoise3(p2);
-       let n3 = cnoise3(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = cnoise3(vec3f(x, y, z));
+         test::results[i * 2 + 1] = cnoise3(vec3f(x + 0.01, y + 0.01, z + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.1);
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5, 0.5)
   expectCloseTo([-0.3962], [result[0]]);
 });
 
 test("cnoise4", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::cnoise::cnoise4;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec4f(0.5, 0.5, 0.5, 0.5);
-       let p2 = vec4f(0.5, 0.5, 0.5, 0.5); // Same point
-       let p3 = vec4f(0.51, 0.51, 0.51, 0.51); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5, 0.5, 0.5) - our regression point
+         let x = f32(i % 4u) * 0.2 + 0.5;
+         let y = f32((i / 4u) % 4u) * 0.2 + 0.5;
+         let z = f32((i / 16u) % 4u) * 0.2 + 0.5;
+         let w = f32(i / 64u) * 0.2 + 0.5;
 
-       let n1 = cnoise4(p1);
-       let n2 = cnoise4(p2);
-       let n3 = cnoise4(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = cnoise4(vec4f(x, y, z, w));
+         test::results[i * 2 + 1] = cnoise4(vec4f(x + 0.01, y + 0.01, z + 0.01, w + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.1);
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5, 0.5, 0.5)
   expectCloseTo([0.0203], [result[0]]);
 });
 
 test("snoise2", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::snoise::snoise2;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec2f(1.0, 2.0);
-       let p2 = vec2f(1.0, 2.0); // Same point
-       let p3 = vec2f(1.01, 2.01); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 1.0 so first point is at (1.0, 2.0) - our regression point
+         let x = f32(i % 16u) * 0.2 + 1.0;
+         let y = f32(i / 16u) * 0.2 + 2.0;
 
-       let n1 = snoise2(p1);
-       let n2 = snoise2(p2);
-       let n3 = snoise2(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = snoise2(vec2f(x, y));
+         test::results[i * 2 + 1] = snoise2(vec2f(x + 0.01, y + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.2);
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.2);
+
+  // Range: all values in approximately [-1, 1] (allow small overshoot for simplex noise)
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.1);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.1);
+
+  // Regression: result[0] is naturally at (1.0, 2.0)
   expectCloseTo([0.3683], [result[0]]);
 });
 
 test("snoise3", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::snoise::snoise3;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec3f(1.0, 2.0, 3.0);
-       let p2 = vec3f(1.0, 2.0, 3.0); // Same point
-       let p3 = vec3f(1.01, 2.01, 3.01); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset so first point is at (1.0, 2.0, 3.0) - our regression point
+         let x = f32(i % 8u) * 0.2 + 1.0;
+         let y = f32((i / 8u) % 8u) * 0.2 + 2.0;
+         let z = f32(i / 64u) * 0.2 + 3.0;
 
-       let n1 = snoise3(p1);
-       let n2 = snoise3(p2);
-       let n3 = snoise3(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = snoise3(vec3f(x, y, z));
+         test::results[i * 2 + 1] = snoise3(vec3f(x + 0.01, y + 0.01, z + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.2);
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.35);
+
+  // Range: all values in approximately [-1, 1] (allow small overshoot for simplex noise)
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.1);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.1);
+
+  // Regression: result[0] is naturally at (1.0, 2.0, 3.0)
   expectCloseTo([0.7335], [result[0]]);
 });
 
 test("pnoise2", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
+  const src = `
+     import constants::PAIR_COUNT;
+     import lygia::generative::pnoise::pnoise2;
+
+     @compute @workgroup_size(1)
+     fn foo() {
+       let period = vec2f(4.0, 4.0);
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5) - our regression point
+         let x = f32(i % 16u) * 0.2 + 0.5;
+         let y = f32(i / 16u) * 0.2 + 0.5;
+
+         test::results[i * 2] = pnoise2(vec2f(x, y), period);
+         test::results[i * 2 + 1] = pnoise2(vec2f(x + 0.01, y + 0.01), period);
+       }
+     }
+   `;
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5)
+  expectCloseTo([-0.4915], [result[0]]);
+});
+
+test("pnoise2 - periodicity", async () => {
   const src = `
      import lygia::generative::pnoise::pnoise2;
 
@@ -151,11 +260,50 @@ test("pnoise2", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Regression: exact output value
-  expectCloseTo([-0.4915], [result[0]]);
 });
 
 test("pnoise3", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
+  const src = `
+     import constants::PAIR_COUNT;
+     import lygia::generative::pnoise::pnoise3;
+
+     @compute @workgroup_size(1)
+     fn foo() {
+       let period = vec3f(4.0, 4.0, 4.0);
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5, 0.5) - our regression point
+         let x = f32(i % 8u) * 0.2 + 0.5;
+         let y = f32((i / 8u) % 8u) * 0.2 + 0.5;
+         let z = f32(i / 64u) * 0.2 + 0.5;
+
+         test::results[i * 2] = pnoise3(vec3f(x, y, z), period);
+         test::results[i * 2 + 1] = pnoise3(vec3f(x + 0.01, y + 0.01, z + 0.01), period);
+       }
+     }
+   `;
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5, 0.5)
+  expectCloseTo([-0.3962], [result[0]]);
+});
+
+test("pnoise3 - periodicity", async () => {
   const src = `
      import lygia::generative::pnoise::pnoise3;
 
@@ -175,11 +323,51 @@ test("pnoise3", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Regression: exact output value
-  expectCloseTo([-0.3962], [result[0]]);
 });
 
 test("pnoise4", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
+  const src = `
+     import constants::PAIR_COUNT;
+     import lygia::generative::pnoise::pnoise4;
+
+     @compute @workgroup_size(1)
+     fn foo() {
+       let period = vec4f(4.0, 4.0, 4.0, 4.0);
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset by 0.5 so first point is at (0.5, 0.5, 0.5, 0.5) - our regression point
+         let x = f32(i % 4u) * 0.2 + 0.5;
+         let y = f32((i / 4u) % 4u) * 0.2 + 0.5;
+         let z = f32((i / 16u) % 4u) * 0.2 + 0.5;
+         let w = f32(i / 64u) * 0.2 + 0.5;
+
+         test::results[i * 2] = pnoise4(vec4f(x, y, z, w), period);
+         test::results[i * 2 + 1] = pnoise4(vec4f(x + 0.01, y + 0.01, z + 0.01, w + 0.01), period);
+       }
+     }
+   `;
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.1);
+
+  // Range: all values in [-1, 1]
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.0);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.0);
+
+  // Regression: result[0] is naturally at (0.5, 0.5, 0.5, 0.5)
+  expectCloseTo([0.0203], [result[0]]);
+});
+
+test("pnoise4 - periodicity", async () => {
   const src = `
      import lygia::generative::pnoise::pnoise4;
 
@@ -199,8 +387,6 @@ test("pnoise4", async () => {
   const result = await testCompute(src, { elem: "vec4f" });
   // Test periodicity property: noise repeats exactly after one period
   expectCloseTo([result[0], result[0]], [result[1], result[2]]);
-  // Regression: exact output value
-  expectCloseTo([0.0203], [result[0]]);
 });
 
 test("srandom2", async () => {
@@ -906,28 +1092,43 @@ test("snoise34", async () => {
 });
 
 test("snoise4", async () => {
+  const pairCount = 256;
+  const sampleCount = pairCount * 2;
   const src = `
+     import constants::PAIR_COUNT;
      import lygia::generative::snoise::snoise4;
 
      @compute @workgroup_size(1)
      fn foo() {
-       let p1 = vec4f(1.0, 2.0, 3.0, 4.0);
-       let p2 = vec4f(1.0, 2.0, 3.0, 4.0); // Same point
-       let p3 = vec4f(1.01, 2.01, 3.01, 4.01); // Nearby point
+       for (var i = 0u; i < PAIR_COUNT; i++) {
+         // Offset so first point is at (1.0, 2.0, 3.0, 4.0) - our regression point
+         let x = f32(i % 4u) * 0.2 + 1.0;
+         let y = f32((i / 4u) % 4u) * 0.2 + 2.0;
+         let z = f32((i / 16u) % 4u) * 0.2 + 3.0;
+         let w = f32(i / 64u) * 0.2 + 4.0;
 
-       let n1 = snoise4(p1);
-       let n2 = snoise4(p2);
-       let n3 = snoise4(p3);
-
-       test::results[0] = vec4f(n1, n2, n3, abs(n3 - n1));
+         test::results[i * 2] = snoise4(vec4f(x, y, z, w));
+         test::results[i * 2 + 1] = snoise4(vec4f(x + 0.01, y + 0.01, z + 0.01, w + 0.01));
+       }
      }
    `;
-  const result = await testCompute(src, { elem: "vec4f" });
-  // Test determinism: same input produces same output
-  expectCloseTo([result[0]], [result[1]]);
-  // Test continuity: nearby points have similar values
-  expect(result[3]).toBeLessThan(0.2);
-  // Regression: exact output value
+  const result = await testDistribution(src, sampleCount, "f32", {
+    PAIR_COUNT: pairCount,
+  });
+
+  // Continuity: check all 256 pairs
+  let maxDiff = 0;
+  for (let i = 0; i < pairCount; i++) {
+    const diff = Math.abs(result[i * 2 + 1] - result[i * 2]);
+    maxDiff = Math.max(maxDiff, diff);
+  }
+  expect(maxDiff).toBeLessThan(0.2);
+
+  // Range: all values in approximately [-1, 1] (allow small overshoot for simplex noise)
+  expect(Math.min(...result)).toBeGreaterThanOrEqual(-1.1);
+  expect(Math.max(...result)).toBeLessThanOrEqual(1.1);
+
+  // Regression: result[0] is naturally at (1.0, 2.0, 3.0, 4.0)
   expectCloseTo([-0.3748], [result[0]]);
 });
 
