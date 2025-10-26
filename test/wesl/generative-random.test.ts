@@ -1,5 +1,10 @@
 import { expect, test } from "vitest";
-import { expectCloseTo, testCompute } from "./testUtil.ts";
+import {
+  expectCloseTo,
+  expectDistribution,
+  testCompute,
+  testDistribution,
+} from "./testUtil.ts";
 
 test("random", async () => {
   const src = `
@@ -21,6 +26,25 @@ test("random", async () => {
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
   expectCloseTo([0.763], [result[0]]);
+});
+
+test("random - distribution", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        test::results[i] = random(f32(i));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [0.0, 1.0]);
 });
 
 test("random2", async () => {
@@ -46,6 +70,27 @@ test("random2", async () => {
   expectCloseTo([0.6153], [result[0]]);
 });
 
+test("random2 - distribution", async () => {
+  const sampleCount = 512;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random2;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 32u);
+        let y = f32(i / 32u);
+        test::results[i] = random2(vec2f(x, y));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [0.0, 1.0]);
+});
+
 test("random3", async () => {
   const src = `
      import lygia::generative::random::random3;
@@ -67,6 +112,28 @@ test("random3", async () => {
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
   expectCloseTo([0.372], [result[0]]);
+});
+
+test("random3 - distribution", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random3;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 16u);
+        let y = f32((i / 16u) % 16u);
+        let z = f32(i / 256u);
+        test::results[i] = random3(vec3f(x, y, z));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [0.0, 1.0]);
 });
 
 test("random4", async () => {
@@ -132,6 +199,28 @@ test("random22 - basic output", async () => {
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
   expectCloseTo([0.2333], [result[0]]);
+});
+
+test("random22 - distribution (x component)", async () => {
+  const sampleCount = 512;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random22;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 32u);
+        let y = f32(i / 32u);
+        let sample = random22(vec2f(x, y));
+        test::results[i] = sample.x;
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [0.0, 1.0]);
 });
 
 test("random23 - basic output", async () => {
@@ -215,6 +304,29 @@ test("random33 - basic output", async () => {
   expectCloseTo([result[0]], [result[3]]);
   // Regression: exact output value
   expectCloseTo([0.4542], [result[0]]);
+});
+
+test("random33 - distribution (x component)", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::random::random33;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 16u);
+        let y = f32((i / 16u) % 16u);
+        let z = f32(i / 256u);
+        let sample = random33(vec3f(x, y, z));
+        test::results[i] = sample.x;
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [0.0, 1.0]);
 });
 
 test("random41 - determinism and range", async () => {
@@ -424,6 +536,28 @@ test("srandom2", async () => {
   // Regression: exact output value
   expectCloseTo([-91 / 128], [result[0]]);
 });
+
+test("srandom2 - distribution", async () => {
+  const sampleCount = 512;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::srandom::srandom2;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        let x = f32(i % 32u);
+        let y = f32(i / 32u);
+        test::results[i] = srandom2(vec2f(x, y));
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [-1.0, 1.0]);
+});
+
 test("srandom", async () => {
   const src = `
      import lygia::generative::srandom::srandom;
@@ -444,6 +578,26 @@ test("srandom", async () => {
   expect(result[0]).not.toBeCloseTo(result[2], 1);
   // Regression: exact output value
   expectCloseTo([233 / 512], [result[0]]);
+});
+
+test("srandom - distribution", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::srandom::srandom;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        // Vary inputs more to avoid patterns
+        test::results[i] = srandom(f32(i) * 1.234 + 0.567);
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [-1.0, 1.0]);
 });
 
 test("srandom22", async () => {
@@ -468,6 +622,29 @@ test("srandom22", async () => {
   expectCloseTo([result[0], result[1]], [result[2], result[3]]);
   // Regression: exact output value
   expectCloseTo([-0.3648], [result[0]]);
+});
+
+test("srandom22 - distribution (x component)", async () => {
+  const sampleCount = 1024;
+  const src = `
+    import constants::SAMPLE_COUNT;
+    import lygia::generative::srandom::srandom22;
+
+    @compute @workgroup_size(1)
+    fn main() {
+      for (var i = 0u; i < SAMPLE_COUNT; i++) {
+        // Vary inputs more to avoid patterns
+        let x = f32(i % 32u) * 1.1 + 0.3;
+        let y = f32(i / 32u) * 1.3 + 0.7;
+        let sample = srandom22(vec2f(x, y));
+        test::results[i] = sample.x;
+      }
+    }
+  `;
+  const samples = await testDistribution(src, sampleCount, "f32", {
+    SAMPLE_COUNT: sampleCount,
+  });
+  expectDistribution(samples, [-1.0, 1.0]);
 });
 
 test("srandom3", async () => {
