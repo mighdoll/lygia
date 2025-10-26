@@ -9,7 +9,7 @@ import {
 // Setup image snapshot matcher
 imageMatcher();
 
-const projectDir = import.meta.url;
+const projectDir = new URL("../../", import.meta.url).href;
 let device: GPUDevice;
 
 beforeAll(async () => {

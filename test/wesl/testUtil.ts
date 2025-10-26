@@ -11,7 +11,7 @@ import {
   testFragmentShader,
 } from "wesl-debug";
 
-const projectDir = import.meta.url;
+const projectDir = new URL("../../", import.meta.url).href;
 
 /** compare two arrays for approximate equality */
 export function expectCloseTo(
