@@ -1,16 +1,5 @@
-import { afterEach, beforeEach, expect, test } from "vitest";
-import { getGPUDevice } from "wesl-debug";
+import { expect, test } from "vitest";
 import { expectCloseTo, testCompute, testDistribution } from "./testUtil.ts";
-
-beforeEach(async () => {
-  const device = await getGPUDevice();
-  await device.queue.onSubmittedWorkDone();
-});
-
-afterEach(async () => {
-  const device = await getGPUDevice();
-  await device.queue.onSubmittedWorkDone();
-});
 
 test("cnoise2", async () => {
   const pairCount = 256;
