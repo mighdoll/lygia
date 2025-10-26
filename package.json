@@ -11,9 +11,10 @@
     "build": "rm -rf dist/* && webpack",
     "build:wesl": "wesl-packager --multiBundle --outDir dist",
     "lint": "eslint --fix --ext .js .",
-    "prepublishOnly": "pnpm test:once",
-    "test": "pnpm build:wesl && pnpm vitest",
-    "test:once": "pnpm build:wesl && pnpm vitest run"
+    "prepublishOnly": "pnpm test:built",
+    "test": "pnpm vitest",
+    "test:built": "pnpm build:wesl && TEST_BUNDLES=true pnpm vitest run",
+    "test:once": "pnpm vitest run"
   },
   "repository": {
     "type": "git",
