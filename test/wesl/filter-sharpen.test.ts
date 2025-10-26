@@ -3,8 +3,8 @@ import { getGPUDevice } from "wesl-debug";
 import {
   checkerboardTexture,
   createSampler,
-  solidTexture,
   expectCloseTo,
+  solidTexture,
   testCompute,
   testFragment,
 } from "./testUtil.ts";

@@ -180,7 +180,6 @@ test("xyz2rgb4 - alpha preservation", async () => {
   expectCloseTo([1.0, 0.0, 0.0, 0.6], result);
 });
 
-
 test("rgb2xyY4 - alpha preservation", async () => {
   const src = `
      import lygia::color::space::rgb2xyY::rgb2xyY4;

@@ -74,12 +74,7 @@
       ]
     },
     "color-blend-hsl.test.ts": {
-      "tests": [
-        "blendHue",
-        "blendSaturation",
-        "blendColor",
-        "blendLuminosity"
-      ]
+      "tests": ["blendHue", "blendSaturation", "blendColor", "blendLuminosity"]
     },
     "color-blend-opacity.test.ts": {
       "tests": [

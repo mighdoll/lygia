@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test } from "vitest";
-import { expectCloseTo, testCompute, testDistribution } from "./testUtil.ts";
 import { getGPUDevice } from "wesl-debug";
+import { expectCloseTo, testCompute, testDistribution } from "./testUtil.ts";
 
 beforeEach(async () => {
   const device = await getGPUDevice();

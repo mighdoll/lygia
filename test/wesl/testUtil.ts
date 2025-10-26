@@ -3,10 +3,10 @@ import { expect } from "vitest";
 import type { WgslElementType } from "wesl-debug";
 import {
   checkerboardTexture,
-  gradientTexture,
   createSampler,
-  solidTexture,
   getGPUDevice,
+  gradientTexture,
+  solidTexture,
   testComputeShader,
   testFragmentShader,
 } from "wesl-debug";
@@ -179,9 +179,4 @@ export function expectDistribution(
 }
 
 // Re-export texture helpers for convenience
-export {
-  checkerboardTexture,
-  gradientTexture,
-  createSampler,
-  solidTexture,
-};
+export { checkerboardTexture, gradientTexture, createSampler, solidTexture };

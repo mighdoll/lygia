@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, expect, test } from "vitest";
+import { imageMatcher } from "vitest-image-snapshot";
 import {
-  getGPUDevice,
   destroySharedDevice,
+  getGPUDevice,
   testFragmentShaderImage,
 } from "wesl-debug";
-import { imageMatcher } from "vitest-image-snapshot";
 
 // Setup image snapshot matcher
 imageMatcher();

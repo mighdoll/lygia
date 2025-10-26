@@ -1,10 +1,10 @@
 import { expect, test } from "vitest";
 import { getGPUDevice } from "wesl-debug";
 import {
-  gradientTexture,
   createSampler,
-  solidTexture,
   expectCloseTo,
+  gradientTexture,
+  solidTexture,
   testFragment,
 } from "./testUtil.js";
 
