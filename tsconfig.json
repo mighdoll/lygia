@@ -3,7 +3,7 @@
     "target": "ES2024", // we can expect a modern version with WebGPU (but we want stablility, so not "esnext")
     "lib": ["ES2024"],
 
-    "types": ["@webgpu/types"],
+    "types": ["@webgpu/types", "vitest"],
 
     "noEmit": true, // we don't transpile, we just typecheck 
     "module": "preserve", // import syntax passes through to bundler/node unchanged
@@ -14,5 +14,6 @@
     "allowImportingTsExtensions": true, // allows typechecking wesl core too for wesl devs
 
   },
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "include": ["test/**/*", "test/wesl-examples/vite-env.d.ts"]
 }
