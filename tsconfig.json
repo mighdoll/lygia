@@ -15,5 +15,5 @@
 
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["test/**/*", "test/wesl-examples/vite-env.d.ts"]
+  "include": ["test/**/*"]
 }
