@@ -216,6 +216,30 @@ The project uses a sophisticated system to avoid unnecessary test duplication:
 - Focuses effort on genuine gaps
 - Maintains high coverage percentage (99.1%)
 
+### Test Infrastructure Capabilities
+
+The project has comprehensive test infrastructure supporting multiple testing approaches:
+
+**Compute Shader Testing** (default):
+- `testCompute()` from `testUtil.ts` - For pure math functions
+- Fast execution, simple setup
+- Returns numeric results for validation
+
+**Fragment Shader Testing** (✅ IMPLEMENTED):
+- `testFragment()` from `testUtil.ts` - For derivatives and screen-space effects
+- Supports `fwidth()`, `dpdx()`, `dpdy()` functions
+- Input texture support via `inputTextures` parameter
+- Texture helpers: `gradientTexture`, `checkerboardTexture`, `lemurTexture`, etc.
+- All derivative functions (aafloor, aafract, aastep, aamirror, fcos, sharpen/adaptive) have passing tests
+
+**Visual Regression Testing** (✅ IMPLEMENTED):
+- `testFragmentShaderImage()` from `wesl-debug` - For complex visual outputs
+- Image snapshot matching with `toMatchImage()` matcher (vitest-image-snapshot)
+- Automatic diff generation on failures
+- Used for filters, generative functions, blend modes
+
+**Status:** All test infrastructure is fully implemented and working. See CLAUDE.md sections on "Fragment Shader Testing" and "Visual Regression Testing" for usage patterns.
+
 ---
 
 ## 📈 Progress Metrics

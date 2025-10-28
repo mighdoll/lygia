@@ -178,3 +178,182 @@ For deterministic functions like noise generators and pseudo-random functions:
 - Symmetry: Functions with symmetric properties (if applicable)
 
 ---
+
+## Fragment Shader Test Patterns
+
+Functions using derivatives (`fwidth()`, `dpdx()`, `dpdy()`) require fragment shader tests using `testFragment()` instead of `testCompute()`.
+
+### When to Use Fragment Shader Tests
+
+Use `testFragment()` for:
+- **Derivative functions:** `aafloor`, `aafract`, `aastep`, `aamirror`, `fcos`
+- **Filter functions:** Edge detection, sharpening, blur (when they use derivatives)
+- **Functions requiring texture sampling:** Filters, effects, distortions
+- **Screen-space effects:** Any function that needs pixel coordinates or neighboring pixels
+
+### Fragment Shader Test Pattern
+
+```typescript
+test("aafloor with derivatives", async () => {
+  const src = `
+    import lygia::math::aafloor::aafloor;
+    @fragment
+    fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
+      let x = pos.x / 10.0 + 2.5;
+      let result = aafloor(x);
+      return vec4f(result, 0.0, 0.0, 1.0);
+    }`;
+  const result = await testFragment(src, { size: [2, 2] });
+
+  // Test the behavior at pixel (0,0)
+  expectCloseTo([2.0], [result[0]]);
+});
+```
+
+**Key points:**
+- Minimum size `[2, 2]` for derivatives (needs 2×2 quad)
+- Returns pixel (0,0) values as array
+- Use `@fragment` shader stage
+- Test specific behavior, not just "doesn't crash"
+
+### Fragment Shader Test with Input Textures
+
+```typescript
+test("edgePrewitt with gradient", async () => {
+  const device = await getGPUDevice();
+  const gradientTex = gradientTexture(device, 256, 256, "horizontal");
+  const sampler = createSampler(device);
+
+  const src = `
+    import lygia::filter::edge::prewitt::edgePrewitt;
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
+    @fragment
+    fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
+      let uv = pos.xy / 256.0;
+      let pixel_size = vec2f(1.0 / 256.0);
+      let edge = edgePrewitt(input_tex, input_samp, uv, pixel_size);
+      return vec4f(edge, 1.0);
+    }`;
+
+  const result = await testFragment(src, {
+    size: [256, 256],
+    inputTextures: [{ texture: gradientTex, sampler }],
+  });
+
+  // Horizontal gradient should produce vertical edges
+  expect(result[0]).toBeGreaterThan(0.008);
+  expectCloseTo([0.0118], [result[0]]);
+});
+```
+
+**Available texture helpers:**
+- `solidTexture(device, width, height, color)` - Solid color
+- `gradientTexture(device, width, height, direction)` - Linear gradient
+- `checkerboardTexture(device, width, height, cellSize)` - Checkerboard pattern
+- `radialGradientTexture(device, width, height)` - Radial gradient
+- `edgePatternTexture(device, width, height)` - Edge detection test pattern
+- `colorBarsTexture(device, width, height)` - Color test bars
+- `noiseTexture(device, width, height)` - Random noise
+- `lemurTexture(device)` - 512×512 test photo
+
+**Best practices:**
+- Use meaningful test patterns (gradient for edge detection, noise for blur)
+- Test specific expected values, not just ranges
+- Verify behavior makes sense for the input pattern
+- Include property checks along with exact values
+
+---
+
+## Visual Regression Test Patterns
+
+For complex visual outputs where numeric validation is insufficient, use image snapshot testing.
+
+### When to Use Visual Regression Tests
+
+Use `toMatchImage()` for:
+- **Filters:** Blur, sharpen, edge detection, morphological operations
+- **Generative functions:** Noise patterns, procedural textures, fractals
+- **Complex rendering:** SDF compositions, blend modes, color grading
+- **Anything where "looks right" matters more than exact pixel values**
+
+### Visual Regression Test Pattern
+
+```typescript
+import { imageMatcher } from "vitest-image-snapshot";
+imageMatcher(); // Call once at top of test file
+
+test("Perlin noise FBM pattern", async () => {
+  const device = await getGPUDevice();
+
+  const src = `
+    import lygia::generative::cnoise::cnoise2;
+    @fragment
+    fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
+      let uv = pos.xy / 512.0;
+      let noise = cnoise2(uv * 8.0);
+      return vec4f(noise, noise, noise, 1.0);
+    }`;
+
+  const result = await testFragmentShaderImage({
+    projectDir: import.meta.url,
+    device,
+    src,
+    size: [512, 512],
+  });
+
+  await expect(result).toMatchImage("perlin-noise-fbm");
+});
+```
+
+**Key points:**
+- First run creates baseline snapshot in `__image_snapshots__/`
+- Failed tests create diffs in `__image_diffs__/`
+- Update snapshots with `pnpm vitest -u`
+- Use descriptive snapshot names
+
+### Visual Regression Best Practices
+
+**✅ Good visual regression tests:**
+1. **Deterministic output** - No random seeds, consistent results
+2. **Large enough to see details** - Use 256×256 or 512×512
+3. **Meaningful patterns** - Test real visual behavior, not trivial outputs
+4. **Descriptive names** - Snapshot name describes what's being tested
+
+**❌ Bad visual regression tests:**
+1. **Non-deterministic** - Random outputs that change every run
+2. **Too small** - 16×16 images where you can't see details
+3. **Trivial outputs** - Solid color, single pixel, empty image
+4. **Vague names** - "test1", "output", "result"
+
+**Example - Good visual regression test:**
+```typescript
+test("Gaussian blur 5×5 on checkerboard", async () => {
+  const device = await getGPUDevice();
+  const checkerboard = checkerboardTexture(device, 512, 512, 32);
+  const sampler = createSampler(device);
+
+  const src = `
+    // ... blur implementation with checkerboard input ...
+  `;
+
+  const result = await testFragmentShaderImage({
+    projectDir: import.meta.url,
+    device,
+    src,
+    size: [512, 512],
+    inputTextures: [{ texture: checkerboard, sampler }],
+  });
+
+  await expect(result).toMatchImage("gaussian-blur-5x5-checkerboard");
+  //                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  //                                 Descriptive name explains exactly what's tested
+});
+```
+
+**When to combine numeric + visual tests:**
+- Start with visual regression for the overall behavior
+- Add numeric checks for specific edge cases or boundary conditions
+- Use both when you want regression protection AND specific validation
+
+---

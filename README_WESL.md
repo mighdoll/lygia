@@ -11,8 +11,11 @@ WESL is WGSL plus a few additional features.
     e.g., variants for a `fn` with `f32` and the same `fn` with `vec3f` arguments go in the same file. 
     (And future versions of WESL will use fn overloads or generics to reduce duplication.)
 1. Add appropriate tests in `test/wesl`.
-    - Please help raise the level of testing in the library as you add 
-  features or fix issues.
+    - Use `testCompute()` for pure math functions
+    - Use `testFragment()` for derivative functions (`fwidth`, `dpdx`, `dpdy`) or texture sampling
+    - Use `toMatchImage()` for visual regression tests (filters, generative patterns, complex rendering)
+    - See CLAUDE.md "Fragment Shader Testing" and "Visual Regression Testing" sections for patterns
+    - Please help raise the level of testing in the library as you add features or fix issues
 
 #### Notes when porting to WESL:
 - WESL file names can't start with a number, and can't be current WGSL or WESL keywords.

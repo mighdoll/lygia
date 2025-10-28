@@ -84,19 +84,19 @@ All in functions.test.ts:
 
 Based on the test coverage above, here are converted .wesl files that lack tests:
 
-#### 🚨 Functions Requiring Fragment Shader Testing (6 functions) - Priority: HIGH
+#### ✅ Fragment Shader Functions (6 functions) - TESTED
 
-These functions use derivatives (`fwidth()`, `dFdx()`, `dFdy()`) which are only available in fragment shaders.
-They require a new `testFragmentShader()` test harness (see [test-fragshader.md](test-fragshader.md) for implementation plan).
+These functions use derivatives (`fwidth()`, `dpdx()`, `dpdy()`) which are only available in fragment shaders.
+Fragment shader test harness is **implemented** using `testFragment()` from `testUtil.ts`.
 
-1. **`math/aafloor.wesl`** - Anti-aliased floor (uses `fwidth()` on line 12)
-2. **`math/aafract.wesl`** - Anti-aliased fract (uses `fwidth()` on line 11)
-3. **`math/aastep.wesl`** - Anti-aliased step (uses `fwidth()` on line 7)
-4. **`math/aamirror.wesl`** - Anti-aliased mirror (uses `dpdx()/dpdy()` on line 11)
-5. **`math/fcos.wesl`** - Fast cosine approximation (uses `fwidth()` on line 13)
-6. **`filter/sharpen/adaptive.wesl`** - Adaptive sharpening filter (uses `fwidth()` on line 78)
+1. **`math/aafloor.wesl`** ✅ - Anti-aliased floor (tested in `math-aa.test.ts`)
+2. **`math/aafract.wesl`** ✅ - Anti-aliased fract (tested in `math-aa.test.ts`)
+3. **`math/aastep.wesl`** ✅ - Anti-aliased step (tested in `math-aa.test.ts`)
+4. **`math/aamirror.wesl`** ✅ - Anti-aliased mirror (tested in `math-aa.test.ts`)
+5. **`math/fcos.wesl`** ✅ - Fast cosine approximation (tested in `math-aa.test.ts`)
+6. **`filter/sharpen/adaptive.wesl`** ✅ - Adaptive sharpening (tested in `filter-sharpen.test.ts`)
 
-**Status:** Tests currently skipped in `functions.test.ts`. Once fragment shader test harness is implemented, these can be fully tested.
+**Status:** All derivative functions now have passing tests using the fragment shader test infrastructure. See CLAUDE.md "Fragment Shader Testing" section for usage patterns.
 
 #### Color Utilities (4 files) - Priority: Medium
 - `color/hueShiftRYB.wesl` - RYB color space hue shifting
