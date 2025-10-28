@@ -5,11 +5,11 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  wesl: link:../worktrees/lazy-resolve/tools/packages/wesl
-  wesl-debug: link:../worktrees/lazy-resolve/tools/packages/wesl-debug
-  wesl-packager: link:../worktrees/lazy-resolve/tools/packages/wesl-packager
-  wesl-link: link:../worktrees/lazy-resolve/tools/packages/wesl-link
-  vitest-image-snapshot: link:../worktrees/lazy-resolve/tools/packages/vitest-image-snapshot
+  wesl: link:../wesl-js/tools/packages/wesl
+  wesl-debug: link:../wesl-js/tools/packages/wesl-debug
+  wesl-packager: link:../wesl-js/tools/packages/wesl-packager
+  wesl-link: link:../wesl-js/tools/packages/wesl-link
+  vitest-image-snapshot: link:../wesl-js/tools/packages/vitest-image-snapshot
 
 importers:
 
@@ -43,8 +43,8 @@ importers:
         specifier: ^3.1.3
         version: 3.2.4(@types/node@22.13.10)(terser@5.39.0)
       vitest-image-snapshot:
-        specifier: link:../worktrees/lazy-resolve/tools/packages/vitest-image-snapshot
-        version: link:../worktrees/lazy-resolve/tools/packages/vitest-image-snapshot
+        specifier: link:../wesl-js/tools/packages/vitest-image-snapshot
+        version: link:../wesl-js/tools/packages/vitest-image-snapshot
       webgpu:
         specifier: ^0.2.12
         version: 0.2.12
@@ -58,14 +58,14 @@ importers:
         specifier: github:patriciogonzalezvivo/webpack-glsl-loader
         version: https://codeload.github.com/patriciogonzalezvivo/webpack-glsl-loader/tar.gz/3023b6ce6e56fb779ca305d61de7bc356b7cca35
       wesl-debug:
-        specifier: link:../worktrees/lazy-resolve/tools/packages/wesl-debug
-        version: link:../worktrees/lazy-resolve/tools/packages/wesl-debug
+        specifier: link:../wesl-js/tools/packages/wesl-debug
+        version: link:../wesl-js/tools/packages/wesl-debug
       wesl-link:
-        specifier: link:../worktrees/lazy-resolve/tools/packages/wesl-link
-        version: link:../worktrees/lazy-resolve/tools/packages/wesl-link
+        specifier: link:../wesl-js/tools/packages/wesl-link
+        version: link:../wesl-js/tools/packages/wesl-link
       wesl-packager:
-        specifier: link:../worktrees/lazy-resolve/tools/packages/wesl-packager
-        version: link:../worktrees/lazy-resolve/tools/packages/wesl-packager
+        specifier: link:../wesl-js/tools/packages/wesl-packager
+        version: link:../wesl-js/tools/packages/wesl-packager
 
 packages:
 

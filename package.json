@@ -63,11 +63,11 @@
   },
   "pnpm": {
     "overrides": {
-      "wesl": "link:../worktrees/lazy-resolve/tools/packages/wesl",
-      "wesl-debug": "link:../worktrees/lazy-resolve/tools/packages/wesl-debug",
-      "wesl-packager": "link:../worktrees/lazy-resolve/tools/packages/wesl-packager",
-      "wesl-link": "link:../worktrees/lazy-resolve/tools/packages/wesl-link",
-      "vitest-image-snapshot": "link:../worktrees/lazy-resolve/tools/packages/vitest-image-snapshot"
+      "wesl": "link:../wesl-js/tools/packages/wesl",
+      "wesl-debug": "link:../wesl-js/tools/packages/wesl-debug",
+      "wesl-packager": "link:../wesl-js/tools/packages/wesl-packager",
+      "wesl-link": "link:../wesl-js/tools/packages/wesl-link",
+      "vitest-image-snapshot": "link:../wesl-js/tools/packages/vitest-image-snapshot"
     }
   },
   "eslintConfig": {
