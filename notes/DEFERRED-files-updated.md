@@ -1,7 +1,7 @@
 # Files Deferred from GLSL to WESL Conversion
 
-**Last Updated:** 2025-10-27
-**Status:** REVISED after texture/sampler test infrastructure review
+**Last Updated:** 2025-10-28
+**Status:** REVISED AGAIN after infrastructure capability review
 
 ---
 
@@ -10,17 +10,76 @@
 **Original Status (pre-review):**
 - Total deferred: 105 files (24% of 432 total)
 
-**Updated Status (post-review):**
-- **Can convert NOW:** 48 files (moved from deferred to ready)
-- **Still deferred:** 57 files (13% of total)
+**Updated Status (after texture/sampler review):**
+- Can convert with new infrastructure: 48 files
+- Still deferred: 57 files (13% of total)
 
-**Net change:** -48 deferred files (46% reduction in deferred count)
+**LATEST Status (after infrastructure capability review):**
+- **Ready to convert NOW:** 65 files (moved from deferred to ready)
+- **Still deferred:** 40 files (9% of total)
+
+**Net change:** -65 deferred files (62% reduction in deferred count)
 
 ---
 
 ## Files NO LONGER DEFERRED ✅
 
-These 48 files were previously deferred but can now be converted with the new test infrastructure.
+These 65 files were previously deferred but can now be converted.
+
+### Ready to Convert NOW - Infrastructure Already Exists! (17 files) 🚀
+
+**Discovery:** These files were deferred for "visual validation" or "complex algorithms" but current test infrastructure already supports them!
+
+#### Visual Validation Files (10 files)
+
+**Why ready:** `testFragmentShaderImage()` and `toMatchImage()` already exist in test suite!
+
+**Filter category (4 files):**
+1. `filter/kuwahara.glsl` - Oil painting effect (visual regression test)
+2. `filter/smartDeNoise.glsl` - Adaptive denoising (visual regression test)
+3. `filter/radialBlur.glsl` - Radial motion blur (visual regression test)
+4. `filter/fibonacciBokeh.glsl` - Bokeh depth effect (visual regression test)
+
+**Distort category (6 files):**
+5. `distort/displace.glsl` - Displacement mapping (dual texture input)
+6. `distort/barrel.glsl` - Barrel distortion
+7. `distort/chromaAB.glsl` - Chromatic aberration
+8. `distort/stretch.glsl` - Stretch distortion
+9. `distort/pincushion.glsl` - Pincushion distortion
+10. `distort/grain.glsl` - Film grain effect
+
+#### Morphological Single-Pass Files (3 files)
+
+**Why ready:** These are single-pass kernel operations, NOT multi-pass iterative algorithms!
+
+11. `morphological/erosion.glsl` - Erosion filter (3x3 or 5x5 kernel)
+12. `morphological/dilation.glsl` - Dilation filter (3x3 or 5x5 kernel)
+13. `morphological/alphaFill.glsl` - Alpha fill (spiral sampling pattern)
+
+#### Generative Files with Defaults (3 files)
+
+**Why ready:** Listed as "no sensible default" but they HAVE defaults!
+
+14. `generative/fbm.glsl` - FBM with default `#define FBM_NOISE_FNC(UV) snoise(UV)`
+15. `generative/voronoise.glsl` - Voronoise with default `#define VORONOISE_RANDOM_FNC(XYZ) random3(XYZ)`
+16. `generative/voronoi.glsl` - Voronoi with default `#define VORONOI_FNC(UV) voronoi(UV)`
+
+#### Simulate Single-Pass Files (1 file)
+
+**Why ready:** Single-pass state transition (previous frame → next frame), testable with `inputTextures`!
+
+17. `simulate/ripple.glsl` - Water ripple simulation (single-pass state update)
+
+**Test infrastructure used:**
+- `testFragmentShaderImage()` - Visual regression
+- `toMatchImage()` - Image snapshot matching
+- `testFragment()` - Fragment shader with texture inputs
+- `inputTextures` parameter - Texture binding (supports multiple textures)
+- Texture helpers: `lemurTexture`, `checkerboardTexture`, `gradientTexture`, `edgePatternTexture`
+
+---
+
+### Ready with New Infrastructure (48 files)
 
 ### Filter/ - Can Convert (23 files)
 
@@ -109,20 +168,14 @@ These 48 files were previously deferred but can now be converted with the new te
 
 ## Files STILL DEFERRED ❌
 
-These 57 files remain deferred for various reasons.
+These 40 files remain deferred for various reasons.
 
-### Filter/ - Still Deferred (6 files)
+### Filter/ - Still Deferred (2 files)
 
-1. `filter/kuwahara.glsl` - Complex variance analysis, needs visual validation
-2. `filter/smartDeNoise.glsl` - Adaptive denoising, complex algorithm
-3. `filter/noiseBlur.glsl` - Depends on sample/nearest (not yet converted)
-4. `filter/radialBlur.glsl` - Artistic effect, needs visual validation
-5. `filter/fibonacciBokeh.glsl` - Bokeh effect, needs visual validation
-6. `filter/sharpen/adaptive.glsl` - **Uses fwidth() derivatives**
+1. `filter/noiseBlur.glsl` - Depends on sample/nearest (not yet converted)
+2. `filter/sharpen/adaptive.glsl` - **Uses fwidth() derivatives**
 
 **Reasons:**
-- Complex iterative algorithms (kuwahara, smartDeNoise)
-- Artistic effects requiring visual regression testing
 - Derivative-based (adaptive sharpen)
 - Dependencies (noiseBlur → sample/nearest)
 
@@ -178,57 +231,29 @@ These 57 files remain deferred for various reasons.
 - Multi-pass rendering requirements
 - Requires depth buffers, normal buffers, etc.
 
-### Distort/ - Still Deferred (6 files)
+### Morphological/ - Still Deferred (5 files)
 
-1. `distort/displace.glsl` - Displacement mapping
-2. `distort/barrel.glsl` - Barrel distortion
-3. `distort/chromaAB.glsl` - Chromatic aberration
-4. `distort/stretch.glsl` - Stretch distortion
-5. `distort/pincushion.glsl` - Pincushion distortion
-6. `distort/grain.glsl` - Film grain effect
-
-**Reasons:**
-- Artistic effects requiring visual validation
-- Could convert but defer until higher priorities done
-
-### Morphological/ - Still Deferred (8 files)
-
-1. `morphological/erosion.glsl` - Morphological erosion
-2. `morphological/alphaFill.glsl` - Alpha channel fill
-3. `morphological/marchingSquares.glsl` - Marching squares
-4. `morphological/jumpFlood.glsl` - Jump flood algorithm
-5. `morphological/alphaHashing.glsl` - Alpha hashing
-6. `morphological/dilation.glsl` - Morphological dilation
-7. `morphological/pyramid.glsl` - Pyramid operations
-8. `morphological/pyramid/upscale.glsl`, `downscale.glsl` - Pyramid utilities
+1. `morphological/marchingSquares.glsl` - Marching squares
+2. `morphological/jumpFlood.glsl` - Jump flood algorithm (multi-pass iterative)
+3. `morphological/alphaHashing.glsl` - Alpha hashing
+4. `morphological/pyramid.glsl` - Pyramid operations
+5. `morphological/pyramid/upscale.glsl`, `downscale.glsl` - Pyramid utilities
 
 **Reasons:**
-- Iterative multi-pass algorithms
+- Multi-pass iterative algorithms (jumpFlood)
 - Complex computational patterns
-- Lower priority for general use
+- Need infrastructure review for other files
 
-### Simulate/ - Still Deferred (4 files)
+### Simulate/ - Still Deferred (3 files)
 
 1. `simulate/latticeBoltzmann.glsl` - Physics simulation
 2. `simulate/simpleAndFastFluid.glsl` - Fluid simulation
-3. `simulate/ripple.glsl` - Water ripple simulation
-4. `simulate/grayscott.glsl` - Reaction-diffusion simulation
+3. `simulate/grayscott.glsl` - Reaction-diffusion simulation
 
 **Reasons:**
 - Multi-pass simulation algorithms
 - Require persistent state across frames
 - Complex computational patterns
-
-### Generative/ - Still Deferred (3 files)
-
-1. `generative/fbm.glsl` - FBM with user-defined FBM_FNC
-2. `generative/voronoise.glsl` - Voronoi noise with VORONOISE_FNC
-3. `generative/voronoi.glsl` - Voronoi with VORONOI_FNC
-
-**Reasons:**
-- Require user-pluggable function macros
-- No sensible default implementation
-- API redesign needed
 
 ### Color/ - Still Deferred (5 files)
 
@@ -388,52 +413,74 @@ sample/2DCube.wesl
 
 | Category | Original Deferred | Now Ready | Still Deferred | Change |
 |----------|-------------------|-----------|----------------|--------|
-| Filter | 23 | 23 | 6 | -17 (74% reduction) |
+| Filter | 23 | 23 + 4 | 2 | -21 (91% reduction) |
 | Sample | 27 | 25 | 6 | -21 (78% reduction) |
 | Lighting/material | 8 | 0 | 8 | 0 (keep all deferred) |
 | Lighting (other) | ~14 | 0 | ~14 | 0 (review needed) |
-| Distort | 6 | 0 | 6 | 0 (could review) |
-| Morphological | 8 | 0 | 8 | 0 (complex) |
-| Simulate | 4 | 0 | 4 | 0 (complex) |
-| Generative | 3 | 0 | 3 | 0 (API redesign) |
+| Distort | 6 | 6 | 0 | -6 (100% reduction) |
+| Morphological | 8 | 3 | 5 | -3 (38% reduction) |
+| Simulate | 4 | 1 | 3 | -1 (25% reduction) |
+| Generative | 3 | 3 | 0 | -3 (100% reduction) |
 | Color | 5 | 0 | 5 | 0 (could review) |
 | Space | 3 | 0 | 3 | 0 (could review) |
 | Draw | 2 | 0 | 2 | 0 (low priority) |
 | SDF | 1 | 0 | 1 | 0 (API redesign) |
 | Root | 1 | 0 | 1 | 0 (not applicable) |
-| **TOTAL** | **105** | **48** | **57** | **-48 (46% reduction)** |
+| **TOTAL** | **105** | **65** | **40** | **-65 (62% reduction)** |
 
 ### Impact on Overall Conversion
 
-| Metric | Before Review | After Review | Change |
-|--------|---------------|--------------|--------|
-| Total GLSL files | 432 | 432 | - |
-| Deferred files | 105 (24%) | 57 (13%) | -48 |
-| Ready to convert | 327 (76%) | 375 (87%) | +48 |
+| Metric | Before Review | After 1st Review | After 2nd Review | Total Change |
+|--------|---------------|------------------|------------------|--------------|
+| Total GLSL files | 432 | 432 | 432 | - |
+| Deferred files | 105 (24%) | 57 (13%) | 40 (9%) | -65 |
+| Ready to convert | 327 (76%) | 375 (87%) | 392 (91%) | +65 |
 
 ---
 
 ## Key Findings
 
-1. **Texture testing infrastructure enables most conversions** - 46% of deferred files can now be converted
-2. **sample/clamp2edge.glsl is critical** - Must convert first to unblock filter/ category
-3. **GlslViewer material files are special cases** - Not general-purpose utilities, belong in renderer codebase
-4. **Platform conditionals can be removed** - WGSL supports dynamic loops
-5. **Visual regression needed for artistic effects** - kuwahara, bokeh, radial blur
-6. **Only one filter uses derivatives** - sharpen/adaptive (uses fwidth)
-7. **Scene dependencies still block many files** - shadows, SSR, SSAO, etc.
+1. **Test infrastructure more capable than documented** - 62% of deferred files can now be converted (up from 46%)
+2. **Visual regression testing already exists** - 10 "needs visual validation" files can convert immediately
+3. **Morphological files mischaracterized** - 3 are single-pass (not multi-pass), ready NOW
+4. **Generative files have defaults** - 3 files incorrectly listed as "no sensible default"
+5. **sample/clamp2edge.glsl is critical** - Must convert first to unblock filter/ category
+6. **GlslViewer material files are special cases** - Not general-purpose utilities, belong in renderer codebase
+7. **Platform conditionals can be removed** - WGSL supports dynamic loops
+8. **Only one filter uses derivatives** - sharpen/adaptive (uses fwidth)
+9. **Scene dependencies overstated** - Many can be tested with mocked inputs (depth textures, etc.)
+10. **17 files ready for immediate conversion** - No infrastructure changes needed!
 
 ---
 
 ## Next Actions
 
-1. ✅ Update this file (DEFERRED-files.md)
-2. Convert `sample/clamp2edge.glsl` FIRST (critical blocker)
-3. Batch convert simple sample utilities (10 files)
-4. Batch convert simple filters (14 files)
-5. Add visual regression tests for complex filters
-6. Review remaining deferred categories (distort, color, space, draw)
-7. Document GlslViewer integration pattern for material files
+### Immediate (This Week)
+
+1. ✅ Update this file (DEFERRED-files-updated.md)
+2. **Convert 17 "ready NOW" files using existing infrastructure:**
+   - 4 filter visual validation files
+   - 6 distort files
+   - 3 morphological single-pass files
+   - 3 generative files with defaults
+   - 1 simulate file (ripple)
+3. Convert `sample/clamp2edge.glsl` FIRST (critical blocker for 48 other files)
+4. Batch convert simple sample utilities (10 files)
+5. Batch convert simple filters (14 files)
+
+### Next Week
+
+1. Add depth texture helper (2-3 hours) - see test-infrastructure-gaps.md
+2. Convert shadow/depth sampling files (4 files)
+3. Review color/ and space/ categories for hidden convertibles
+4. Add visual regression tests for remaining complex filters
+
+### Later
+
+1. Add multi-pass rendering support (2-3 days)
+2. Convert jumpFlood and multi-frame simulations
+3. Review advanced lighting requirements
+4. Document GlslViewer integration pattern for material files
 
 ---
 
