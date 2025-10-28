@@ -4,15 +4,22 @@ Find LYGIA WESL functions that are not covered by tests.
 
 This script:
 1. Scans all .wesl files and extracts function names
-2. Scans all .test.ts files and extracts imported lygia:: modules
-3. Reports which functions don't have test coverage
+2. Scans unit tests (test/wesl/*.test.ts) and extracts imported lygia:: modules
+3. Scans visual regression tests (test/wesl-examples/**/*.test.ts and shaders/*.wesl)
+4. Reports which functions don't have test coverage (unit, visual, or indirect)
+
+Coverage categories:
+  - Tested directly: Unit tests in test/wesl/
+  - Tested visually: Visual regression tests in test/wesl-examples/
+  - Tested indirectly: Component-wise wrappers or functions called by tested functions
+  - Genuinely untested: Not covered by any of the above
 
 Usage:
     python3 scripts/find-untested-functions.py                  # Show all untested functions
     python3 scripts/find-untested-functions.py --count          # Show counts by category
-    python3 scripts/find-untested-functions.py --summary        # Show summary only
+    python3 scripts/find-untested-functions.py --summary        # Show summary with breakdown
     python3 scripts/find-untested-functions.py --files          # List only untested .wesl files
-    python3 scripts/find-untested-functions.py --skip-indirect  # Exclude indirectly tested functions
+    python3 scripts/find-untested-functions.py --show-visual    # Show only visual regression tested functions
     python3 scripts/find-untested-functions.py --show-indirect  # Show only indirectly tested functions
 """
 
@@ -25,11 +32,14 @@ from typing import Dict, Set, List, Tuple
 
 
 def find_wesl_files(root_dir: Path) -> List[Path]:
-    """Find all .wesl files in the repository."""
+    """Find all .wesl files in the repository (library files only, not test examples)."""
     wesl_files = []
     for path in root_dir.rglob("*.wesl"):
-        # Skip node_modules and other build directories
-        if "node_modules" not in str(path) and ".git" not in str(path):
+        path_str = str(path)
+        # Skip node_modules, build directories, and test examples
+        if ("node_modules" not in path_str and
+            ".git" not in path_str and
+            "test/wesl-examples" not in path_str):
             wesl_files.append(path)
     return wesl_files
 
@@ -69,14 +79,28 @@ def extract_functions_from_wesl(wesl_file: Path) -> List[str]:
     return functions
 
 
-def find_test_files(root_dir: Path) -> List[Path]:
-    """Find all test.ts files."""
-    test_files = []
+def find_test_files(root_dir: Path) -> Tuple[List[Path], List[Path]]:
+    """Find all test.ts files in test/wesl/ and test/wesl-examples/.
+
+    Returns:
+        (unit_test_files, visual_test_files) - separate lists for unit and visual regression tests
+    """
+    unit_test_files = []
+    visual_test_files = []
+
+    # Unit tests in test/wesl/
     test_dir = root_dir / "test" / "wesl"
     if test_dir.exists():
         for path in test_dir.glob("*.test.ts"):
-            test_files.append(path)
-    return test_files
+            unit_test_files.append(path)
+
+    # Visual regression tests in test/wesl-examples/
+    examples_dir = root_dir / "test" / "wesl-examples"
+    if examples_dir.exists():
+        for path in examples_dir.rglob("*.test.ts"):
+            visual_test_files.append(path)
+
+    return unit_test_files, visual_test_files
 
 
 def extract_imports_from_test(test_file: Path) -> Set[str]:
@@ -97,6 +121,34 @@ def extract_imports_from_test(test_file: Path) -> Set[str]:
                 imports.add(import_path)
     except Exception as e:
         print(f"Warning: Could not read {test_file}: {e}", file=sys.stderr)
+
+    return imports
+
+
+def extract_imports_from_shader_files(root_dir: Path) -> Set[str]:
+    """Extract LYGIA imports from shader files used in visual regression tests.
+
+    Scans .wesl files in test/wesl-examples/shaders/ directory.
+    Returns the full module paths (including function names).
+    """
+    imports = set()
+    shaders_dir = root_dir / "test" / "wesl-examples" / "shaders"
+
+    if not shaders_dir.exists():
+        return imports
+
+    for shader_file in shaders_dir.glob("*.wesl"):
+        try:
+            with open(shader_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Match LYGIA imports: import lygia::path::to::function;
+                pattern = r'import\s+(lygia::[a-zA-Z0-9_:]+);'
+                matches = re.finditer(pattern, content)
+                for match in matches:
+                    import_path = match.group(1)
+                    imports.add(import_path)
+        except Exception as e:
+            print(f"Warning: Could not read {shader_file}: {e}", file=sys.stderr)
 
     return imports
 
@@ -149,6 +201,7 @@ def main():
     show_files = "--files" in sys.argv
     skip_indirect = "--skip-indirect" in sys.argv
     show_indirect = "--show-indirect" in sys.argv
+    show_visual = "--show-visual" in sys.argv
 
     # Get repository root (parent of scripts directory)
     script_dir = Path(__file__).parent
@@ -180,21 +233,31 @@ def main():
 
     # Find all test files and extract imports
     print("Scanning test files...", file=sys.stderr)
-    test_files = find_test_files(root_dir)
-    tested_imports: Set[str] = set()
+    unit_test_files, visual_test_files = find_test_files(root_dir)
 
-    for test_file in test_files:
+    # Extract imports from unit tests
+    unit_tested_imports: Set[str] = set()
+    for test_file in unit_test_files:
         imports = extract_imports_from_test(test_file)
-        tested_imports.update(imports)
+        unit_tested_imports.update(imports)
 
-    print(f"Found {len(tested_imports)} tested imports in {len(test_files)} test files", file=sys.stderr)
+    # Extract imports from visual regression shaders
+    visual_tested_imports = extract_imports_from_shader_files(root_dir)
+
+    # Combined: all directly tested (unit + visual)
+    all_tested_imports = unit_tested_imports | visual_tested_imports
+
+    print(f"Found {len(unit_tested_imports)} unit tested imports in {len(unit_test_files)} test files", file=sys.stderr)
+    print(f"Found {len(visual_tested_imports)} visual regression tested imports in {len(visual_test_files)} visual test files", file=sys.stderr)
 
     # Compare: find untested functions
     untested_by_category = defaultdict(list)
     indirect_by_category = defaultdict(list)
+    visual_by_category = defaultdict(list)
     files_with_any_test = set()  # Track files that have at least one tested function
     total_functions = 0
-    total_tested = 0
+    total_unit_tested = 0
+    total_visual_tested = 0
     total_indirect = 0
 
     for module_path, data in sorted(module_functions.items()):
@@ -207,38 +270,59 @@ def main():
             # lygia::path::to::module::functionName
             full_import = f"{module_path}::{func_name}"
 
-            if full_import in tested_imports:
-                total_tested += 1
-                files_with_any_test.add(file_path)  # Mark this file as having a test
-            elif full_import in indirectly_tested:
+            is_tested = False
+            category = categorize_module(module_path)
+
+            if full_import in unit_tested_imports:
+                total_unit_tested += 1
+                files_with_any_test.add(file_path)
+                is_tested = True
+
+            if full_import in visual_tested_imports:
+                # Function is tested via visual regression
+                total_visual_tested += 1
+                files_with_any_test.add(file_path)
+                visual_by_category[category].append({
+                    'module': module_path,
+                    'function': func_name,
+                    'file': file_path
+                })
+                is_tested = True
+
+            if full_import in indirectly_tested:
                 # Function is indirectly tested
                 total_indirect += 1
-                category = categorize_module(module_path)
                 indirect_by_category[category].append({
                     'module': module_path,
                     'function': func_name,
                     'file': file_path
                 })
-            else:
+                is_tested = True
+
+            if not is_tested:
                 # Function is genuinely untested
-                category = categorize_module(module_path)
                 untested_by_category[category].append({
                     'module': module_path,
                     'function': func_name,
                     'file': file_path
                 })
 
-    total_untested = total_functions - total_tested - total_indirect
+    # Calculate total untested: functions not in any test category
+    all_tested_functions = (unit_tested_imports | visual_tested_imports | indirectly_tested)
+    all_functions = {f"{m}::{f}" for m, d in module_functions.items() for f in d['functions']}
+    total_untested = len(all_functions - all_tested_functions)
 
     # Output results
     if show_summary:
         print(f"\nSummary:")
         print(f"  Total functions: {total_functions}")
-        print(f"  Tested directly: {total_tested} ({100*total_tested/total_functions:.1f}%)")
+        print(f"  Tested directly: {total_unit_tested} ({100*total_unit_tested/total_functions:.1f}%)")
+        if total_visual_tested > 0:
+            print(f"  Tested visually: {total_visual_tested} ({100*total_visual_tested/total_functions:.1f}%)")
         if total_indirect > 0:
             print(f"  Tested indirectly: {total_indirect} ({100*total_indirect/total_functions:.1f}%)")
-            effective_tested = total_tested + total_indirect
-            print(f"  Effective coverage: {effective_tested} ({100*effective_tested/total_functions:.1f}%)")
+        effective_tested = total_unit_tested + total_visual_tested + total_indirect
+        print(f"  Effective coverage: {effective_tested} ({100*effective_tested/total_functions:.1f}%)")
         print(f"  Genuinely untested: {total_untested} ({100*total_untested/total_functions:.1f}%)")
         return
 
@@ -259,9 +343,19 @@ def main():
             for file_path in sorted(completely_untested_files):
                 print(file_path)
             print(f"\nTotal: {len(completely_untested_files)} files with no tests")
+            total_tested = total_unit_tested + total_visual_tested
             print(f"Coverage: {total_tested}/{total_functions} ({100*total_tested/total_functions:.1f}%)")
     elif show_count:
-        if show_indirect:
+        if show_visual:
+            print(f"\nVisual regression tested functions by category:")
+            print(f"{'Category':<20} {'Count'}")
+            print("=" * 35)
+            for category in sorted(visual_by_category.keys()):
+                count = len(visual_by_category[category])
+                print(f"{category:<20} {count:>5}")
+            print("=" * 35)
+            print(f"{'Total':<20} {total_visual_tested:>5}")
+        elif show_indirect:
             print(f"\nIndirectly tested functions by category:")
             print(f"{'Category':<20} {'Count'}")
             print("=" * 35)
@@ -282,11 +376,31 @@ def main():
             if total_indirect > 0 and not skip_indirect:
                 print(f"\n(Note: {total_indirect} functions are indirectly tested - use --show-indirect to see them)")
 
-        effective_tested = total_tested + total_indirect
-        print(f"\nCoverage: {total_tested} direct + {total_indirect} indirect = {effective_tested}/{total_functions} ({100*effective_tested/total_functions:.1f}%)")
+        effective_tested = total_unit_tested + total_visual_tested + total_indirect
+        total_tested = total_unit_tested + total_visual_tested
+        print(f"\nCoverage: {total_unit_tested} unit + {total_visual_tested} visual + {total_indirect} indirect = {effective_tested}/{total_functions} ({100*effective_tested/total_functions:.1f}%)")
     else:
         # Show detailed list
-        if show_indirect:
+        if show_visual:
+            # Show visual regression tested functions
+            if not visual_by_category:
+                print("\n✨ No visual regression tested functions found")
+            else:
+                print(f"\nVisual regression tested functions ({total_visual_tested} total):\n")
+
+                for category in sorted(visual_by_category.keys()):
+                    items = visual_by_category[category]
+                    print(f"\n{category}/ ({len(items)} visual):")
+                    print("-" * 60)
+
+                    for item in sorted(items, key=lambda x: (x['file'], x['function'])):
+                        print(f"  {item['file']}")
+                        print(f"    fn {item['function']}()")
+                        print(f"    import {item['module']}::{item['function']}")
+
+                print(f"\n" + "=" * 60)
+                print(f"Total: {total_visual_tested} visual regression tested")
+        elif show_indirect:
             # Show indirectly tested functions
             if not indirect_by_category:
                 print("\n✨ No indirectly tested functions found")
@@ -324,9 +438,12 @@ def main():
 
                 print(f"\n" + "=" * 60)
                 print(f"Total: {total_untested} genuinely untested")
+                if total_visual_tested > 0:
+                    print(f"       {total_visual_tested} visual regression tested (use --show-visual to see them)")
                 if total_indirect > 0:
                     print(f"       {total_indirect} indirectly tested (use --show-indirect to see them)")
-                    effective_tested = total_tested + total_indirect
+                if total_visual_tested > 0 or total_indirect > 0:
+                    effective_tested = total_unit_tested + total_visual_tested + total_indirect
                     print(f"Effective coverage: {effective_tested}/{total_functions} ({100*effective_tested/total_functions:.1f}%)")
 
 
