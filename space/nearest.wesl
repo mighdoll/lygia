@@ -1,6 +1,7 @@
 /*
 contributors: Patricio Gonzalez Vivo
 description: sampling function to make a texture behave like GL_NEAREST
+use: <vec2f> nearest(<vec2f> v, <vec2f> res)
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license

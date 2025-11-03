@@ -1,0 +1,59 @@
+import { expect, test } from "vitest";
+import {
+  createSampler,
+  getGPUDevice,
+  gradientTexture,
+  solidTexture,
+} from "wesl-test";
+import { expectCloseTo, lygiaTestFragment } from "./testUtil.js";
+
+test("edgePrewitt", async () => {
+  const device = await getGPUDevice();
+  const gradientTex = gradientTexture(device, 256, 256, "horizontal");
+  const solidTex = solidTexture(device, [0.5, 0.5, 0.5, 1.0], 256, 256);
+  const sampler = createSampler(device);
+
+  // Test 1: Horizontal gradient should produce strong horizontal edge response
+  const src1 = `
+    import lygia::filter::edge::prewitt::edgePrewitt;
+
+    @group(0) @binding(1) var input_tex: texture_2d<f32>;
+    @group(0) @binding(2) var input_samp: sampler;
+
+    @fragment
+    fn fs_main(@builtin(position) pos: vec4f) -> @location(0) vec4f {
+      let uv = pos.xy / 256.0;
+      let pixel_size = vec2f(1.0 / 256.0, 1.0 / 256.0);
+      let edge = edgePrewitt(input_tex, input_samp, uv, pixel_size);
+      return vec4f(edge, 1.0);
+    }`;
+
+  const gradientResult = await lygiaTestFragment(src1, {
+    textureFormat: "rgba32float",
+    size: [256, 256],
+    inputTextures: [{ texture: gradientTex, sampler }],
+  });
+
+  // Test 2: Solid color should produce near-zero edge response
+  const solidResult = await lygiaTestFragment(src1, {
+    textureFormat: "rgba32float",
+    size: [256, 256],
+    inputTextures: [{ texture: solidTex, sampler }],
+  });
+
+  // Gradient should produce significant edge magnitude (Prewitt detects horizontal edges)
+  // For a uniform gradient from 0 to 1 over 256 pixels, the Prewitt operator
+  // computes the gradient magnitude which should be approximately 3/255 ≈ 0.0118
+  expect(gradientResult[0]).toBeGreaterThan(0.008);
+  expect(gradientResult[0]).toBeLessThan(0.02);
+
+  // Solid color should produce very small edge magnitude (near zero)
+  expect(solidResult[0]).toBeLessThan(0.01);
+
+  // Edge detection on gradient should be significantly stronger than on solid
+  expect(gradientResult[0]).toBeGreaterThan(solidResult[0] * 10);
+
+  // Regression test - exact values to catch implementation changes
+  expectCloseTo([0.0118], [gradientResult[0]]);
+  expectCloseTo([1.192e-7], [solidResult[0]]);
+});
