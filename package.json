@@ -15,7 +15,8 @@
     "prepublishOnly": "pnpm test:built",
     "test": "pnpm vitest",
     "test:built": "pnpm build:wesl && TEST_BUNDLES=true pnpm vitest run",
-    "test:once": "pnpm vitest run"
+    "test:once": "pnpm vitest run",
+    "doc:dev": "vite"
   },
   "repository": {
     "type": "git",
@@ -58,7 +59,8 @@
     "webpack-glsl-loader": "github:patriciogonzalezvivo/webpack-glsl-loader",
     "wesl-link": "^0.6.36",
     "wesl-packager": "^0.6.36",
-    "wesl-test": "^0.6.36"
+    "wesl-test": "^0.6.36",
+    "wgsl-play": "^0.0.4"
   },
   "eslintConfig": {
     "env": {

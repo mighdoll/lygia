@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LYGIA Docs</title>
+    <style>
+    wgsl-play {
+      width: 400px;
+      height: 400px;
+    }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+    import "wgsl-play";
+    </script>
+    <p>LYGIA shader library documentation.</p>
+    <wgsl-play
+      src="/test/wesl/shaders/draw-shapes.wesl"
+      shader-root="."
+    ></wgsl-play>
+    <wgsl-play
+      src="/test/wesl/shaders/perlin-noise-fbm.wesl"
+      shader-root="."
+    ></wgsl-play>
+  </body>
+</html>
