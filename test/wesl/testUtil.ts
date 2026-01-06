@@ -4,7 +4,7 @@ import type {
   FragmentImageTestParams,
   FragmentTestParams,
   WgslElementType,
-} from "wesl-test";
+} from "wgsl-test";
 import {
   createSampler,
   expectFragmentImage,
@@ -13,7 +13,7 @@ import {
   testCompute,
   testFragment,
   testFragmentImage,
-} from "wesl-test";
+} from "wgsl-test";
 
 const projectDir = new URL("../../", import.meta.url).href;
 

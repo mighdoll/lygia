@@ -59,7 +59,7 @@
     "webpack-glsl-loader": "github:patriciogonzalezvivo/webpack-glsl-loader",
     "wesl-link": "^0.6.36",
     "wesl-packager": "^0.6.36",
-    "wesl-test": "^0.6.36",
+    "wgsl-test": "^0.6.36",
     "wgsl-play": "^0.0.4"
   },
   "eslintConfig": {
@@ -92,6 +92,14 @@
     "./*": {
       "import": "./dist/*/weslBundle.js",
       "types": "./dist/weslBundle.d.ts"
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "wesl": "link:../worktrees/custom-parser-4/tools/packages/wesl",
+      "wesl-link": "link:../worktrees/custom-parser-4/tools/packages/wesl-link",
+      "wesl-packager": "link:../worktrees/custom-parser-4/tools/packages/wesl-packager",
+      "wgsl-test": "link:../worktrees/custom-parser-4/tools/packages/wgsl-test"
     }
   }
 }
